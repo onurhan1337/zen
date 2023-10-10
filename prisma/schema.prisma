@@ -13,7 +13,6 @@ datasource db {
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
-
 model Account {
   id                 String  @id @default(cuid())
   userId             String

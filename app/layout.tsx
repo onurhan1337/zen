@@ -1,8 +1,11 @@
 import "./globals.css";
-import cx from "classnames";
+import "@radix-ui/themes/styles.css";
+import { Suspense } from "react";
 import { sfPro, inter } from "./fonts";
 import Nav from "@/components/layout/nav";
-import { Suspense } from "react";
+import { Theme } from "@radix-ui/themes";
+
+import cx from "classnames";
 
 export const metadata = {
   title: "Zen - Project management app",
@@ -17,13 +20,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={cx(sfPro.variable, inter.variable)}>
-        <div className="fixed h-screen w-full" />
-        <Suspense fallback="...">
-          <Nav />
-        </Suspense>
-        <main className="flex min-h-screen w-full flex-col items-center justify-center py-32">
-          {children}
-        </main>
+        <Theme>
+          <div className="fixed h-screen w-full" />
+          <Suspense fallback="...">
+            <Nav />
+          </Suspense>
+          <main className="mx-5 py-32">{children}</main>
+        </Theme>
       </body>
     </html>
   );
