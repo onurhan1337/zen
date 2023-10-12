@@ -10,7 +10,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
   }
 
   return (
-    <div className="flex cursor-pointer flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4 hover:bg-black">
+    <div className="flex cursor-pointer flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4 hover:bg-zinc-100">
       <div>
         <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
           {title}

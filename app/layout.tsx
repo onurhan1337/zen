@@ -21,7 +21,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={cx(sfPro.variable, inter.variable)}>
         <Theme>
-          <div className="fixed h-screen w-full" />
+          <div className="fixed -z-10 h-screen w-full bg-white" />
           <Suspense fallback="...">
             <Nav />
           </Suspense>

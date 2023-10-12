@@ -32,13 +32,17 @@ const ProjectsCardList = () => {
       {PROJECTS.map((project) => (
         <ProjectCard key={project.id} project={project} />
       ))}
-
-      <div className="flex cursor-pointer flex-col justify-around space-y-2 rounded-md border border-zinc-200 bg-white p-4 hover:bg-zinc-200">
-        <PlusCircleIcon className="mx-auto h-10 w-10 text-zinc-200" />
-        <p className="text-center text-gray-500">Create Project</p>
-      </div>
     </div>
   );
 };
 
 export default ProjectsCardList;
+
+const EmptyCreateProjectCard = () => {
+  return (
+    <div className="group flex cursor-pointer flex-col justify-around space-y-2 rounded-md border border-zinc-200 p-4 hover:bg-zinc-100">
+      <PlusCircleIcon className="mx-auto h-10 w-10 text-zinc-200 group-hover:text-zinc-300" />
+      <p className="text-center text-zinc-500">Create Project</p>
+    </div>
+  );
+};

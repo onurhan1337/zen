@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   previewFeatures = ["jsonProtocol"]
@@ -8,27 +5,29 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+  url = env("POSTGRES_PRISMA_URL") // Use connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // Use a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // Used for migrations
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Define a relationship with the User model
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Use unique constraints for account identification
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
@@ -39,6 +38,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Use an index for faster lookups by userId
   @@index([userId])
 }
 
@@ -48,8 +49,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  // Define relationships for User's accounts, sessions, and projects
   accounts      Account[]
   sessions      Session[]
+  projects      Project[]
 }
 
 model VerificationToken {
@@ -57,5 +60,30 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
 
+  // Use unique constraints for verification tokens
   @@unique([identifier, token])
+}
+
+enum ProjectStatus {
+  notStarted
+  inProgress
+  completed
+  onHold
+  cancelled
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  startDate   DateTime? @default(now())
+  endDate     DateTime? 
+  status      ProjectStatus @default(notStarted)
+  userId      String
+  // Define a relationship with the User model
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Use a unique constraint for project names
+  @@unique([id, name])
+  @@index([userId])
 }
