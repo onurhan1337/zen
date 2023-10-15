@@ -44,7 +44,7 @@ const ProjectCreateForm = () => {
   };
 
   const handleSubmit = async (values: FormValues) => {
-    await fetch("/api/projects", {
+    await fetch("/api/project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
