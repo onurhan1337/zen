@@ -1,5 +1,4 @@
 "use client";
-
 import { Separator } from "@radix-ui/themes";
 import { Drawer } from "vaul";
 import ProjectCreateForm from "./form";
@@ -30,13 +29,10 @@ const ProjectCreateContent = ({
           <div className="mt-auto border-t border-zinc-200 bg-zinc-100 p-4">
             <div className="mx-auto flex max-w-md justify-center gap-6">
               <button
-                onClick={() => setOpenPopover(!openPopover)}
+                onClick={() => setOpenPopover(false)}
                 className="w-1/2 rounded-md bg-transparent px-4 py-2 text-zinc-500 hover:bg-zinc-300 hover:text-zinc-600"
               >
                 Cancel
-              </button>
-              <button className="w-1/2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-                Create
               </button>
             </div>
           </div>
@@ -47,12 +43,3 @@ const ProjectCreateContent = ({
 };
 
 export default ProjectCreateContent;
-
-/*
-    FIELDS:
-        - NAME
-        - DESCRIPTION
-        - STATUS ( STARTED, FINISHED )
-        - TASKS ( RELATIONS )
-        - START-END DATE ( OPTIONAL )
-*/
