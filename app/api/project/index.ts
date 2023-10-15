@@ -1,18 +1,22 @@
-import { getServerSession } from "next-auth/next";
+import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const session = await getServerSession(authOptions);
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const session = await getSession({ req });
 
   if (!session || !session.user || !session.user.email) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  if (req.method === "POST") {
+
+  try {
     const { name, status, startDate, endDate, description } = req.body;
 
     if (!name || !status || !startDate || !endDate || !description) {
@@ -36,18 +40,17 @@ export default async function handler(
         startDate,
         endDate,
         description,
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
+        userId: user.id, // Assuming a direct foreign key relationship in your Prisma model
       },
     });
 
     return res.status(201).json({
       project,
-      description: "Project created successfully",
+      message: "Project created successfully",
       error: null,
     });
+  } catch (error) {
+    console.error("Error creating project:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
