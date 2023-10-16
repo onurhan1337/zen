@@ -1,20 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(request: Request) {
   // Handle POST request
-  const session = await getSession({ req });
+  const cookie = request.headers.get("cookie");
+  const res = await fetch("http://localhost:3000/api/auth/session", {
+    headers: {
+      cookie: cookie!,
+    },
+  });
+  if (!cookie) {
+    return new Response("No cookie found", { status: 401 });
+  }
 
+  const session = await res.json();
   if (!session || !session.user || !session.user.email) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return new Response("Unauthorized", { status: 401 });
   }
 
   try {
-    const { name, status, startDate, endDate, description } = req.body;
+    const { name, status, startDate, endDate, description } =
+      await request.json();
 
     if (!name || !status || !startDate || !endDate || !description) {
-      return res.status(400).json({ error: "Missing parameters" });
+      return new Response("Missing fields", { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -24,7 +32,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return new Response("User not found", { status: 404 });
     }
 
     const project = await prisma.project.create({
@@ -38,13 +46,9 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    return res.status(201).json({
-      project,
-      message: "Project created successfully",
-      error: null,
-    });
+    return new Response(JSON.stringify(project), { status: 200 });
   } catch (error) {
     console.error("Error creating project:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return new Response("Error creating project", { status: 500 });
   }
 }
