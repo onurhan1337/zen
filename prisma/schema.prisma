@@ -63,11 +63,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-enum ProjectStatus {
-  active
-  inactive
-}
-
 model Project {
   id          String    @id @default(cuid()) @unique
   name        String
