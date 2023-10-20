@@ -1,5 +1,3 @@
-"use client";
-
 interface BadgeProps {
   id: number;
   text: string;

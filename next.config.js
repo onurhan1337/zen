@@ -1,26 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ["lh3.googleusercontent.com", "vercel.com"],
-  },
-  async redirects() {
-    return [
-      {
-        source: "/github",
-        destination: "https://github.com/onurhan1337",
-        permanent: false,
-      },
-    ];
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "http://localhost:3000/api/:path*",
-      },
-    ];
+  api: {
+    bodyParser: {
+      sizeLimit: "1mb",
+    },
   },
 };
 

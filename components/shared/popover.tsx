@@ -1,5 +1,3 @@
-"use client";
-
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Drawer } from "vaul";

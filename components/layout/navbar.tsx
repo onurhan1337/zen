@@ -1,12 +1,10 @@
-"use client";
-
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import useScroll from "@/lib/hooks/use-scroll";
 import { useSignInModal } from "./sign-in-modal";
 import UserDropdown from "./user-dropdown";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { Button } from "@radix-ui/themes";
 
 interface MenuProps {
@@ -17,10 +15,11 @@ const MENU: MenuProps = {
   "/": "home",
 };
 
-export default function NavBar({ session }: { session: Session | null }) {
+export default function NavBar() {
   const { SignInModal, setShowSignInModal } = useSignInModal();
   const scrolled = useScroll(50);
-  const pathname = usePathname();
+  const { pathname } = useRouter();
+  const { data: session } = useSession();
 
   return (
     <>

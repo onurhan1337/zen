@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@radix-ui/themes";
 import ProjectsCardList from "./projects/list";

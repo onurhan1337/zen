@@ -1,8 +1,6 @@
-"use client";
-
 import { useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { format } from "date-fns";
+
 import * as Yup from "yup";
 
 import { LoadingDots } from "@/components/shared/icons";
@@ -14,36 +12,41 @@ enum ProjectStatus {
 
 interface FormValues {
   name: string;
-  status: ProjectStatus;
-  startDate: string;
-  endDate: string;
+  // status only "active" or "inactive". These are the only values that will be
+  // status: ProjectStatus; -> cant use this because its enum. We need to use value of enum
+  status: "active" | "inactive";
+  startDate: Date;
+  endDate: Date;
   description: string;
 }
 
 const ProjectCreateForm = () => {
-  const [status, setStatus] = useState<ProjectStatus>(ProjectStatus.Active);
+  const [status, setStatus] = useState<"active" | "inactive">("active");
 
   const initialValues: FormValues = {
     name: "",
-    status: ProjectStatus.Active,
-    startDate: format(new Date(), "yyyy-MM-dd"),
-    endDate: format(new Date(), "yyyy-MM-dd"),
+    status: "active",
+    startDate: new Date(),
+    endDate: new Date(),
     description: "",
   };
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
     status: Yup.string().required("Required"),
-    startDate: Yup.string().required("Required"),
-    endDate: Yup.string().required("Required"),
+    startDate: Yup.date().required("Required"),
+    endDate: Yup.date().required("Required"),
     description: Yup.string().required("Required"),
   });
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value as ProjectStatus);
+    setStatus(e.target.value as "active" | "inactive");
   };
 
   const handleSubmit = async (values: FormValues) => {
+    const startDate = new Date(values.startDate);
+    const endDate = new Date(values.endDate);
+
     await fetch("/api/project", {
       method: "POST",
       headers: {
@@ -52,8 +55,8 @@ const ProjectCreateForm = () => {
       body: JSON.stringify({
         name: values.name,
         status: values.status,
-        startDate: values.startDate,
-        endDate: values.endDate,
+        startDate,
+        endDate,
         description: values.description,
       }),
     });
@@ -103,11 +106,8 @@ const ProjectCreateForm = () => {
                 onChange={handleStatusChange}
                 className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
               >
-                {Object.entries(ProjectStatus).map(([key, value]) => (
-                  <option key={key} value={value}>
-                    {key}
-                  </option>
-                ))}
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
               </Field>
               <ErrorMessage
                 name="status"
@@ -123,7 +123,7 @@ const ProjectCreateForm = () => {
                 Start Date
               </label>
               <Field
-                type="date"
+                type="datetime-local"
                 name="startDate"
                 id="startDate"
                 defaultValue={new Date().toISOString().slice(0, 10)}
@@ -143,7 +143,7 @@ const ProjectCreateForm = () => {
                 End Date
               </label>
               <Field
-                type="date"
+                type="datetime-local"
                 name="endDate"
                 id="endDate"
                 min={new Date().toISOString().slice(0, 10)}

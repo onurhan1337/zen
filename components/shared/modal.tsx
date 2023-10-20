@@ -1,5 +1,3 @@
-"use client";
-
 import { Dispatch, SetStateAction } from "react";
 import { cn } from "@/lib/utils";
 import { Drawer } from "vaul";

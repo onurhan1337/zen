@@ -7,7 +7,6 @@ datasource db {
   provider = "postgresql"
   url = env("POSTGRES_PRISMA_URL") // Use connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // Use a direct connection
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // Used for migrations
 }
 
 model Account {
@@ -65,20 +64,17 @@ model VerificationToken {
 }
 
 enum ProjectStatus {
-  notStarted
-  inProgress
-  completed
-  onHold
-  cancelled
+  active
+  inactive
 }
 
 model Project {
-  id          String    @id @default(cuid())
+  id          String    @id @default(cuid()) @unique
   name        String
   description String
   startDate   DateTime? @default(now())
   endDate     DateTime? 
-  status      ProjectStatus @default(notStarted)
+  status      String   @default("active")
   userId      String
   // Define a relationship with the User model
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)

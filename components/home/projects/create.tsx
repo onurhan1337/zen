@@ -1,4 +1,3 @@
-"use client";
 import { Separator } from "@radix-ui/themes";
 import { Drawer } from "vaul";
 import ProjectCreateForm from "./form";

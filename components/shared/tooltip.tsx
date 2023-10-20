@@ -1,5 +1,3 @@
-"use client";
-
 import { ReactNode } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { Drawer } from "vaul";
