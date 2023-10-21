@@ -6,6 +6,7 @@ import "@radix-ui/themes/styles.css";
 import { Suspense } from "react";
 import { Theme } from "@radix-ui/themes";
 import NavBar from "@/components/layout/navbar";
+import { Toaster } from "sonner";
 
 export default function App({
   Component,
@@ -22,6 +23,14 @@ export default function App({
         <main className="mx-5 py-32">
           <Component {...pageProps} />
         </main>
+        <Toaster
+          richColors
+          toastOptions={{
+            style: {
+              zIndex: "99999999",
+            },
+          }}
+        />
       </Theme>
     </SessionProvider>
   );

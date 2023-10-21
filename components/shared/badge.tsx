@@ -1,37 +1,34 @@
 interface BadgeProps {
-  id: number;
-  text: string;
-  hasCloseButton?: boolean;
-  onRemove?: (id: number) => void;
+  type: "active" | "inactive";
 }
 
-const Badge = ({ id, text, hasCloseButton = false, onRemove }: BadgeProps) => {
-  const handleRemove = () => {
-    if (onRemove) {
-      onRemove(id);
-    }
-  };
-
+const Badge = ({ type = "active" }: BadgeProps) => {
   return (
-    <span className="inline-flex items-center gap-x-0.5 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-      {text}
-      {hasCloseButton && (
-        <button
-          type="button"
-          onClick={handleRemove}
-          className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-blue-600/20"
-        >
-          <span className="sr-only">Remove</span>
+    <>
+      {type === "active" ? (
+        <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200">
           <svg
-            viewBox="0 0 14 14"
-            className="h-3.5 w-3.5 stroke-blue-700/50 group-hover:stroke-blue-700/75"
+            className="h-1.5 w-1.5 fill-green-500"
+            viewBox="0 0 6 6"
+            aria-hidden="true"
           >
-            <path d="M4 4l6 6m0-6l-6 6" />
+            <circle cx="3" cy="3" r="3" />
           </svg>
-          <span className="absolute -inset-1" />
-        </button>
+          ACTIVE
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200">
+          <svg
+            className="h-1.5 w-1.5 fill-red-500"
+            viewBox="0 0 6 6"
+            aria-hidden="true"
+          >
+            <circle cx="3" cy="3" r="3" />
+          </svg>
+          INACTIVE
+        </span>
       )}
-    </span>
+    </>
   );
 };
 

@@ -1,6 +1,13 @@
 export interface Project {
-  id: number;
-  title: string;
+  id: string;
+  name: string;
+  status: "active" | "inactive";
+  startDate: string;
+  endDate: string;
   description: string;
-  tags?: string[];
+  user?: {
+    id?: string;
+    name?: string;
+    email?: string;
+  };
 }

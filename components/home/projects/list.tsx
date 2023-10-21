@@ -1,42 +1,24 @@
-import { PlusCircleIcon } from "lucide-react";
+import { useState } from "react";
+import { Project } from "@prisma/client";
 import ProjectCard from "./card";
-import { Project } from "types/project";
+import { PlusCircleIcon } from "lucide-react";
 
-const PROJECTS: Project[] = [
-  {
-    id: 1,
-    title: "Project 1",
-    description:
-      "The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.",
-    tags: ["school", "work"],
-  },
-  {
-    id: 2,
-    title: "Project 2",
-    description:
-      "The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.",
-    tags: ["work"],
-  },
-  {
-    id: 3,
-    title: "Project 3",
-    description:
-      "The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.",
-    tags: [],
-  },
-];
-
-const ProjectsCardList = () => {
-  return (
-    <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 lg:gap-5">
-      {PROJECTS.map((project) => (
-        <ProjectCard key={project.id} project={project} />
-      ))}
-    </div>
-  );
+type Props = {
+  projects: Project[] | null;
 };
 
-export default ProjectsCardList;
+export default function ProjectsCardList({ projects }: Props) {
+  return (
+    <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 lg:gap-5">
+      {projects &&
+        projects.map((project: Project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+
+      <EmptyCreateProjectCard />
+    </div>
+  );
+}
 
 const EmptyCreateProjectCard = () => {
   return (
