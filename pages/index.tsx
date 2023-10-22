@@ -42,9 +42,6 @@ export default function Home({ projects }: Props) {
                   <p className="text-lg text-gray-500">
                     Create a project to get started
                   </p>
-                  <Button onClick={() => setOpen(!isOpen)} variant="classic">
-                    Create Project
-                  </Button>
                 </div>
               )}
             </div>
