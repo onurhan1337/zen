@@ -103,8 +103,8 @@ export const getServerSideProps = async (
   // Convert Date objects to strings
   const serializedProjects = projects.map((project) => ({
     ...project,
-    startDate: project.startDate?.toISOString(),
-    endDate: project.endDate?.toISOString(),
+    startDate: project.startDate ? project.startDate.toISOString() : null,
+    endDate: project.endDate ? project.endDate.toISOString() : null,
   }));
 
   return {
