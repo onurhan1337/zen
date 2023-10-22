@@ -1,10 +1,10 @@
 import { GetServerSidePropsContext } from "next";
-import { useState } from "react";
 import { Button } from "@radix-ui/themes";
 import ProjectCreateContent from "@/components/home/projects/create";
 
 import { getSession, useSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
+import { useDrawerStore } from "@/lib/store";
 import { Project } from "@prisma/client";
 
 import ProjectsCardList from "@/components/home/projects/list";
@@ -14,7 +14,8 @@ type Props = {
 };
 
 export default function Home({ projects }: Props) {
-  const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const { isOpen, setOpen } = useDrawerStore();
+
   const { data: session } = useSession();
 
   return (
@@ -27,10 +28,7 @@ export default function Home({ projects }: Props) {
                 <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
                   Projects{" "}
                 </h1>
-                <Button
-                  onClick={() => setOpenPopover(!openPopover)}
-                  variant="classic"
-                >
+                <Button onClick={() => setOpen(!isOpen)} variant="classic">
                   Create Project
                 </Button>
               </div>
@@ -48,10 +46,7 @@ export default function Home({ projects }: Props) {
           <p className="text-lg text-gray-500">
             Create a project to get started
           </p>
-          <Button
-            onClick={() => setOpenPopover(!openPopover)}
-            variant="classic"
-          >
+          <Button onClick={() => setOpen(!isOpen)} variant="classic">
             Create Project
           </Button>
         </div>
@@ -68,10 +63,7 @@ export default function Home({ projects }: Props) {
         </div>
       )}
 
-      <ProjectCreateContent
-        openPopover={openPopover}
-        setOpenPopover={() => setOpenPopover}
-      />
+      <ProjectCreateContent />
     </>
   );
 }

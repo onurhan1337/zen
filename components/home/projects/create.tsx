@@ -1,16 +1,13 @@
 import { Separator } from "@radix-ui/themes";
 import { Drawer } from "vaul";
+import { useDrawerStore } from "@/lib/store";
 import ProjectCreateForm from "./form";
 
-const ProjectCreateContent = ({
-  openPopover,
-  setOpenPopover,
-}: {
-  openPopover: boolean;
-  setOpenPopover: (setOpenPopover: boolean) => void;
-}) => {
+const ProjectCreateContent = () => {
+  const { isOpen, setOpen } = useDrawerStore();
+
   return (
-    <Drawer.Root open={openPopover} shouldScaleBackground>
+    <Drawer.Root open={isOpen} shouldScaleBackground>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Content className="fixed bottom-0 left-0 right-0 mt-24 flex h-[96%] flex-col rounded-t-[10px] bg-zinc-100">
@@ -26,7 +23,7 @@ const ProjectCreateContent = ({
               <div>
                 <Drawer.Close asChild>
                   <button
-                    onClick={() => setOpenPopover(false)}
+                    onClick={() => setOpen(false)}
                     className="mx-auto flex w-1/2 items-center justify-center rounded-md bg-transparent px-4 py-2 text-center text-zinc-500 hover:bg-zinc-300 hover:text-zinc-600"
                   >
                     Cancel

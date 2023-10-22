@@ -1,6 +1,7 @@
 import { Project } from "@prisma/client";
-import ProjectCard from "./card";
+import { useDrawerStore } from "@/lib/store";
 import { PlusCircleIcon } from "lucide-react";
+import ProjectCard from "./card";
 
 type Props = {
   projects: Project[] | null;
@@ -20,8 +21,13 @@ export default function ProjectsCardList({ projects }: Props) {
 }
 
 const EmptyCreateProjectCard = () => {
+  const { isOpen, setOpen } = useDrawerStore();
+
   return (
-    <div className="group flex cursor-pointer flex-col justify-around space-y-2 rounded-md border border-zinc-200 p-4 hover:bg-zinc-100">
+    <div
+      onClick={() => setOpen(!isOpen)}
+      className="group flex cursor-pointer flex-col justify-around space-y-2 rounded-md border border-zinc-200 p-4 hover:bg-zinc-100"
+    >
       <PlusCircleIcon className="mx-auto h-10 w-10 text-zinc-200 group-hover:text-zinc-300" />
       <p className="text-center text-zinc-500">Create Project</p>
     </div>
