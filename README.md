@@ -11,4 +11,4 @@ A project management web app.
 - Fix sonner zIndex below in vaul
 - When project created successfully, close the drawer
 - Add zustand and add drawer open-close state from there and add this property to EmptyCreateProjectCard.
-- Badge inactive issue
+- [x] Badge inactive issue -> the issue from project create form

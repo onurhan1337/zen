@@ -13,7 +13,7 @@ const ProjectCard = ({ project }: Props) => {
   const router = useRouter();
 
   return (
-    <div className="flex cursor-pointer flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4 hover:bg-zinc-100">
+    <div className="flex flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4 hover:bg-zinc-100">
       <div className="flex items-center justify-start gap-2">
         {status === "active" ? (
           <Badge type="active" />
@@ -38,7 +38,7 @@ const ProjectCard = ({ project }: Props) => {
           }}
           color={"indigo"}
           variant={"soft"}
-          className="w-full cursor-pointer"
+          className="w-full "
         >
           Go Details
         </Button>

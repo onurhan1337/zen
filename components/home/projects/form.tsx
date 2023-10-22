@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
@@ -21,7 +21,7 @@ const ProjectCreateForm = () => {
 
   const initialValues: FormValues = {
     name: "",
-    status: "active",
+    status,
     startDate: new Date(),
     endDate: new Date(),
     description: "",
@@ -29,15 +29,20 @@ const ProjectCreateForm = () => {
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
-    status: Yup.string().required("Required"),
+    status: Yup.string<"active" | "inactive">().required("Required"),
     startDate: Yup.date().required("Required"),
     endDate: Yup.date().required("Required"),
     description: Yup.string().required("Required"),
   });
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value as "active" | "inactive");
-  };
+  console.log(initialValues);
+
+  const handleStatusChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setStatus(e.target.value as "active" | "inactive");
+    },
+    [setStatus],
+  );
 
   const handleSubmit = async (values: FormValues) => {
     const startDate = new Date(values.startDate);
@@ -51,12 +56,17 @@ const ProjectCreateForm = () => {
         },
         body: JSON.stringify({
           name: values.name,
-          status: values.status,
+          status,
           startDate,
           endDate,
           description: values.description,
         }),
       });
+
+      // if successful, redirect to project page
+      if (res.ok) {
+        router.push("/");
+      }
 
       if (!res.ok) {
         const error = await res.text();
@@ -103,6 +113,7 @@ const ProjectCreateForm = () => {
               >
                 Status
               </label>
+
               <Field
                 as="select"
                 name="status"

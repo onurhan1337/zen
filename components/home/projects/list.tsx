@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Project } from "@prisma/client";
 import ProjectCard from "./card";
 import { PlusCircleIcon } from "lucide-react";
