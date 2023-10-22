@@ -22,6 +22,16 @@ export const authOptions = {
   ],
 
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async session({ session, user }: any) {
+      if (session?.user) {
+        // @ts-ignore
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
 };
 
 export default NextAuth(authOptions);
