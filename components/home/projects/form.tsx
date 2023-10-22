@@ -35,8 +35,6 @@ const ProjectCreateForm = () => {
     description: Yup.string().required("Required"),
   });
 
-  console.log(initialValues);
-
   const handleStatusChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       setStatus(e.target.value as "active" | "inactive");
