@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Button } from "@radix-ui/themes";
 import { Project } from "@prisma/client";
 import { truncate } from "@/lib/utils";
 import Badge from "@/components/shared/badge";
+import { LoadingDots } from "@/components/shared/icons";
 
 type Props = {
   project: Project;
 };
 
 const ProjectCard = ({ project }: Props) => {
+  const [clicked, setClicked] = useState<boolean>(false);
   const { id, name, status, description } = project;
   const router = useRouter();
 
@@ -34,13 +37,15 @@ const ProjectCard = ({ project }: Props) => {
       <div className="py-2">
         <Button
           onClick={() => {
+            setClicked(true);
             router.push(`/projects/${id}`);
           }}
           color={"indigo"}
           variant={"soft"}
+          disabled={clicked}
           className="w-full "
         >
-          Go Details
+          {clicked ? <LoadingDots color="#808080" /> : "View Project"}
         </Button>
       </div>
     </div>
