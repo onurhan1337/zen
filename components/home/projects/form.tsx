@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { toast } from "sonner";
 
 import * as Yup from "yup";
 
+import { useDrawerStore } from "@/lib/store";
 import { LoadingDots } from "@/components/shared/icons";
-import { toast } from "sonner";
 
 interface FormValues {
   name: string;
@@ -17,6 +18,7 @@ interface FormValues {
 
 const ProjectCreateForm = () => {
   const [status, setStatus] = useState<"active" | "inactive">("active");
+  const { setOpen } = useDrawerStore();
   const router = useRouter();
 
   const initialValues: FormValues = {
@@ -63,6 +65,7 @@ const ProjectCreateForm = () => {
 
       // if successful, redirect to project page
       if (res.ok) {
+        setOpen(false);
         router.push("/");
       }
 
