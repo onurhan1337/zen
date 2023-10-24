@@ -23,7 +23,7 @@ export default function App({
         <main className="mx-5 py-32">
           <Component {...pageProps} />
         </main>
-        <Toaster richColors />
+        <Toaster richColors closeButton={true} />
       </Theme>
     </SessionProvider>
   );

@@ -62,13 +62,12 @@ export default ProjectCard;
 
 const CardActionMenu = ({ id }: { id: string }) => {
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // delete project
-
-  // if user clicks delete and waits for response, toast loading
-  // if user clicks delete and response is successful, toast success
   const deleteProject = async () => {
     try {
+      setIsDeleting(true);
+      toast.loading("Deleting project...");
       const res = await fetch("/api/project", {
         method: "DELETE",
         headers: {
@@ -88,6 +87,8 @@ const CardActionMenu = ({ id }: { id: string }) => {
       }
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -107,8 +108,12 @@ const CardActionMenu = ({ id }: { id: string }) => {
             </Flex>
           </Text>
         </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={deleteProject} color="red">
-          Delete
+        <DropdownMenu.Item
+          onClick={deleteProject}
+          color="red"
+          disabled={isDeleting}
+        >
+          {isDeleting ? <LoadingDots color="#808080" /> : "Delete"}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
