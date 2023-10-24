@@ -53,7 +53,11 @@ export default function Home({ projects }: Props) {
         <div>
           <div className="flex w-full flex-col items-center justify-center gap-4">
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
-              Welcome to Zen - Project Manager
+              Welcome to{" "}
+              <span className="bg-gradient-to-r from-slate-500 via-zinc-600 to-slate-500 bg-clip-text text-transparent">
+                Zen
+              </span>{" "}
+              - Project Manager
             </h1>
             <p className="text-lg text-gray-500">Sign in to create a project</p>
           </div>

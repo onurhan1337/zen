@@ -68,7 +68,12 @@ export default function NavBar() {
           {session ? (
             <UserDropdown session={session} />
           ) : (
-            <Button variant="surface" onClick={() => setShowSignInModal(true)}>
+            <Button
+              radius={"full"}
+              variant="surface"
+              color={"gray"}
+              onClick={() => setShowSignInModal(true)}
+            >
               Sign In
             </Button>
           )}
