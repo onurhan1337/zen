@@ -12,3 +12,7 @@ A project management web app.
 - [x] Add zustand and add drawer open-close state from there and add this property to EmptyCreateProjectCard.
 - [x] Badge inactive issue -> the issue from project create form
 - Date format m-dd-yyy to d-mm-yyy
+- [ ] Login page
+- [ ] Login with email and password
+- [ ] Register button to navbar when email login added
+- [ ] Add change status function to project card at index page

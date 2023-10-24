@@ -9,7 +9,7 @@ type Props = {
 
 export default function ProjectsCardList({ projects }: Props) {
   return (
-    <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 lg:gap-5">
+    <div className="mb-4 grid w-full grid-cols-2 gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 lg:gap-5">
       {projects &&
         projects.map((project: Project) => (
           <ProjectCard key={project.id} project={project} />

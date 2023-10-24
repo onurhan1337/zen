@@ -221,9 +221,10 @@ function SubmitButton({
     <button
       type="button"
       onClick={handleSubmit}
-      className="my-4 inline-flex h-10 w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-normal text-white shadow-sm hover:bg-blue-700"
+      disabled={isSubmitting}
+      className="my-4 inline-flex h-10 w-full items-center justify-center rounded-md border border-transparent bg-[#BDE56C] px-4 py-2 text-sm font-normal text-black shadow-sm hover:bg-[#bdee63]"
     >
-      {isSubmitting ? <LoadingDots color="#FFFFFF" /> : "Create"}
+      {isSubmitting ? <LoadingDots color="#070809" /> : "Create"}
     </button>
   );
 }

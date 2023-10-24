@@ -28,7 +28,11 @@ export default function Home({ projects }: Props) {
                 <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
                   Projects{" "}
                 </h1>
-                <Button onClick={() => setOpen(!isOpen)} variant="classic">
+                <Button
+                  onClick={() => setOpen(!isOpen)}
+                  color={"lime"}
+                  variant="classic"
+                >
                   Create Project
                 </Button>
               </div>

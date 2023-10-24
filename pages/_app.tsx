@@ -23,14 +23,7 @@ export default function App({
         <main className="mx-5 py-32">
           <Component {...pageProps} />
         </main>
-        <Toaster
-          richColors
-          toastOptions={{
-            style: {
-              zIndex: "99999999",
-            },
-          }}
-        />
+        <Toaster richColors />
       </Theme>
     </SessionProvider>
   );
