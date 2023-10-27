@@ -61,7 +61,7 @@ model VerificationToken {
 
   // Use unique constraints for verification tokens
   @@unique([identifier, token])
-}
+}                                                                                                             
 
 model Project {
   id          String    @id @default(cuid()) @unique
@@ -73,8 +73,33 @@ model Project {
   userId      String
   // Define a relationship with the User model
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks      Task[]
 
   // Use a unique constraint for project names
   @@unique([id, name])
   @@index([userId])
 }
+
+//  ______   ______     ______     __  __    
+// /\__  _\ /\  __ \   /\  ___\   /\ \/ /    
+// \/_/\ \/ \ \  __ \  \ \___  \  \ \  _"-.  
+//    \ \_\  \ \_\ \_\  \/\_____\  \ \_\ \_\ 
+//     \/_/   \/_/\/_/   \/_____/   \/_/\/_/ 
+
+model Task {
+  id          String    @id @default(cuid()) @unique
+  name        String
+  description String
+  startDate   DateTime? @default(now())
+  endDate     DateTime? 
+  status      String   @default("active")
+  projectId   String
+  
+  // Define a relationship with the Project model
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Use a unique constraint for task names
+  @@unique([id, name])
+  @@index([projectId])
+}                                                          
+                            
