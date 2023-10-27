@@ -1,12 +1,16 @@
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import Head from "next/head";
 import prisma from "@/lib/prisma";
 import { getSession } from "next-auth/react";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+
+import Badge from "@/components/shared/badge";
+import BoardSectionList from "@/components/projects/board/list";
 
 type Props = {
   project: {
     id: string;
     name: string;
-    status: string;
+    status: "active" | "inactive";
     startDate: Date;
     endDate: Date;
     description: string;
@@ -23,10 +27,36 @@ export default function ProjectDetailIndex({ project }: Props) {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold">{project.name}</h1>
-      <p className="text-sm text-gray-500">{project.description}</p>
-    </div>
+    <>
+      <Head>
+        <title>{project.name} | Zen</title>
+        <meta name="description" content={project.description} />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <section className="flex w-full flex-col items-center">
+        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between border-b border-zinc-200 pb-4">
+          <div>
+            <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
+              {project.name}
+            </h1>
+            <p className=" text-sm text-gray-500">{project.description}</p>
+          </div>
+          <Badge type={project.status} />
+        </div>
+        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between ">
+          <BoardSectionList
+            INITIAL_TASKS={[
+              {
+                id: "1",
+                title: "Task 1",
+                description: "Description 1",
+                status: "todo",
+              },
+            ]}
+          />
+        </div>
+      </section>
+    </>
   );
 }
 
