@@ -29,6 +29,8 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
 
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
 
+  const task = activeTaskId ? getTaskById(tasks, activeTaskId) : null;
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -124,17 +126,16 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
       }));
     }
 
-    // change task db status with boardSection title
+    const activeTask = tasks.find((task) => task.id === active.id);
 
-    if (task) {
-      task.status = overContainer as
+    if (activeTask) {
+      activeTask.status = overContainer as
         | "backlog"
         | "todo"
         | "in-progress"
         | "done";
 
-      // update task status on db with prisma
-      fetch(`/api/task/${task.id}`, {
+      fetch(`/api/task/${activeTask.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -150,11 +151,10 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
     ...defaultDropAnimation,
   };
 
-  const task = activeTaskId ? getTaskById(tasks, activeTaskId) : null;
-
   return (
     <div className="my-4 grid w-full grid-cols-1 gap-4 overflow-scroll md:grid-cols-2 lg:grid-cols-4">
       <DndContext
+        id="unique-context"
         sensors={sensors}
         collisionDetection={closestCorners}
         onDragStart={handleDragStart}
