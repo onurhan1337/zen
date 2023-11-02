@@ -13,7 +13,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
         draggable
         role="button"
       >
-        <h5 className="text-lg font-semibold">{task.title}</h5>
+        <h5 className="text-lg font-semibold">{task.name}</h5>
         <GripVertical size={16} className="text-gray-500" />
       </div>
       <p>{task.description}</p>

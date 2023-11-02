@@ -90,9 +90,9 @@ model Task {
   id          String    @id @default(cuid()) @unique
   name        String
   description String
+  status      String 
   startDate   DateTime? @default(now())
   endDate     DateTime? 
-  status      String   @default("active")
   projectId   String
   
   // Define a relationship with the Project model

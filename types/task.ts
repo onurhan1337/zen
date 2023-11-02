@@ -1,10 +1,12 @@
-export type Status = "todo" | "in progress" | "done" | "backlog";
+export type Status = "backlog" | "todo" | "in-progress" | "done";
 
 export type Task = {
   id: string;
-  title: string;
+  name: string;
+  startDate: string;
+  status: "backlog" | "todo" | "in-progress" | "done";
+  endDate: string;
   description: string;
-  status: Status;
 };
 
 export type BoardSections = {

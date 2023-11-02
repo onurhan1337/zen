@@ -11,7 +11,13 @@ A project management web app.
 - [x] When project created successfully, close the drawer or route the project detail page
 - [x] Add zustand and add drawer open-close state from there and add this property to EmptyCreateProjectCard.
 - [x] Badge inactive issue -> the issue from project create form
-- Date format m-dd-yyy to d-mm-yyy
+- [x] Task create form
+- [x] Task listing at draggable components
+- [x] listing the task in selected status
+- [ ] Task detail popover
+- [ ] Add tabs to project detail page
+- [ ] Add project settings tab and do changeable everythings
+- [ ] Date format m-dd-yyy to d-mm-yyy
 - [ ] Login page
 - [ ] Login with email and password
 - [ ] Register button to navbar when email login added

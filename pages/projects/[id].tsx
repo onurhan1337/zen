@@ -2,9 +2,13 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import prisma from "@/lib/prisma";
 import { getSession } from "next-auth/react";
+import { Button } from "@radix-ui/themes";
 
+import { Task } from "types/task";
 import Badge from "@/components/shared/badge";
 import BoardSectionList from "@/components/projects/board/list";
+import { useDrawerStore } from "@/lib/store";
+import TaskCreateContent from "@/components/tasks/create";
 
 type Props = {
   project: {
@@ -18,9 +22,12 @@ type Props = {
       email: string;
     };
   } | null; // Updated to handle null if the project is not found.
+  tasks: Task[] | null;
 };
 
-export default function ProjectDetailIndex({ project }: Props) {
+export default function ProjectDetailIndex({ project, tasks }: Props) {
+  const { setOpen } = useDrawerStore();
+
   // TODO: Add here empty state card
   if (!project) {
     return <div>Project not found</div>;
@@ -29,7 +36,7 @@ export default function ProjectDetailIndex({ project }: Props) {
   return (
     <>
       <Head>
-        <title>{project.name} | Zen</title>
+        <title>{`${project.name} | Zen`}</title>
         <meta name="description" content={project.description} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -39,23 +46,40 @@ export default function ProjectDetailIndex({ project }: Props) {
             <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
               {project.name}
             </h1>
-            <p className=" text-sm text-gray-500">{project.description}</p>
+            <p className=" py-2 text-sm text-gray-500">{project.description}</p>
+            <Button
+              color="lime"
+              variant="classic"
+              mt={"4"}
+              onClick={() => setOpen(true)}
+            >
+              Create Task
+            </Button>
           </div>
           <Badge type={project.status} />
         </div>
         <div className="flex w-full max-w-screen-xl flex-row items-center justify-between ">
-          <BoardSectionList
-            INITIAL_TASKS={[
-              {
-                id: "1",
-                title: "Task 1",
-                description: "Description 1",
-                status: "todo",
-              },
-            ]}
-          />
+          {tasks && tasks.length > 0 ? (
+            <BoardSectionList INITIAL_TASKS={tasks} />
+          ) : (
+            <div className="flex w-full flex-col items-center justify-center py-12">
+              <h1 className="text-2xl font-bold text-gray-500">
+                No tasks found
+              </h1>
+              <p className="text-gray-400">Create a new task to get started</p>
+              <Button
+                color="lime"
+                variant="classic"
+                mt={"4"}
+                onClick={() => setOpen(true)}
+              >
+                Create Task
+              </Button>
+            </div>
+          )}
         </div>
       </section>
+      <TaskCreateContent />
     </>
   );
 }
@@ -87,6 +111,18 @@ export const getServerSideProps: GetServerSideProps = async (
     };
   }
 
+  const tasks = await prisma.task.findMany({
+    where: {
+      projectId: id as string,
+    },
+  });
+
+  if (!tasks) {
+    return {
+      notFound: true,
+    };
+  }
+
   const user = await prisma.user.findUnique({
     where: {
       email: session.user.email!,
@@ -99,6 +135,14 @@ export const getServerSideProps: GetServerSideProps = async (
       notFound: true,
     };
   }
+
+  const tasksWithDatesToString = tasks.map((task) => {
+    return {
+      ...task,
+      startDate: JSON.parse(JSON.stringify(task.startDate)),
+      endDate: JSON.parse(JSON.stringify(task.endDate)),
+    };
+  });
 
   return {
     props: {
@@ -113,6 +157,7 @@ export const getServerSideProps: GetServerSideProps = async (
           email: user.email,
         },
       },
+      tasks: tasksWithDatesToString,
     },
   };
 };

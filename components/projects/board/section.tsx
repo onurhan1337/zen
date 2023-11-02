@@ -55,7 +55,7 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
         items={tasks}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={setNodeRef} className="pr-0 sm:pr-4">
+        <div ref={setNodeRef} className="space-y-4 pr-0 sm:pr-4">
           {tasks.map((task) => (
             <div key={task.id}>
               <SortableTaskItem id={task.id}>
