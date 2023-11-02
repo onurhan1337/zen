@@ -124,6 +124,25 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
       }));
     }
 
+    // change task db status with boardSection title
+
+    if (task) {
+      task.status = overContainer as
+        | "backlog"
+        | "todo"
+        | "in-progress"
+        | "done";
+
+      // update task status on db with prisma
+      fetch(`/api/task/${task.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      });
+    }
+
     setActiveTaskId(null);
   };
 
