@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { toast } from "sonner";
+import { CommandIcon, CornerDownLeftIcon } from "lucide-react";
 
 import * as Yup from "yup";
 
@@ -78,6 +79,25 @@ const ProjectCreateForm = () => {
     }
   };
 
+  /**
+   * Handles the onKeyDown event on the form.
+   *
+   * @param e - The keyboard event.
+   * @param submitForm - The function to submit the form.
+   */
+  const handleOnKeyDown = (
+    e: React.KeyboardEvent<HTMLFormElement>,
+    submitForm: () => void,
+  ) => {
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      (e.key === "Enter" || e.key === "NumpadEnter")
+    ) {
+      e.preventDefault();
+      submitForm();
+    }
+  };
+
   return (
     <div>
       <Formik
@@ -86,7 +106,10 @@ const ProjectCreateForm = () => {
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, submitForm }) => (
-          <Form className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5">
+          <Form
+            onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
+            className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
+          >
             <div className="relative col-span-2 mt-2 md:col-span-1">
               <label
                 htmlFor="name"
@@ -222,9 +245,23 @@ function SubmitButton({
       type="button"
       onClick={handleSubmit}
       disabled={isSubmitting}
-      className="my-4 inline-flex h-10 w-full items-center justify-center rounded-md border border-transparent bg-[#BDE56C] px-4 py-2 text-sm font-normal text-black shadow-sm hover:bg-[#bdee63]"
+      className="my-4 inline-flex h-10 w-full items-center justify-center space-x-2 rounded-md border border-transparent bg-[#BDE56C] px-4 py-2 text-sm font-normal text-black shadow-sm hover:bg-[#bdee63]"
     >
-      {isSubmitting ? <LoadingDots color="#070809" /> : "Create"}
+      {isSubmitting ? (
+        <LoadingDots color="#070809" />
+      ) : (
+        <>
+          <div
+            className="inline-flex items-center justify-center space-x-1
+            rounded-lg border border-lime-900 px-2 py-1 text-xs
+          "
+          >
+            <CommandIcon width="14" height="14" />
+            <CornerDownLeftIcon width="14" height="14" />
+          </div>
+          <span>Create</span>
+        </>
+      )}
     </button>
   );
 }
