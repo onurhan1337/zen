@@ -1,40 +1,37 @@
-import { Separator } from "@radix-ui/themes";
-import { Drawer } from "vaul";
-import { useDrawerStore } from "@/lib/store";
-import ProjectCreateForm from "./form";
+import { Button } from "@radix-ui/themes";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Portal } from "@radix-ui/themes";
+
+import { projectCreateFormState } from "@/lib/store";
+import TaskCreateForm from "./form";
 
 const ProjectCreateContent = () => {
-  const { isOpen, setOpen } = useDrawerStore();
+  const { isOpen, setOpen } = projectCreateFormState();
 
   return (
-    <Drawer.Root open={isOpen} shouldScaleBackground>
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-        <Drawer.Content className="fixed bottom-0 left-0 right-0 mt-24 flex h-[96%] flex-col rounded-t-[10px] bg-zinc-100">
-          <div className="flex-1 rounded-t-[10px] bg-white p-4">
-            <div className="mx-auto mb-4 h-1.5 w-12 flex-shrink-0 rounded-full bg-zinc-300" />
-            <div className="mx-auto max-w-md">
-              <Drawer.Title className="mb-4 text-center font-medium">
-                Create new Project
-              </Drawer.Title>
-
-              <Separator className="mb-4" />
-              <ProjectCreateForm />
-              <div>
-                <Drawer.Close asChild>
-                  <button
-                    onClick={() => setOpen(false)}
-                    className="mx-auto flex w-1/2 items-center justify-center rounded-md bg-transparent px-4 py-2 text-center text-zinc-500 hover:bg-zinc-300 hover:text-zinc-600"
-                  >
-                    Cancel
-                  </button>
-                </Drawer.Close>
-              </div>
-            </div>
-          </div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+    <Dialog open={isOpen} onOpenChange={(open) => setOpen(open)}>
+      <DialogTrigger asChild>
+        <Button className="mt-4" variant="classic" color="teal">
+          Create Project
+        </Button>
+      </DialogTrigger>
+      <Portal>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create Project</DialogTitle>
+            <DialogDescription>Create a new project.</DialogDescription>
+          </DialogHeader>
+          <TaskCreateForm />
+        </DialogContent>
+      </Portal>
+    </Dialog>
   );
 };
 

@@ -46,7 +46,7 @@ const ProjectCard = ({ project }: Props) => {
             setClicked(true);
             router.push(`/projects/${id}`);
           }}
-          color={"lime"}
+          color={"teal"}
           variant={"soft"}
           disabled={clicked}
           className="w-full "

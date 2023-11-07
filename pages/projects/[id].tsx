@@ -2,12 +2,10 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import prisma from "@/lib/prisma";
 import { getSession } from "next-auth/react";
-import { Button } from "@radix-ui/themes";
 
 import { Task } from "types/task";
 import Badge from "@/components/shared/badge";
 import BoardSectionList from "@/components/projects/board/list";
-import { useDrawerStore } from "@/lib/store";
 import TaskCreateContent from "@/components/tasks/create";
 
 type Props = {
@@ -26,8 +24,6 @@ type Props = {
 };
 
 export default function ProjectDetailIndex({ project, tasks }: Props) {
-  const { setOpen } = useDrawerStore();
-
   // TODO: Add here empty state card
   if (!project) {
     return <div>Project not found</div>;
@@ -41,22 +37,15 @@ export default function ProjectDetailIndex({ project, tasks }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <section className="flex w-full flex-col items-center">
-        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between border-b border-zinc-200 pb-4">
+        <div className="flex w-full max-w-screen-xl flex-row items-end justify-between border-b border-zinc-200 pb-4">
           <div>
             <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
               {project.name}
             </h1>
-            <p className=" py-2 text-sm text-gray-500">{project.description}</p>
-            <Button
-              color="lime"
-              variant="classic"
-              mt={"4"}
-              onClick={() => setOpen(true)}
-            >
-              Create Task
-            </Button>
+            <p className=" pt-2 text-sm text-gray-500">{project.description}</p>
           </div>
-          <Badge type={project.status} />
+
+          <TaskCreateContent />
         </div>
         <div className="flex w-full max-w-screen-xl flex-row items-center justify-between ">
           {tasks && tasks.length > 0 ? (
@@ -67,19 +56,10 @@ export default function ProjectDetailIndex({ project, tasks }: Props) {
                 No tasks found
               </h1>
               <p className="text-gray-400">Create a new task to get started</p>
-              <Button
-                color="lime"
-                variant="classic"
-                mt={"4"}
-                onClick={() => setOpen(true)}
-              >
-                Create Task
-              </Button>
             </div>
           )}
         </div>
       </section>
-      <TaskCreateContent />
     </>
   );
 }

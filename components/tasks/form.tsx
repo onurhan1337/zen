@@ -1,12 +1,31 @@
 import { useRouter } from "next/router";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { toast } from "sonner";
-import { CommandIcon, CornerDownLeftIcon } from "lucide-react";
+import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
 
 import * as Yup from "yup";
+import { format } from "date-fns";
 
-import { useDrawerStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
 import { LoadingDots } from "@/components/shared/icons";
+import { Calendar } from "@/components/ui/calendar";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { taskCreateFormState } from "@/lib/store";
 
 interface FormValues {
   name: string;
@@ -17,8 +36,8 @@ interface FormValues {
 }
 
 const TaskCreateForm = () => {
-  const { setOpen } = useDrawerStore();
   const router = useRouter();
+  const { setOpen } = taskCreateFormState();
 
   const initialValues: FormValues = {
     name: "",
@@ -34,14 +53,11 @@ const TaskCreateForm = () => {
       "Required",
     ),
     startDate: Yup.date().required("Required"),
-    endDate: Yup.date().required("Required"),
+    endDate: Yup.date().required("Required").min(Yup.ref("startDate")),
     description: Yup.string().required("Required"),
   });
 
   const handleSubmit = async (values: FormValues) => {
-    const startDate = new Date(values.startDate);
-    const endDate = new Date(values.endDate);
-
     try {
       const res = await fetch("/api/task", {
         method: "POST",
@@ -50,8 +66,8 @@ const TaskCreateForm = () => {
         },
         body: JSON.stringify({
           name: values.name,
-          startDate,
-          endDate,
+          startDate: values.startDate.toISOString(),
+          endDate: values.endDate.toISOString(),
           status: values.status,
           description: values.description,
           projectId: router.query.id,
@@ -60,6 +76,7 @@ const TaskCreateForm = () => {
 
       // if successful, redirect to project detail page
       if (res.ok) {
+        toast.success("Task created successfully!");
         setOpen(false);
         // reload page to get the latest data
         router.reload();
@@ -100,19 +117,15 @@ const TaskCreateForm = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, submitForm, values }) => (
+        {({ isSubmitting, submitForm, values, setFieldValue }) => (
           <Form
             onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
             className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
           >
             <div className="relative col-span-2 mt-2 md:col-span-1">
-              <label
-                htmlFor="name"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-zinc-900"
-              >
-                Name
-              </label>
+              <Label htmlFor="name">Name</Label>
               <Field
+                as={Input}
                 type="text"
                 name="name"
                 id="name"
@@ -126,23 +139,26 @@ const TaskCreateForm = () => {
             </div>
 
             <div className="relative col-span-2 mt-2 md:col-span-1">
-              <label
-                htmlFor="status"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-zinc-900"
-              >
-                Status
-              </label>
+              <Label htmlFor="status">Status</Label>
               <Field
-                as="select"
+                as={Select}
                 name="status"
                 id="status"
                 className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
                 value={values.status}
+                onValueChange={(value: string) =>
+                  setFieldValue("status", value)
+                }
               >
-                <option value="backlog">Backlog</option>
-                <option value="todo">Todo</option>
-                <option value="in-progress">In Progress</option>
-                <option value="done">Done</option>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="backlog">Backlog</SelectItem>
+                  <SelectItem value="todo">Todo</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="done">Done</SelectItem>
+                </SelectContent>
               </Field>
               <ErrorMessage
                 name="status"
@@ -151,18 +167,14 @@ const TaskCreateForm = () => {
               />
             </div>
 
-            <div className="relative col-span-2 mt-4 md:col-span-1">
-              <label
-                htmlFor="startDate"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-zinc-900"
-              >
-                Start Date
-              </label>
+            <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
+              <Label htmlFor="startDate">Start Date</Label>
               <Field
-                type="datetime-local"
+                as={DatePicker}
                 name="startDate"
                 id="startDate"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                date={values.startDate}
+                setDate={(date: Date) => setFieldValue("startDate", date)}
               />
               <ErrorMessage
                 name="startDate"
@@ -170,18 +182,14 @@ const TaskCreateForm = () => {
                 component="div"
               />
             </div>
-            <div className="relative col-span-2 mt-4 md:col-span-1">
-              <label
-                htmlFor="endDate"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-zinc-900"
-              >
-                End Date
-              </label>
+            <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
+              <Label htmlFor="endDate">End Date</Label>
               <Field
-                type="datetime-local"
+                as={DatePicker}
                 name="endDate"
                 id="endDate"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                date={values.endDate}
+                setDate={(date: Date) => setFieldValue("endDate", date)}
               />
               <ErrorMessage
                 name="endDate"
@@ -191,14 +199,9 @@ const TaskCreateForm = () => {
             </div>
 
             <div className="relative col-span-2 mt-4">
-              <label
-                htmlFor="description"
-                className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-zinc-900"
-              >
-                Description
-              </label>
+              <Label htmlFor="description">Description</Label>
               <Field
-                as="textarea"
+                as={Textarea}
                 name="description"
                 id="description"
                 className="block w-full resize-none rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
@@ -237,19 +240,19 @@ function SubmitButton({
   };
 
   return (
-    <button
+    <Button
+      className="flex w-full items-center justify-center space-x-2"
       type="button"
       onClick={handleSubmit}
       disabled={isSubmitting}
-      className="my-4 inline-flex h-10 w-full items-center justify-center space-x-2 rounded-md border border-transparent bg-[#BDE56C] px-4 py-2 text-sm font-normal text-black shadow-sm hover:bg-[#bdee63]"
     >
       {isSubmitting ? (
-        <LoadingDots color="#070809" />
+        <LoadingDots color="#FFFFFF" />
       ) : (
         <>
           <div
             className="inline-flex items-center justify-center space-x-1
-            rounded-lg border border-lime-900 px-2 py-1 text-xs
+            rounded-lg border border-zinc-600 px-2 py-1 text-xs
           "
           >
             <CommandIcon width="14" height="14" />
@@ -258,6 +261,39 @@ function SubmitButton({
           <span>Create</span>
         </>
       )}
-    </button>
+    </Button>
+  );
+}
+
+function DatePicker({
+  date,
+  setDate,
+}: {
+  date: Date | undefined;
+  setDate: (date: Date) => void;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-auto justify-start text-left font-normal",
+            !date && "text-muted-foreground",
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, "PP") : <span>Pick a date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={date}
+          onDayClick={setDate}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

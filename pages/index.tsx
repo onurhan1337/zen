@@ -1,10 +1,8 @@
 import { GetServerSidePropsContext } from "next";
-import { Button } from "@radix-ui/themes";
 import ProjectCreateContent from "@/components/home/projects/create";
 
 import { getSession, useSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
-import { useDrawerStore } from "@/lib/store";
 import { Project } from "@prisma/client";
 
 import ProjectsCardList from "@/components/home/projects/list";
@@ -14,8 +12,6 @@ type Props = {
 };
 
 export default function Home({ projects }: Props) {
-  const { isOpen, setOpen } = useDrawerStore();
-
   const { data: session } = useSession();
 
   return (
@@ -26,15 +22,9 @@ export default function Home({ projects }: Props) {
             <div className="inline-flex w-full flex-col items-start justify-center gap-8">
               <div className="flex w-full flex-row items-center justify-between">
                 <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
-                  Projects{" "}
+                  Projects
                 </h1>
-                <Button
-                  onClick={() => setOpen(!isOpen)}
-                  color={"lime"}
-                  variant="classic"
-                >
-                  Create Project
-                </Button>
+                <ProjectCreateContent />
               </div>
               {projects && projects.length > 0 ? (
                 <ProjectsCardList projects={projects} />
@@ -67,8 +57,6 @@ export default function Home({ projects }: Props) {
           </div>
         </div>
       )}
-
-      <ProjectCreateContent />
     </>
   );
 }
