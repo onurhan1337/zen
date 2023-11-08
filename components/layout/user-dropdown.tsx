@@ -1,8 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import Popover from "@/components/shared/popover";
-import Image from "next/image";
 import { Session } from "next-auth";
 
 export default function UserDropdown({ session }: { session: Session }) {
@@ -50,11 +50,9 @@ export default function UserDropdown({ session }: { session: Session }) {
           onClick={() => setOpenPopover(!openPopover)}
           className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-gray-300 transition-all duration-75 focus:outline-none active:scale-95 sm:h-9 sm:w-9"
         >
-          <Image
+          <img
             alt={email}
             src={image || `https://avatars.dicebear.com/api/micah/${email}.svg`}
-            width={40}
-            height={40}
           />
         </button>
       </Popover>
