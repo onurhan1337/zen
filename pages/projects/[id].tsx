@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "next-auth/react";
 
 import { Task } from "types/task";
-import Badge from "@/components/shared/badge";
+
 import BoardSectionList from "@/components/projects/board/list";
 import TaskCreateContent from "@/components/tasks/create";
 

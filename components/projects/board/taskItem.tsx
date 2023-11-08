@@ -7,7 +7,7 @@ type TaskItemProps = {
 
 const TaskItem = ({ task }: TaskItemProps) => {
   return (
-    <div className=" rounded-md border border-zinc-200 bg-white p-4">
+    <div className="rounded-md border border-zinc-200 bg-white p-4">
       <div
         className="flex cursor-move items-center justify-between"
         draggable
