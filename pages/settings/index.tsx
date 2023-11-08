@@ -14,8 +14,6 @@ const SettingsIndex = ({
     email: string;
   };
 }) => {
-  console.log("bu settings dosyası içindeki user: ", user);
-
   return (
     <>
       <Head>
