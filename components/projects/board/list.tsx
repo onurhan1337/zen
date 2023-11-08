@@ -152,7 +152,7 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
   };
 
   return (
-    <div className="my-4 grid w-full grid-cols-1 gap-4 overflow-scroll md:grid-cols-2 lg:grid-cols-4">
+    <div className="my-4 grid w-full grid-cols-1 gap-4 overflow-hidden md:grid-cols-2 lg:grid-cols-4">
       <DndContext
         id="unique-context"
         sensors={sensors}
