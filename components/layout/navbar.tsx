@@ -33,7 +33,7 @@ export default function NavBar() {
       >
         <div className="mx-5 flex h-16 w-full max-w-screen-xl items-center justify-between">
           <div className="inline-flex w-full items-center justify-start gap-8">
-            <Link href="/" className="flex items-center font-display text-2xl">
+            <Link href="/" className="font-display flex items-center text-2xl">
               <Image
                 src="/logo.png"
                 alt="Zen logo"
@@ -66,7 +66,7 @@ export default function NavBar() {
             )}
           </div>
           {session ? (
-            <UserDropdown session={session} />
+            <UserDropdown />
           ) : (
             <Button
               radius={"full"}

@@ -15,10 +15,12 @@ A project management web app.
 - [x] Task listing at draggable components
 - [x] listing the task in selected status
 - [ ] Task detail popover
-- [ ] Add tabs to project detail page
-- [ ] Add project settings tab and do changeable everythings
-- [ ] Date format m-dd-yyy to d-mm-yyy
+- [x] Add tabs to project detail page
+- [x] Add project settings tab and do changeable everythings
+- [x] Date format m-dd-yyy to d-mm-yyy
 - [ ] Login page
 - [ ] Login with email and password
 - [ ] Register button to navbar when email login added
-- [ ] Add change status function to project card at index page
+- [ ] Clean the codebase with destructive the page contents
+- [ ] Session control at the pages are not working, because all the data stuffs changed. fix that.
+- [ ] Using a state management library like Zustand to manage your API operations.

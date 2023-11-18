@@ -1,13 +1,14 @@
 import { useRouter } from "next/router";
+import { mutate } from "swr";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { toast } from "sonner";
-import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 
 import * as Yup from "yup";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
-import { LoadingDots } from "@/components/shared/icons";
+import { Project } from "types/project";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { projectCreateFormState } from "@/lib/store";
+import SubmitButton from "@/components/shared/submitButton";
 
 interface FormValues {
   name: string;
@@ -35,7 +37,7 @@ interface FormValues {
   description: string;
 }
 
-const TaskCreateForm = () => {
+const ProjectCreateForm = () => {
   const router = useRouter();
   const { setOpen } = projectCreateFormState();
 
@@ -74,12 +76,23 @@ const TaskCreateForm = () => {
 
       toast.loading("Creating Project...");
 
-      // if successful, redirect to project detail page
       if (res.ok) {
+        const newProject = await res.json();
+
+        // Update local data without revalidation
+        mutate(
+          "/api/project",
+          (data: Project[] | undefined) => {
+            if (Array.isArray(data)) {
+              return [...data, newProject];
+            }
+            return data;
+          },
+          true, // Revalidate the data
+        );
+
         toast.success("Project created successfully!");
         setOpen(false);
-        // reload page to get the latest data
-        router.reload();
       }
 
       if (!res.ok) {
@@ -224,44 +237,7 @@ const TaskCreateForm = () => {
   );
 };
 
-export default TaskCreateForm;
-
-function SubmitButton({
-  submitForm,
-  isSubmitting,
-}: {
-  submitForm: () => Promise<void>;
-  isSubmitting: boolean;
-}) {
-  const handleSubmit = () => {
-    submitForm();
-  };
-
-  return (
-    <Button
-      className="flex w-full items-center justify-center space-x-2"
-      type="button"
-      onClick={handleSubmit}
-      disabled={isSubmitting}
-    >
-      {isSubmitting ? (
-        <LoadingDots color="#FFFFFF" />
-      ) : (
-        <>
-          <div
-            className="inline-flex items-center justify-center space-x-1
-            rounded-lg border border-zinc-600 px-2 py-1 text-xs
-          "
-          >
-            <CommandIcon width="14" height="14" />
-            <CornerDownLeftIcon width="14" height="14" />
-          </div>
-          <span>Create</span>
-        </>
-      )}
-    </Button>
-  );
-}
+export default ProjectCreateForm;
 
 function DatePicker({
   date,

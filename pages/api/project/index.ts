@@ -63,6 +63,26 @@ export default async function handler(
       }
     }
 
+    if (req.method === "GET") {
+      try {
+        const projects = await prisma.project.findMany({
+          where: {
+            userId: prismaUser.id,
+          },
+        });
+
+        return res.status(201).json({
+          projects,
+          message: "Projects fetched successfully",
+        });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+          message: "Error fetching projects",
+        });
+      }
+    }
+
     if (req.method === "DELETE") {
       try {
         const { id } = req.body;
@@ -73,6 +93,14 @@ export default async function handler(
           });
         }
 
+        // Firstly -> delete the tasks associated with the project
+        await prisma.task.deleteMany({
+          where: {
+            projectId: id,
+          },
+        });
+
+        // Then -> delete the project
         const project = await prisma.project.delete({
           where: {
             id: id,

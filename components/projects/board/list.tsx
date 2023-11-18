@@ -23,9 +23,12 @@ import TaskItem from "./taskItem";
 
 const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
   const tasks = INITIAL_TASKS;
-  const initialBoardSections = initializeBoard(tasks);
-  const [boardSections, setBoardSections] =
-    useState<BoardSectionsType>(initialBoardSections);
+  const [boardSections, setBoardSections] = useState<BoardSectionsType>({});
+
+  React.useEffect(() => {
+    const initialBoardSections = initializeBoard(tasks);
+    setBoardSections(initialBoardSections);
+  }, [INITIAL_TASKS, tasks]);
 
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
 

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { mutate } from "swr";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { toast } from "sonner";
 import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
@@ -7,6 +8,7 @@ import * as Yup from "yup";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
+import { Task } from "types/task";
 import { LoadingDots } from "@/components/shared/icons";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "../ui/textarea";
@@ -74,12 +76,23 @@ const TaskCreateForm = () => {
         }),
       });
 
-      // if successful, redirect to project detail page
       if (res.ok) {
+        const newTask = await res.json();
+
+        // Update local data without revalidation
+        mutate(
+          `/api/task/${router.query.id}`,
+          (data: Task[] | undefined) => {
+            if (Array.isArray(data)) {
+              return [...data, newTask];
+            }
+            return data;
+          },
+          true,
+        );
+
         toast.success("Task created successfully!");
         setOpen(false);
-        // reload page to get the latest data
-        router.reload();
       }
 
       if (!res.ok) {

@@ -10,7 +10,7 @@ import {
 import { Portal } from "@radix-ui/themes";
 
 import { projectCreateFormState } from "@/lib/store";
-import TaskCreateForm from "./form";
+import ProjectCreateForm from "./form";
 
 const ProjectCreateContent = () => {
   const { isOpen, setOpen } = projectCreateFormState();
@@ -28,7 +28,7 @@ const ProjectCreateContent = () => {
             <DialogTitle>Create Project</DialogTitle>
             <DialogDescription>Create a new project.</DialogDescription>
           </DialogHeader>
-          <TaskCreateForm />
+          <ProjectCreateForm />
         </DialogContent>
       </Portal>
     </Dialog>

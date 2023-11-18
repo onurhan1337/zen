@@ -1,143 +1,148 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import useSWR from "swr";
 import Head from "next/head";
-import prisma from "@/lib/prisma";
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { Task } from "types/task";
-
+import { Project } from "types/project";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProjectSettingsContent from "@/components/projects/settings/content";
 import BoardSectionList from "@/components/projects/board/list";
 import TaskCreateContent from "@/components/tasks/create";
+import fetcher from "@/lib/fetcher";
+import { useMemo } from "react";
+import Badge from "@/components/shared/badge";
 
-type Props = {
-  project: {
-    id: string;
-    name: string;
-    status: "active" | "inactive";
-    startDate: Date;
-    endDate: Date;
-    description: string;
-    user: {
-      email: string;
-    };
-  } | null; // Updated to handle null if the project is not found.
-  tasks: Task[] | null;
-};
+export default function ProjectDetailIndex() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { id } = router.query;
 
-export default function ProjectDetailIndex({ project, tasks }: Props) {
-  // TODO: Add here empty state card
-  if (!project) {
-    return <div>Project not found</div>;
-  }
+  const { data: project } = useSWR<Project>(`/api/project/${id}`, fetcher, {
+    revalidateOnFocus: true,
+  });
+
+  const { data: tasks } = useSWR<Task[]>(`/api/task/${id}`, fetcher, {
+    revalidateOnFocus: true,
+  });
+
+  const memoizedTasks = useMemo(() => {
+    if (!tasks) return null;
+    return tasks;
+  }, [tasks]);
 
   return (
     <>
       <Head>
-        <title>{`${project.name} | Zen`}</title>
-        <meta name="description" content={project.description} />
+        <title>{`${project?.name || ""} | Zen`}</title>
+        <meta name="description" content={project?.description || ""} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="flex w-full flex-col items-center">
-        <div className="flex w-full max-w-screen-xl flex-row items-end justify-between border-b border-zinc-200 pb-4">
-          <div>
-            <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
-              {project.name}
-            </h1>
-            <p className=" pt-2 text-sm text-gray-500">{project.description}</p>
-          </div>
 
-          <TaskCreateContent />
-        </div>
-        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between ">
-          {tasks && tasks.length > 0 ? (
-            <BoardSectionList INITIAL_TASKS={tasks} />
-          ) : (
-            <div className="flex w-full flex-col items-center justify-center py-12">
-              <h1 className="text-2xl font-bold text-gray-500">
-                No tasks found
-              </h1>
-              <p className="text-gray-400">Create a new task to get started</p>
+      {session ? (
+        project && tasks ? (
+          <section className="flex w-full flex-col items-center">
+            <ProjectDetailContent project={project} />
+            <div className="w-full max-w-screen-xl py-4">
+              <Tabs defaultValue="tasks">
+                <div className="flex w-full flex-col items-center justify-center">
+                  <TabsList className="flex w-full max-w-screen-sm items-center justify-center">
+                    <TabsTrigger className="w-full" value="tasks">
+                      Tasks
+                    </TabsTrigger>
+                    <TabsTrigger className="w-full" value="settings">
+                      Settings
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="tasks">
+                  {memoizedTasks && memoizedTasks.length > 0 ? (
+                    <BoardSectionList INITIAL_TASKS={memoizedTasks} />
+                  ) : (
+                    <div className="flex w-full flex-col items-center justify-center py-12">
+                      <h1 className="text-2xl font-bold text-gray-500">
+                        No tasks found
+                      </h1>
+                      <p className="text-gray-400">
+                        Create a new task to get started
+                      </p>
+                    </div>
+                  )}
+                </TabsContent>
+                <TabsContent value="settings">
+                  <div className="flex w-full flex-col items-center justify-center">
+                    <ProjectSettingsContent projectId={project.id} />
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
-          )}
+          </section>
+        ) : (
+          <PageLoadingState />
+        )
+      ) : (
+        <div className="flex w-full flex-col items-center justify-center py-12">
+          <h1 className="text-2xl font-bold text-gray-500">
+            You don&apos;t have access to this project.
+          </h1>
         </div>
-      </section>
+      )}
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const { id } = context.query;
-  const session = await getSession(context);
+const ProjectDetailContent = ({ project }: { project: Project }) => {
+  return (
+    <div className="flex w-full max-w-screen-xl flex-col items-end justify-between border-b border-zinc-200 pb-4 sm:flex-row">
+      <div>
+        <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
+          {project.name}
+        </h1>
+        <p className=" pt-2 text-sm text-gray-500">{project.description}</p>
+      </div>
+      <div className="flex flex-row items-center justify-center space-x-4">
+        <Badge type={project.status} />
+        <TaskCreateContent />
+      </div>
+    </div>
+  );
+};
 
-  if (!session || !session.user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+const PageLoadingState = () => {
+  return (
+    <div className="animate-pulse">
+      <section className="flex w-full flex-col items-center">
+        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between border-b border-zinc-200 pb-4">
+          <div className="flex w-1/2 flex-col items-start justify-center gap-4">
+            <div className="h-8 w-1/2 rounded bg-gray-300"></div>
+            <div className="h-4 w-1/3 rounded bg-gray-300"></div>
+          </div>
 
-  const project = await prisma.project.findUnique({
-    where: {
-      id: id as string,
-    },
-  });
+          <div className="h-12 w-12 rounded-full bg-gray-300"></div>
+        </div>
 
-  if (!project) {
-    return {
-      notFound: true,
-    };
-  }
-
-  const tasks = await prisma.task.findMany({
-    where: {
-      projectId: id as string,
-    },
-  });
-
-  if (!tasks) {
-    return {
-      notFound: true,
-    };
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email!,
-    },
-  });
-
-  // if user is not the owner of the project
-  if (user?.id !== project?.userId) {
-    return {
-      notFound: true,
-    };
-  }
-
-  const tasksWithDatesToString = tasks.map((task) => {
-    return {
-      ...task,
-      startDate: JSON.parse(JSON.stringify(task.startDate)),
-      endDate: JSON.parse(JSON.stringify(task.endDate)),
-    };
-  });
-
-  return {
-    props: {
-      project: {
-        id: project.id,
-        name: project.name,
-        status: project.status,
-        startDate: JSON.parse(JSON.stringify(project.startDate)),
-        endDate: JSON.parse(JSON.stringify(project.endDate)),
-        description: project.description,
-        user: {
-          email: user.email,
-        },
-      },
-      tasks: tasksWithDatesToString,
-    },
-  };
+        <div className="w-full max-w-screen-xl py-4">
+          <Tabs defaultValue="tasks">
+            <div className="flex w-full flex-col items-center justify-center">
+              <TabsList className="flex w-full max-w-screen-sm items-center justify-center">
+                <div className="h-8 w-full rounded bg-gray-300"></div>
+                <div className="h-8 w-full rounded bg-gray-300"></div>
+              </TabsList>
+            </div>
+            <TabsContent value="tasks">
+              <div className="flex w-full flex-col items-center justify-center py-12">
+                <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+                <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+              </div>
+            </TabsContent>
+            <TabsContent value="settings">
+              <div className="flex w-full flex-col items-center justify-center">
+                <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
+    </div>
+  );
 };

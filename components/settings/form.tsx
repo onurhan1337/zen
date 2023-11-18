@@ -5,6 +5,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import SubmitButton from "../shared/submitButton";
 import { toast } from "sonner";
+import { mutate } from "swr";
 
 interface FormValues {
   name: string;
@@ -39,6 +40,7 @@ const SettingsForm = ({ user }: SettingsFormProps) => {
 
       if (res.ok) {
         toast.success("Profile updated successfully");
+        mutate("/api/auth/session", true);
       }
     } catch (error: any) {
       toast.error(error);

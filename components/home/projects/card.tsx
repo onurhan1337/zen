@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Project } from "@prisma/client";
-import { Button, DropdownMenu, Text, Flex, Switch } from "@radix-ui/themes";
-import { toast } from "sonner";
-import { MoreHorizontal } from "lucide-react";
 
 import { truncate } from "@/lib/utils";
 import Badge from "@/components/shared/badge";
 import { LoadingDots } from "@/components/shared/icons";
+import { Button } from "@radix-ui/themes";
+import DeleteConfirmationDialog from "@/components/projects/settings/confirm";
 
 type Props = {
   project: Project;
@@ -28,7 +27,7 @@ const ProjectCard = ({ project }: Props) => {
             <Badge type="inactive" />
           )}
         </div>
-        <CardActionMenu id={id} />
+        <DeleteConfirmationDialog id={id} hasLabel={false} />
       </div>
       <div>
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -59,63 +58,3 @@ const ProjectCard = ({ project }: Props) => {
 };
 
 export default ProjectCard;
-
-const CardActionMenu = ({ id }: { id: string }) => {
-  const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const deleteProject = async () => {
-    try {
-      setIsDeleting(true);
-      toast.loading("Deleting project...");
-      const res = await fetch("/api/project", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-
-      if (res.ok) {
-        toast.success("Project deleted");
-        router.push("/");
-      }
-
-      if (!res.ok) {
-        const error = await res.text();
-        toast.error(error);
-      }
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger>
-        <Button variant={"ghost"} color={"gray"}>
-          <MoreHorizontal size={14} />
-        </Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item className="hover:bg-gray-200 hover:text-gray-500">
-          <Text as="label" size="2">
-            <Flex gap="2">
-              <Switch color="lime" disabled />
-              Status
-            </Flex>
-          </Text>
-        </DropdownMenu.Item>
-        <DropdownMenu.Item
-          onClick={deleteProject}
-          color="red"
-          disabled={isDeleting}
-        >
-          {isDeleting ? <LoadingDots color="#808080" /> : "Delete"}
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
-  );
-};

@@ -1,21 +1,20 @@
-import { GetServerSidePropsContext } from "next";
+import Head from "next/head";
+import { useSession } from "next-auth/react";
+
 import ProjectCreateContent from "@/components/home/projects/create";
-
-import { getSession, useSession } from "next-auth/react";
-import prisma from "@/lib/prisma";
-import { Project } from "@prisma/client";
-
 import ProjectsCardList from "@/components/home/projects/list";
 
-type Props = {
-  projects: Project[] | null;
-};
-
-export default function Home({ projects }: Props) {
+export default function Home() {
   const { data: session } = useSession();
 
   return (
     <>
+      <Head>
+        <title>Zen</title>
+        <meta name="description" content="Zen - Project Manager" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       {session && (
         <div className="flex w-full justify-center">
           <div className="flex w-full max-w-screen-xl items-center justify-between">
@@ -26,18 +25,7 @@ export default function Home({ projects }: Props) {
                 </h1>
                 <ProjectCreateContent />
               </div>
-              {projects && projects.length > 0 ? (
-                <ProjectsCardList projects={projects} />
-              ) : (
-                <div className="flex w-full flex-col items-center justify-center gap-4">
-                  <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
-                    No Projects
-                  </h1>
-                  <p className="text-lg text-gray-500">
-                    Create a project to get started
-                  </p>
-                </div>
-              )}
+              <ProjectsCardList />
             </div>
           </div>
         </div>
@@ -60,51 +48,3 @@ export default function Home({ projects }: Props) {
     </>
   );
 }
-
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const session = await getSession(context);
-
-  // if not session, get empty state component
-  if (!session) {
-    return {
-      props: {
-        projects: [],
-      },
-    };
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: session.user.id,
-    },
-  });
-
-  if (!user) {
-    return {
-      props: {
-        projects: [],
-      },
-    };
-  }
-
-  const projects = await prisma.project.findMany({
-    where: {
-      userId: user.id,
-    },
-  });
-
-  // Convert Date objects to strings
-  const serializedProjects = projects.map((project) => ({
-    ...project,
-    startDate: project.startDate ? project.startDate.toISOString() : null,
-    endDate: project.endDate ? project.endDate.toISOString() : null,
-  }));
-
-  return {
-    props: {
-      projects: serializedProjects,
-    },
-  };
-};
