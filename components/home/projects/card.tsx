@@ -31,12 +31,12 @@ const ProjectCard = ({ project }: Props) => {
       </div>
       <div>
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-          {name}
+          {truncate(name, 15)}
         </h4>
       </div>
       <div className="py-2">
         <p className="leading-7 [&:not(:first-child)]:mt-6">
-          {truncate(description, 46)}
+          {truncate(description, 30)}
         </p>
       </div>
       <div className="py-2">

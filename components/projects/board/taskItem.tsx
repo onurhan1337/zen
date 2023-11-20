@@ -1,3 +1,4 @@
+import { truncate } from "@/lib/utils";
 import { GripVertical } from "lucide-react";
 import { Task } from "types/task";
 
@@ -13,10 +14,10 @@ const TaskItem = ({ task }: TaskItemProps) => {
         draggable
         role="button"
       >
-        <h5 className="text-lg font-semibold">{task.name}</h5>
+        <h5 className="text-lg font-semibold">{truncate(task.name, 15)}</h5>
         <GripVertical size={16} className="text-gray-500" />
       </div>
-      <p>{task.description}</p>
+      <p>{truncate(task.description, 20)}</p>
     </div>
   );
 };

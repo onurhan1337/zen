@@ -12,6 +12,7 @@ import TaskCreateContent from "@/components/tasks/create";
 import fetcher from "@/lib/fetcher";
 import { useMemo } from "react";
 import Badge from "@/components/shared/badge";
+import { truncate } from "@/lib/utils";
 
 export default function ProjectDetailIndex() {
   const { data: session } = useSession();
@@ -93,14 +94,16 @@ export default function ProjectDetailIndex() {
 
 const ProjectDetailContent = ({ project }: { project: Project }) => {
   return (
-    <div className="flex w-full max-w-screen-xl flex-col items-end justify-between border-b border-zinc-200 pb-4 sm:flex-row">
-      <div>
+    <div className="grid w-full max-w-screen-xl grid-cols-1 items-end justify-between gap-4 border-b border-zinc-200 pb-4 sm:grid-cols-2">
+      <div className="w-full grid-cols-2 sm:grid-cols-2">
         <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
-          {project.name}
+          {truncate(project.name, 20)}
         </h1>
-        <p className=" pt-2 text-sm text-gray-500">{project.description}</p>
+        <p className=" pt-2 text-sm text-gray-500">
+          {truncate(project.description, 100)}
+        </p>
       </div>
-      <div className="flex flex-row items-center justify-center space-x-4">
+      <div className="flex w-full grid-cols-2 flex-row items-center justify-between space-x-4 sm:grid-cols-2 sm:justify-end">
         <Badge type={project.status} />
         <TaskCreateContent />
       </div>

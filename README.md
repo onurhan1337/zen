@@ -24,3 +24,4 @@ A project management web app.
 - [ ] Clean the codebase with destructive the page contents
 - [ ] Session control at the pages are not working, because all the data stuffs changed. fix that.
 - [ ] Using a state management library like Zustand to manage your API operations.
+- [x] Word break for Task list card.
