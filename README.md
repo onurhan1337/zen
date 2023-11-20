@@ -25,3 +25,7 @@ A project management web app.
 - [ ] Session control at the pages are not working, because all the data stuffs changed. fix that.
 - [ ] Using a state management library like Zustand to manage your API operations.
 - [x] Word break for Task list card.
+
+- [ ] User cannot do create two project of same names
+
+- [ ] Add max length to project & task names and descriptions.

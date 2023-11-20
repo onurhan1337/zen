@@ -1,19 +1,10 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Head from "next/head";
-import prisma from "@/lib/prisma";
-import { getSession } from "next-auth/react";
 
 import SettingsForm from "@/components/settings/form";
+import { Suspense } from "react";
+import { LoadingDots } from "@/components/shared/icons";
 
-const SettingsIndex = ({
-  user,
-}: {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}) => {
+const SettingsIndex = () => {
   return (
     <>
       <Head>
@@ -26,47 +17,13 @@ const SettingsIndex = ({
             <h1 className="text-3xl font-semibold">Settings</h1>
           </div>
         </div>
-        <SettingsForm user={user} />
+
+        <Suspense fallback={<LoadingDots />}>
+          <SettingsForm />
+        </Suspense>
       </section>
     </>
   );
 };
 
 export default SettingsIndex;
-
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const session = await getSession(context);
-
-  if (!session || !session.user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email!,
-    },
-  });
-
-  if (!user) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    },
-  };
-};

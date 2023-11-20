@@ -26,6 +26,21 @@ export default async function handler(
       return;
     }
 
+    if (req.method === "GET") {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: session.user.email!,
+        },
+      });
+
+      if (!user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+
+      res.status(200).json({ user });
+    }
+
     if (req.method === "PUT") {
       const { name, email } = req.body;
 

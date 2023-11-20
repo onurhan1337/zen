@@ -1,4 +1,8 @@
 import { Form, Formik, Field, ErrorMessage } from "formik";
+import useSWR from "swr";
+import { User } from "@prisma/client";
+import fetcher from "@/lib/fetcher";
+
 import * as Yup from "yup";
 
 import { Label } from "../ui/label";
@@ -11,15 +15,16 @@ interface FormValues {
   name: string;
 }
 
-interface SettingsFormProps {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
+// data comes from SWR -> data.user.userInfo
+// this is the type of data.user.userInfo
+type UserInfos = {
+  user: User;
+};
 
-const SettingsForm = ({ user }: SettingsFormProps) => {
+const SettingsForm = () => {
+  const { data } = useSWR<UserInfos>("/api/user", fetcher);
+  const user = data?.user;
+
   const initialValues: FormValues = {
     name: "",
   };
