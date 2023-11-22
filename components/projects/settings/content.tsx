@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import fetcher from "@/lib/fetcher";
 import { Project } from "types/project";
-import { LoadingDots } from "@/components/shared/icons";
+import { LoadingSpinner } from "@/components/shared/icons";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -30,7 +30,7 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
   return (
     <div>
       {isValidating ? (
-        <LoadingDots color="#000000" />
+        <LoadingSpinner />
       ) : (
         <div>
           <RenameProjectForm id={projectId} name={project?.name} />

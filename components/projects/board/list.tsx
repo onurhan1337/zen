@@ -35,7 +35,11 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
   const task = activeTaskId ? getTaskById(tasks, activeTaskId) : null;
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),

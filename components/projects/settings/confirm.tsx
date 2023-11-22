@@ -17,18 +17,26 @@ import { Button } from "@/components/ui/button";
 import { LoadingDots } from "@/components/shared/icons";
 import { useRouter } from "next/router";
 
-const DeleteConfirmationDialog = ({
-  id,
-  hasLabel = false,
-}: {
+interface ProjectCreateContentProps {
   id: string;
   hasLabel: boolean;
-}) => {
+  type?: "project" | "task";
+  taskId?: string;
+  afterDelete?: () => void;
+}
+
+const DeleteConfirmationDialog = ({
+  id,
+  afterDelete,
+  hasLabel = false,
+  type = "project",
+  taskId,
+}: ProjectCreateContentProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const onDelete = async () => {
+  const onDeleteProject = async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/project`, {
@@ -66,6 +74,31 @@ const DeleteConfirmationDialog = ({
     }
   };
 
+  const onDeleteTask = async (id: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/task/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      setOpen(false);
+
+      if (afterDelete) {
+        afterDelete();
+      }
+
+      if (!res.ok) {
+        throw new Error("Failed to delete the project");
+      }
+      // ...
+    } catch (error) {
+      // handle error
+    }
+  };
   return (
     <Dialog
       open={open}
@@ -94,7 +127,13 @@ const DeleteConfirmationDialog = ({
         </DialogHeader>
         <DialogFooter>
           <Button
-            onClick={() => onDelete()}
+            onClick={
+              type === "project"
+                ? onDeleteProject
+                : taskId
+                ? () => onDeleteTask(taskId)
+                : () => {}
+            }
             variant={"destructive"}
             disabled={loading}
           >

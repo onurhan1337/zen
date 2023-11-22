@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 import SubmitButton from "../shared/submitButton";
 import { toast } from "sonner";
 import { mutate } from "swr";
+import { LoadingSpinner } from "../shared/icons";
 
 interface FormValues {
   name: string;
@@ -53,7 +54,7 @@ const SettingsForm = () => {
   };
 
   if (!user) {
-    return <div>Loading...</div>; // or return an error message
+    return <LoadingSpinner />;
   }
 
   return (

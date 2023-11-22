@@ -27,18 +27,21 @@ export default async function handler(
     }
 
     if (req.method === "GET") {
-      const tasks = await prisma.task.findMany({
+      const task = await prisma.task.findUnique({
         where: {
-          projectId: req.query.id as string,
+          id: req.query.id as string,
         },
       });
 
-      if (!tasks || tasks.length === 0) {
-        res.status(200).json([]); // Return an empty array in the response object
+      if (!task) {
+        res.status(404).json({ error: "Task not found" });
       } else {
-        res.status(200).json(tasks);
+        res.status(200).json(task);
       }
+    } else {
+      res.status(405).json({ error: "Method not allowed" });
     }
+
     if (req.method === "PUT") {
       const { status } = req.body;
 
@@ -54,6 +57,16 @@ export default async function handler(
         },
         data: {
           status,
+        },
+      });
+
+      return res.status(200).json(task);
+    }
+
+    if (req.method === "DELETE") {
+      const task = await prisma.task.delete({
+        where: {
+          id: req.query.id as string,
         },
       });
 

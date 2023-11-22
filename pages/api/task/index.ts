@@ -26,6 +26,20 @@ export default async function handler(
       return;
     }
 
+    if (req.method === "GET") {
+      const tasks = await prisma.task.findMany({
+        where: {
+          projectId: req.query.id as string,
+        },
+      });
+
+      if (!tasks || tasks.length === 0) {
+        res.status(200).json([]); // Return an empty array in the response object
+      } else {
+        res.status(200).json(tasks);
+      }
+    }
+
     if (req.method === "POST") {
       try {
         const { name, startDate, endDate, status, description, projectId } =

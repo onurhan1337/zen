@@ -23,7 +23,7 @@ export default function ProjectDetailIndex() {
     revalidateOnFocus: true,
   });
 
-  const { data: tasks } = useSWR<Task[]>(`/api/task/${id}`, fetcher, {
+  const { data: tasks } = useSWR<Task[]>(`/api/task`, fetcher, {
     revalidateOnFocus: true,
   });
 

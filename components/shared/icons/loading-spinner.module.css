@@ -4,7 +4,7 @@
   position: relative;
   width: 80px;
   height: 80px;
-  transform: scale(0.3) translateX(-95px);
+  transform: scale(0.3);
 }
 .spinner div {
   transform-origin: 40px 40px;
