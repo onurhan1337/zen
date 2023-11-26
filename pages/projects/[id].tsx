@@ -23,10 +23,9 @@ export default function ProjectDetailIndex() {
     revalidateOnFocus: true,
   });
 
-  const { data: tasks } = useSWR<Task[]>(`/api/task`, fetcher, {
+  const { data: tasks } = useSWR<Task[]>(`/api/project/${id}/task`, fetcher, {
     revalidateOnFocus: true,
   });
-
   const memoizedTasks = useMemo(() => {
     if (!tasks) return null;
     return tasks;
