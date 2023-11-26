@@ -37,11 +37,6 @@ export default async function handler(
     } else {
       res.status(200).json(tasks);
     }
-
-    res.status(201).json({
-      tasks,
-      message: "Task created successfully",
-    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Something went wrong" });
