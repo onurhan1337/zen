@@ -15,7 +15,7 @@ import {
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 
-import { BoardSectionsType, Task } from "types/task";
+import { BoardSectionsType, Task, TaskStatusType } from "types/task";
 import { getTaskById } from "@/lib/utils/tasks";
 import { findBoardSectionContainer, initializeBoard } from "@/lib/utils/board";
 import BoardSection from "./section";
@@ -136,11 +136,7 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
     const activeTask = tasks.find((task) => task.id === active.id);
 
     if (activeTask) {
-      activeTask.status = overContainer as
-        | "backlog"
-        | "todo"
-        | "in-progress"
-        | "done";
+      activeTask.status = overContainer as TaskStatusType;
 
       fetch(`/api/task/${activeTask.id}`, {
         method: "PUT",
