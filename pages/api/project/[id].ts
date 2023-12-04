@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
 import { authOptions } from "../auth/[...nextauth]";
+import { ProjectStatus } from "types/project";
 
 export default async function handler(
   req: NextApiRequest,
@@ -80,13 +81,18 @@ export default async function handler(
       }
 
       if (status) {
-        await prisma.project.update({
+        const project = await prisma.project.update({
           where: {
-            id: req.query.id as string,
+            id: req.query.id as ProjectStatus,
           },
           data: {
             status,
           },
+        });
+
+        return res.status(201).json({
+          project,
+          message: "Project updated successfully",
         });
       }
     }

@@ -7,8 +7,9 @@ import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
 import * as Yup from "yup";
 import { format } from "date-fns";
 
-import { cn } from "@/lib/utils";
-import { Task } from "types/task";
+import { createTask } from "@/lib/services";
+import { capitalize, cn } from "@/lib/utils";
+import { Task, TaskStatus } from "types/task";
 import { LoadingDots } from "@/components/shared/icons";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "../ui/textarea";
@@ -31,9 +32,9 @@ import { taskCreateFormState } from "@/lib/store";
 
 interface FormValues {
   name: string;
+  status: TaskStatus;
   startDate: Date;
   endDate: Date;
-  status: "backlog" | "todo" | "in-progress" | "done";
   description: string;
 }
 
@@ -45,15 +46,13 @@ const TaskCreateForm = () => {
     name: "",
     startDate: new Date(),
     endDate: new Date(),
-    status: "backlog",
+    status: TaskStatus.BACKLOG,
     description: "",
   };
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
-    status: Yup.string<"backlog" | "todo" | "in-progress" | "done">().required(
-      "Required",
-    ),
+    status: Yup.string<TaskStatus>().required("Required"),
     startDate: Yup.date().required("Required"),
     endDate: Yup.date().required("Required").min(Yup.ref("startDate")),
     description: Yup.string().required("Required"),
@@ -61,44 +60,23 @@ const TaskCreateForm = () => {
 
   const handleSubmit = async (values: FormValues) => {
     try {
-      const res = await fetch("/api/task", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      toast.loading("Creating task...");
+
+      const newTask = await createTask(values, router.query.id);
+
+      mutate(
+        `/api/task/${router.query.id}`,
+        (data: Task[] | undefined) => {
+          if (Array.isArray(data)) {
+            return [...data, newTask];
+          }
+          return data;
         },
-        body: JSON.stringify({
-          name: values.name,
-          startDate: values.startDate.toISOString(),
-          endDate: values.endDate.toISOString(),
-          status: values.status,
-          description: values.description,
-          projectId: router.query.id,
-        }),
-      });
+        true,
+      );
 
-      if (res.ok) {
-        const newTask = await res.json();
-
-        // Update local data without revalidation
-        mutate(
-          `/api/task/${router.query.id}`,
-          (data: Task[] | undefined) => {
-            if (Array.isArray(data)) {
-              return [...data, newTask];
-            }
-            return data;
-          },
-          true,
-        );
-
-        toast.success("Task created successfully!");
-        setOpen(false);
-      }
-
-      if (!res.ok) {
-        const error = await res.text();
-        toast.error(error);
-      }
+      toast.success("Task created successfully!");
+      setOpen(false);
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -167,10 +145,11 @@ const TaskCreateForm = () => {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="backlog">Backlog</SelectItem>
-                  <SelectItem value="todo">Todo</SelectItem>
-                  <SelectItem value="in-progress">In Progress</SelectItem>
-                  <SelectItem value="done">Done</SelectItem>
+                  {Object.values(TaskStatus).map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {capitalize(status)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Field>
               <ErrorMessage

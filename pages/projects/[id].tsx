@@ -40,7 +40,7 @@ export default function ProjectDetailIndex() {
       </Head>
 
       {session ? (
-        project && tasks ? (
+        project ? (
           <section className="flex w-full flex-col items-center">
             <ProjectDetailContent project={project} />
             <div className="w-full max-w-screen-xl py-4">
@@ -55,20 +55,22 @@ export default function ProjectDetailIndex() {
                     </TabsTrigger>
                   </TabsList>
                 </div>
-                <TabsContent value="tasks">
-                  {memoizedTasks && memoizedTasks.length > 0 ? (
-                    <BoardSectionList INITIAL_TASKS={memoizedTasks} />
-                  ) : (
-                    <div className="flex w-full flex-col items-center justify-center py-12">
-                      <h1 className="text-2xl font-bold text-gray-500">
-                        No tasks found
-                      </h1>
-                      <p className="text-gray-400">
-                        Create a new task to get started
-                      </p>
-                    </div>
-                  )}
-                </TabsContent>
+                {tasks && (
+                  <TabsContent value="tasks">
+                    {memoizedTasks && memoizedTasks.length > 0 ? (
+                      <BoardSectionList INITIAL_TASKS={memoizedTasks} />
+                    ) : (
+                      <div className="flex w-full flex-col items-center justify-center py-12">
+                        <h1 className="text-2xl font-bold text-gray-500">
+                          No tasks found
+                        </h1>
+                        <p className="text-gray-400">
+                          Create a new task to get started
+                        </p>
+                      </div>
+                    )}
+                  </TabsContent>
+                )}
                 <TabsContent value="settings">
                   <div className="flex w-full flex-col items-center justify-center">
                     <ProjectSettingsContent projectId={project.id} />

@@ -6,7 +6,7 @@ import SubmitButton from "@/components/shared/submitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import fetcher from "@/lib/fetcher";
-import { Project } from "types/project";
+import { Project, ProjectStatus, ProjectStatusType } from "types/project";
 import { LoadingSpinner } from "@/components/shared/icons";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -161,9 +161,9 @@ const ProjectStatusForm = ({
   status,
 }: {
   id: string;
-  status: string | undefined;
+  status: ProjectStatus | undefined;
 }) => {
-  const onSubmit = async (values: { status: string }) => {
+  const onSubmit = async (values: { status: ProjectStatus }) => {
     try {
       toast.loading("Updating project status...");
 
@@ -186,7 +186,10 @@ const ProjectStatusForm = ({
 
   return (
     <div>
-      <Formik initialValues={{ status: status || "" }} onSubmit={onSubmit}>
+      <Formik
+        initialValues={{ status: status || ProjectStatus.ACTIVE }}
+        onSubmit={onSubmit}
+      >
         {({ isSubmitting, setFieldValue, submitForm }) => (
           <Form>
             <div className="flex flex-row items-end space-x-4 py-6">
@@ -199,7 +202,7 @@ const ProjectStatusForm = ({
                     id="status"
                     className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
                     defaultValue={status}
-                    onValueChange={(value: string) =>
+                    onValueChange={(value: ProjectStatus) =>
                       setFieldValue("status", value)
                     }
                   >
@@ -207,8 +210,12 @@ const ProjectStatusForm = ({
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
+                      <SelectItem value={ProjectStatus.ACTIVE}>
+                        Active
+                      </SelectItem>
+                      <SelectItem value={ProjectStatus.INACTIVE}>
+                        Inactive
+                      </SelectItem>
                     </SelectContent>
                   </Field>
                 </div>

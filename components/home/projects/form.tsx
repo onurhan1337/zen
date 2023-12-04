@@ -7,8 +7,8 @@ import { CalendarIcon } from "lucide-react";
 import * as Yup from "yup";
 import { format } from "date-fns";
 
-import { cn } from "@/lib/utils";
-import { Project } from "types/project";
+import { capitalize, cn } from "@/lib/utils";
+import { Project, ProjectStatus, ProjectStatusType } from "types/project";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -31,9 +31,9 @@ import SubmitButton from "@/components/shared/submitButton";
 
 interface FormValues {
   name: string;
+  status: ProjectStatusType;
   startDate: Date;
   endDate: Date;
-  status: "active" | "inactive";
   description: string;
 }
 
@@ -45,60 +45,60 @@ const ProjectCreateForm = () => {
     name: "",
     startDate: new Date(),
     endDate: new Date(),
-    status: "active",
+    status: ProjectStatus.ACTIVE,
     description: "",
   };
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
-    status: Yup.string<"active" | "inactive">().required("Required"),
+    status: Yup.string<ProjectStatus>().required(ProjectStatus.ACTIVE),
     startDate: Yup.date().required("Required"),
     endDate: Yup.date().required("Required").min(Yup.ref("startDate")),
     description: Yup.string().required("Required"),
   });
 
+  async function createProject(values: FormValues) {
+    const res = await fetch("/api/project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: values.name,
+        startDate: values.startDate.toISOString(),
+        endDate: values.endDate.toISOString(),
+        status: values.status,
+        description: values.description,
+        projectId: router.query.id,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+
+    return res.json();
+  }
+
   const handleSubmit = async (values: FormValues) => {
     try {
-      const res = await fetch("/api/project", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: values.name,
-          startDate: values.startDate.toISOString(),
-          endDate: values.endDate.toISOString(),
-          status: values.status,
-          description: values.description,
-          projectId: router.query.id,
-        }),
-      });
-
       toast.loading("Creating Project...");
 
-      if (res.ok) {
-        const newProject = await res.json();
+      const newProject = await createProject(values);
 
-        // Update local data without revalidation
-        mutate(
-          "/api/project",
-          (data: Project[] | undefined) => {
-            if (Array.isArray(data)) {
-              return [...data, newProject];
-            }
-            return data;
-          },
-          true, // Revalidate the data
-        );
+      mutate(
+        "/api/project",
+        (data: Project[] | undefined) => {
+          if (Array.isArray(data)) {
+            return [...data, newProject];
+          }
+          return data;
+        },
+        true, // Revalidate the data
+      );
 
-        toast.success("Project created successfully!");
-        setOpen(false);
-      }
-
-      if (!res.ok) {
-        const error = await res.text();
-        toast.error(error);
-      }
+      toast.success("Project created successfully!");
+      setOpen(false);
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -167,8 +167,11 @@ const ProjectCreateForm = () => {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+                  {Object.values(ProjectStatus).map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {capitalize(status)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Field>
               <ErrorMessage

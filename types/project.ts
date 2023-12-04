@@ -1,7 +1,7 @@
 export interface Project {
   id: string;
   name: string;
-  status: "active" | "inactive";
+  status: ProjectStatusType;
   startDate: string;
   endDate: string;
   description: string;
@@ -11,3 +11,11 @@ export interface Project {
     email?: string;
   };
 }
+
+export enum ProjectStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+}
+
+export type ProjectStatusType =
+  (typeof ProjectStatus)[keyof typeof ProjectStatus];

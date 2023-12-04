@@ -7,6 +7,7 @@ import Badge from "@/components/shared/badge";
 import { LoadingDots } from "@/components/shared/icons";
 import { Button } from "@radix-ui/themes";
 import DeleteConfirmationDialog from "@/components/projects/settings/confirm";
+import { ProjectStatus } from "types/project";
 
 type Props = {
   project: Project;
@@ -21,7 +22,7 @@ const ProjectCard = ({ project }: Props) => {
     <div className="flex flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4 hover:bg-zinc-100">
       <div className="flex items-center justify-between gap-2">
         <div>
-          {status === "active" ? (
+          {status === ProjectStatus.ACTIVE ? (
             <Badge type="active" />
           ) : (
             <Badge type="inactive" />
