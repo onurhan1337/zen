@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { Portal } from "@radix-ui/themes";
-import { Task } from "@prisma/client";
+import { Task } from "types/task";
 import { format } from "date-fns";
 
 import fetcher from "@/lib/fetcher";
