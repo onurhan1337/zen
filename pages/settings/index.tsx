@@ -14,7 +14,9 @@ const SettingsIndex = () => {
       <section className="flex w-full flex-col items-center">
         <div className="flex w-full max-w-screen-xl flex-row items-end justify-between border-b border-zinc-200 pb-4">
           <div>
-            <h1 className="text-3xl font-semibold">Settings</h1>
+            <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
+              Settings
+            </h1>
           </div>
         </div>
 

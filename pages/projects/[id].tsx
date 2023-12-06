@@ -20,11 +20,11 @@ export default function ProjectDetailIndex() {
   const { id } = router.query;
 
   const { data: project } = useSWR<Project>(`/api/project/${id}`, fetcher, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   const { data: tasks } = useSWR<Task[]>(`/api/project/${id}/task`, fetcher, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
   const memoizedTasks = useMemo(() => {
     if (!tasks) return null;
@@ -97,10 +97,10 @@ const ProjectDetailContent = ({ project }: { project: Project }) => {
   return (
     <div className="grid w-full max-w-screen-xl grid-cols-1 items-end justify-between gap-4 border-b border-zinc-200 pb-4 sm:grid-cols-2">
       <div className="w-full grid-cols-2 sm:grid-cols-2">
-        <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight lg:text-5xl">
+        <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight antialiased lg:text-3xl">
           {truncate(project.name, 20)}
         </h1>
-        <p className=" pt-2 text-sm text-gray-500">
+        <p className=" pt-2 text-sm font-medium text-gray-500 antialiased">
           {truncate(project.description, 100)}
         </p>
       </div>

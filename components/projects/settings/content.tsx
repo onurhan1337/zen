@@ -23,7 +23,7 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
     `/api/project/${projectId}`,
     fetcher,
     {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
     },
   );
 

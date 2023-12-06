@@ -11,10 +11,7 @@ import Popover from "@/components/shared/popover";
 
 export default function UserDropdown() {
   const router = useRouter();
-  const { data: session, mutate: mutateSession } = useSWR<Session>(
-    "/api/auth/session",
-    fetcher,
-  );
+  const { data: session } = useSWR<Session>("/api/auth/session", fetcher);
   const { email, image } = session?.user || {};
   const [openPopover, setOpenPopover] = useState(false);
 

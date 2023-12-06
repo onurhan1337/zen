@@ -31,12 +31,12 @@ const ProjectCard = ({ project }: Props) => {
         <DeleteConfirmationDialog id={id} hasLabel={false} />
       </div>
       <div>
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+        <h4 className="antialised scroll-m-20 text-lg font-medium tracking-tight md:subpixel-antialiased">
           {truncate(name, 15)}
         </h4>
       </div>
       <div className="py-2">
-        <p className="leading-7 [&:not(:first-child)]:mt-6">
+        <p className="antialised text-sm font-normal leading-7  md:subpixel-antialiased [&:not(:first-child)]:mt-6">
           {truncate(description, 30)}
         </p>
       </div>

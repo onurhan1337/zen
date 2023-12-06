@@ -12,7 +12,7 @@ type Data = {
 
 export default function ProjectsCardList() {
   const { data, isValidating, error } = useSWR<Data>("/api/project", fetcher, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   const memoizedData = useMemo(() => {

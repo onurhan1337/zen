@@ -58,26 +58,32 @@ const ProjectCreateForm = () => {
   });
 
   async function createProject(values: FormValues) {
-    const res = await fetch("/api/project", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: values.name,
-        startDate: values.startDate.toISOString(),
-        endDate: values.endDate.toISOString(),
-        status: values.status,
-        description: values.description,
-        projectId: router.query.id,
-      }),
-    });
+    try {
+      const res = await fetch("/api/project", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          startDate: values.startDate.toISOString(),
+          endDate: values.endDate.toISOString(),
+          status: values.status,
+          description: values.description,
+          projectId: router.query.id,
+        }),
+      });
 
-    if (!res.ok) {
-      throw new Error(await res.text());
+      if (!res.ok) {
+        toast.error("Something went wrong!");
+      }
+
+      return res.json();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setOpen(false);
     }
-
-    return res.json();
   }
 
   const handleSubmit = async (values: FormValues) => {
@@ -86,21 +92,25 @@ const ProjectCreateForm = () => {
 
       const newProject = await createProject(values);
 
-      mutate(
-        "/api/project",
-        (data: Project[] | undefined) => {
-          if (Array.isArray(data)) {
-            return [...data, newProject];
-          }
-          return data;
-        },
-        true, // Revalidate the data
-      );
+      if (newProject) {
+        mutate(
+          "/api/project",
+          (data: Project[] | undefined) => {
+            if (Array.isArray(data)) {
+              return [...data, newProject];
+            }
+            return data;
+          },
+          true, // Revalidate the data
+        );
+      }
 
       toast.success("Project created successfully!");
       setOpen(false);
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setOpen(false);
     }
   };
 
