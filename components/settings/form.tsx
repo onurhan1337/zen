@@ -24,14 +24,14 @@ type UserInfos = {
 
 const SettingsForm = () => {
   const { data } = useSWR<UserInfos>("/api/user", fetcher);
-  const user = data?.user;
+  const { user } = data || {};
 
   const initialValues: FormValues = {
     name: "",
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().min(3),
+    name: Yup.string().min(3).nullable(),
   });
 
   const handleSubmit = async (values: FormValues) => {
@@ -49,7 +49,7 @@ const SettingsForm = () => {
         mutate("/api/auth/session", true);
       }
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.message || "An error occurred");
     }
   };
 
