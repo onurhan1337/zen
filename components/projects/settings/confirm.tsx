@@ -12,6 +12,7 @@ import { mutate } from "swr";
 import { toast } from "sonner";
 import { TrashIcon, XCircleIcon } from "lucide-react";
 
+import { Task } from "types/task";
 import { Project } from "types/project";
 import { Button } from "@/components/ui/button";
 import { LoadingDots } from "@/components/shared/icons";
@@ -84,6 +85,19 @@ const DeleteConfirmationDialog = ({
         },
         body: JSON.stringify({ id }),
       });
+
+      mutate(
+        `/api/project/${router.query.id}/task`,
+        (data: Task[] | undefined) => {
+          if (Array.isArray(data)) {
+            const updatedData = data.filter((project) => project.id !== id);
+            return updatedData;
+          }
+
+          return data; // Return unchanged if data is not an array
+        },
+        true, // Revalidate the data
+      );
 
       setOpen(false);
 
