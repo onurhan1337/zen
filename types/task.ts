@@ -1,9 +1,9 @@
-export type Status = "backlog" | "todo" | "in-progress" | "done";
+export type Status = "backlog" | "todo" | "inProgress" | "done";
 
 export enum TaskStatus {
   BACKLOG = "backlog",
   TODO = "todo",
-  IN_PROGRESS = "in-progress",
+  IN_PROGRESS = "inProgress",
   DONE = "done",
 }
 

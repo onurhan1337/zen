@@ -65,7 +65,7 @@ const TaskCreateForm = () => {
       const newTask = await createTask(values, router.query.id);
 
       mutate(
-        `/api/task/${router.query.id}`,
+        `/api/project/${router.query.id}/task`,
         (data: Task[] | undefined) => {
           if (Array.isArray(data)) {
             return [...data, newTask];
@@ -145,9 +145,9 @@ const TaskCreateForm = () => {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(TaskStatus).map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {capitalize(status)}
+                  {Object.entries(TaskStatus).map(([key, value]) => (
+                    <SelectItem key={value} value={value}>
+                      {capitalize(key)}
                     </SelectItem>
                   ))}
                 </SelectContent>

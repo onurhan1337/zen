@@ -25,10 +25,15 @@ const TaskItem = ({ task }: TaskItemProps) => {
           draggable
           role="button"
         >
-          <h5 className="text-lg font-semibold">{truncate(task.name, 15)}</h5>
+          <h4 className="antialised scroll-m-20 text-lg font-medium tracking-tight md:subpixel-antialiased">
+            {truncate(task.name, 15)}
+          </h4>{" "}
           <GripVertical size={16} className="text-gray-500" />
         </div>
-        <p>{truncate(task.description, 20)}</p>
+
+        <p className="antialised text-sm font-normal leading-7  md:subpixel-antialiased">
+          {truncate(task.description, 30)}
+        </p>
       </div>
       <TaskDetailModal taskId={task.id} isOpen={isOpen} setOpen={setOpen} />
     </>
