@@ -60,8 +60,45 @@ export default async function handler(
         });
       }
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+
+    if (req.method === "DELETE") {
+      // Get all projects associated with the user
+      const projects = await prisma.project.findMany({
+        where: {
+          userId: session.user.id!,
+        },
+      });
+
+      // Start a transaction
+      await prisma.$transaction([
+        // Delete tasks and projects associated with the user
+        ...projects.map((project) =>
+          prisma.task.deleteMany({
+            where: {
+              projectId: project.id,
+            },
+          }),
+        ),
+        prisma.project.deleteMany({
+          where: {
+            userId: session.user.id!,
+          },
+        }),
+
+        // Delete the user
+        prisma.user.delete({
+          where: {
+            email: session.user.email!,
+          },
+        }),
+      ]);
+      return res.status(201).json({
+        message: "User deleted successfully",
+      });
+    }
+
+    res.status(405).json({ error: "Method not allowed" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 }

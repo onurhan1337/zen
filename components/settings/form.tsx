@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { Form, Formik, Field, ErrorMessage } from "formik";
 import useSWR from "swr";
 import { User } from "@prisma/client";
@@ -11,6 +12,7 @@ import SubmitButton from "../shared/submitButton";
 import { toast } from "sonner";
 import { mutate } from "swr";
 import { LoadingSpinner } from "../shared/icons";
+import { Button } from "../ui/button";
 
 interface FormValues {
   name: string;
@@ -23,6 +25,7 @@ type UserInfos = {
 };
 
 const SettingsForm = () => {
+  const router = useRouter();
   const { data } = useSWR<UserInfos>("/api/user", fetcher);
   const { user } = data || {};
 
@@ -89,6 +92,31 @@ const SettingsForm = () => {
           </Form>
         )}
       </Formik>
+
+      <div className="mt-4">
+        <Button
+          className="w-full"
+          variant={"destructive"}
+          onClick={() => {
+            if (confirm("Are you sure you want to delete your account?")) {
+              fetch("/api/user", {
+                method: "DELETE",
+              })
+                .then((res) => {
+                  if (res.ok) {
+                    toast.success("Account deleted successfully");
+                    router.push("/");
+                  }
+                })
+                .catch((error) => {
+                  toast.error(error.message || "An error occurred");
+                });
+            }
+          }}
+        >
+          Delete Account
+        </Button>
+      </div>
     </div>
   );
 };

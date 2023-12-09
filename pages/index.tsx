@@ -41,7 +41,9 @@ export default function Home() {
               </span>{" "}
               - Project Manager
             </h1>
-            <p className="text-lg text-gray-500">Sign in to create a project</p>
+            <p className="text-md text-zinc-500 antialiased">
+              Sign in to create a project
+            </p>
           </div>
         </div>
       )}
