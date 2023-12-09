@@ -9,10 +9,10 @@ Zen is a robust project management tool designed to streamline the process of ma
 - **Framework**: [Next.js](https://nextjs.org/)
 - **Database**: [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) & [Prisma](https://www.prisma.io/) & [Upstash Redis](https://upstash.com/)
 - **Authentication**: [Next Auth](https://next-auth.js.org/)
-- **Drag and Drop** [Dnd Kit](https://dndkit.com/)
+- **Drag and Drop**: [Dnd Kit](https://dndkit.com/)
 - **Deployment**: [Vercel](https://vercel.com)
-- **Form Handling** [Formik](https://formik.org/) & [Yup](https://github.com/jquense/yup)
-- **State Management** [Zustand](https://github.com/pmndrs/zustand)
+- **Form Handling**: [Formik](https://formik.org/) & [Yup](https://github.com/jquense/yup)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/) & [Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started)
 
 ## Overview
