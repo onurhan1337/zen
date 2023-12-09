@@ -98,6 +98,7 @@ const SettingsForm = () => {
           className="w-full"
           variant={"destructive"}
           onClick={() => {
+            // TODO: add a confirmation modal
             if (confirm("Are you sure you want to delete your account?")) {
               fetch("/api/user", {
                 method: "DELETE",
