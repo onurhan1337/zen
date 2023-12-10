@@ -40,7 +40,7 @@ const DeleteConfirmationDialog = ({
   const onDeleteProject = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/project`, {
+      const res = await fetch(`/api/project/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

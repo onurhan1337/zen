@@ -18,14 +18,22 @@ export default function ProjectDetailIndex() {
   const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
+  const { data: project } = useSWR<Project>(
+    id ? `/api/project/${id}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    },
+  );
 
-  const { data: project } = useSWR<Project>(`/api/project/${id}`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data: tasks } = useSWR<Task[]>(
+    id ? `/api/project/${id}/task` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    },
+  );
 
-  const { data: tasks } = useSWR<Task[]>(`/api/project/${id}/task`, fetcher, {
-    revalidateOnFocus: false,
-  });
   const memoizedTasks = useMemo(() => {
     if (!tasks) return null;
     return tasks;

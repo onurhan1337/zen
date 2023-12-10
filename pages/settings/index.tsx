@@ -15,7 +15,7 @@ const SettingsIndex = () => {
         <title>Settings</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {session ? (
+      {session && (
         <section className="flex w-full flex-col items-center">
           <div className="flex w-full max-w-screen-xl flex-row items-end justify-between border-b border-zinc-200 pb-4">
             <div>
@@ -29,7 +29,9 @@ const SettingsIndex = () => {
             <SettingsForm />
           </Suspense>
         </section>
-      ) : (
+      )}
+
+      {!session && (
         <div className=" flex w-full flex-col items-center justify-center">
           <ShieldAlert className="h-12 w-12 text-zinc-300" />
           <h1 className="text-2xl font-bold">Access Denied</h1>
