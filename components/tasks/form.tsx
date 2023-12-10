@@ -7,7 +7,6 @@ import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
 import * as Yup from "yup";
 import { format } from "date-fns";
 
-import { createTask } from "@/lib/services";
 import { capitalize, cn } from "@/lib/utils";
 import { Task, TaskStatus } from "types/task";
 import { LoadingDots } from "@/components/shared/icons";
@@ -57,6 +56,40 @@ const TaskCreateForm = () => {
     endDate: Yup.date().required("Required").min(Yup.ref("startDate")),
     description: Yup.string().required("Required"),
   });
+
+  interface FormValues {
+    name: string;
+    status: TaskStatus;
+    startDate: Date;
+    endDate: Date;
+    description: string;
+  }
+
+  async function createTask(
+    values: FormValues,
+    projectId: string | string[] | undefined,
+  ) {
+    const res = await fetch("/api/task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: values.name,
+        startDate: values.startDate.toISOString(),
+        endDate: values.endDate.toISOString(),
+        status: values.status,
+        description: values.description,
+        projectId: projectId,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+
+    return res.json();
+  }
 
   const handleSubmit = async (values: FormValues) => {
     try {
