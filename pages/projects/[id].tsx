@@ -13,6 +13,7 @@ import fetcher from "@/lib/fetcher";
 import { useMemo } from "react";
 import Badge from "@/components/shared/badge";
 import { truncate } from "@/lib/utils";
+import Container from "@/components/ui/container";
 
 export default function ProjectDetailIndex() {
   const { data: session } = useSession();
@@ -80,9 +81,9 @@ export default function ProjectDetailIndex() {
                   </TabsContent>
                 )}
                 <TabsContent value="settings">
-                  <div className="flex w-full flex-col items-center justify-center">
+                  <Container>
                     <ProjectSettingsContent projectId={project.id} />
-                  </div>
+                  </Container>
                 </TabsContent>
               </Tabs>
             </div>

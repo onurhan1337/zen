@@ -6,7 +6,7 @@ import SubmitButton from "@/components/shared/submitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import fetcher from "@/lib/fetcher";
-import { Project, ProjectStatus, ProjectStatusType } from "types/project";
+import { Project, ProjectStatus } from "types/project";
 import { LoadingSpinner } from "@/components/shared/icons";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -30,15 +30,17 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
   return (
     <div>
       {isValidating ? (
-        <LoadingSpinner />
+        <div className="flex h-full w-full items-center justify-center">
+          <LoadingSpinner />
+        </div>
       ) : (
         <div>
           <RenameProjectForm id={projectId} name={project?.name} />
+          <ProjectStatusForm id={projectId} status={project?.status} />
           <ProjectDescriptionForm
             id={projectId}
             description={project?.description}
           />
-          <ProjectStatusForm id={projectId} status={project?.status} />
           <ProjectDeleteForm id={projectId} />
         </div>
       )}
@@ -81,17 +83,19 @@ const RenameProjectForm = ({
       <Formik initialValues={{ name: name || "" }} onSubmit={onSubmit}>
         {({ isSubmitting, submitForm }) => (
           <Form>
-            <div className="flex flex-row items-end space-x-4 py-6">
-              <div className="flex flex-col items-start space-y-2">
+            <div className="grid grid-cols-3 items-end gap-4 py-6">
+              <div className="col-span-2 flex flex-col justify-center space-y-2">
                 <Label htmlFor="name">Project Name</Label>
-                <Field as={Input} name="name" type="text" className="w-72" />
+                <Field as={Input} name="name" type="text" className="w-full" />
               </div>
-              <SubmitButton
-                label="Rename"
-                isSubmitting={isSubmitting}
-                submitForm={submitForm}
-                showShortcutIcons={false}
-              />
+              <div className="col-span-1">
+                <SubmitButton
+                  label="Rename"
+                  isSubmitting={isSubmitting}
+                  submitForm={submitForm}
+                  showShortcutIcons={false}
+                />
+              </div>
             </div>
           </Form>
         )}
@@ -192,40 +196,37 @@ const ProjectStatusForm = ({
       >
         {({ isSubmitting, setFieldValue, submitForm }) => (
           <Form>
-            <div className="flex flex-row items-end space-x-4 py-6">
-              <div className="flex flex-col items-start space-y-2">
-                <div className="relative col-span-2 mt-2 md:col-span-1">
-                  <Label htmlFor="status">Status</Label>
-                  <Field
-                    as={Select}
-                    name="status"
-                    id="status"
-                    className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
-                    defaultValue={status}
-                    onValueChange={(value: ProjectStatus) =>
-                      setFieldValue("status", value)
-                    }
-                  >
-                    <SelectTrigger className="w-72">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ProjectStatus.ACTIVE}>
-                        Active
-                      </SelectItem>
-                      <SelectItem value={ProjectStatus.INACTIVE}>
-                        Inactive
-                      </SelectItem>
-                    </SelectContent>
-                  </Field>
-                </div>
+            <div className="grid grid-cols-3 items-end gap-4 py-6">
+              <div className="col-span-2 flex flex-col justify-center space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Field
+                  as={Select}
+                  name="status"
+                  id="status"
+                  defaultValue={status}
+                  onValueChange={(value: ProjectStatus) =>
+                    setFieldValue("status", value)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ProjectStatus.ACTIVE}>Active</SelectItem>
+                    <SelectItem value={ProjectStatus.INACTIVE}>
+                      Inactive
+                    </SelectItem>
+                  </SelectContent>
+                </Field>
               </div>
-              <SubmitButton
-                label="Update"
-                isSubmitting={isSubmitting}
-                submitForm={submitForm}
-                showShortcutIcons={false}
-              />
+              <div className="col-span-1">
+                <SubmitButton
+                  label="Update"
+                  isSubmitting={isSubmitting}
+                  submitForm={submitForm}
+                  showShortcutIcons={false}
+                />
+              </div>
             </div>
           </Form>
         )}
