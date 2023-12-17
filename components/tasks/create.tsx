@@ -1,4 +1,4 @@
-import { Button } from "@radix-ui/themes";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +16,7 @@ const TaskCreateContent = () => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
-        <Button
-          onClick={() => setOpen(true)}
-          className="mt-4"
-          variant="classic"
-          color="teal"
-        >
+        <Button onClick={() => setOpen(true)} variant={"action"}>
           Create Task
         </Button>
       </DialogTrigger>

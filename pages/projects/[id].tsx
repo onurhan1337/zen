@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import useSWR from "swr";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
@@ -9,8 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectSettingsContent from "@/components/projects/settings/content";
 import BoardSectionList from "@/components/projects/board/list";
 import TaskCreateContent from "@/components/tasks/create";
+
 import fetcher from "@/lib/fetcher";
-import { useMemo } from "react";
 import Badge from "@/components/shared/badge";
 import { truncate } from "@/lib/utils";
 import Container from "@/components/ui/container";
@@ -69,14 +70,7 @@ export default function ProjectDetailIndex() {
                     {memoizedTasks && memoizedTasks.length > 0 ? (
                       <BoardSectionList INITIAL_TASKS={memoizedTasks} />
                     ) : (
-                      <div className="flex w-full flex-col items-center justify-center py-12">
-                        <h1 className="text-2xl font-bold text-gray-500">
-                          No tasks found
-                        </h1>
-                        <p className="text-gray-400">
-                          Create a new task to get started
-                        </p>
-                      </div>
+                      <TasksEmptyCard />
                     )}
                   </TabsContent>
                 )}
@@ -156,6 +150,36 @@ const PageLoadingState = () => {
           </Tabs>
         </div>
       </section>
+    </div>
+  );
+};
+
+const TasksEmptyCard = () => {
+  return (
+    <div className="flex w-full flex-col items-center justify-center py-12">
+      <div className="w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none lg:w-1/2">
+        <div className="flex w-full flex-col text-center">
+          <svg
+            className="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              vectorEffect="non-scaling-stroke"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+            />
+          </svg>
+          <h3 className="mt-2 text-sm font-semibold text-gray-900">No tasks</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Get started by creating a new task.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
