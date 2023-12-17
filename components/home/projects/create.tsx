@@ -1,4 +1,4 @@
-import { Button } from "@radix-ui/themes";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,9 +18,7 @@ const ProjectCreateContent = () => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
-        <Button className="mt-4" variant="classic" color="teal">
-          Create Project
-        </Button>
+        <Button variant={"action"}>Create Project</Button>
       </DialogTrigger>
       <Portal>
         <DialogContent className="sm:max-w-[425px]">
