@@ -1,9 +1,11 @@
+import { Suspense } from "react";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import "@radix-ui/themes/styles.css";
-import { Suspense } from "react";
 import { Theme } from "@radix-ui/themes";
 import NavBar from "@/components/layout/navbar";
 import { Toaster } from "sonner";
@@ -20,7 +22,9 @@ export default function App({
             <NavBar />
           </Suspense>
         </header>
-        <main className="mx-5 py-32">
+        <main
+          className={`${GeistSans.variable} ${GeistMono.variable} import mx-5 py-32 font-sans`}
+        >
           <Component {...pageProps} />
         </main>
         <Toaster richColors closeButton={true} />

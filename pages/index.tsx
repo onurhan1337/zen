@@ -3,6 +3,10 @@ import { useSession } from "next-auth/react";
 
 import ProjectCreateContent from "@/components/home/projects/create";
 import ProjectsCardList from "@/components/home/projects/list";
+import HowItWorks from "@/components/layout/how-it-works";
+import Cta from "@/components/layout/cta";
+import Stats from "@/components/layout/stats";
+import Footer from "@/components/layout/footer";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -32,20 +36,12 @@ export default function Home() {
       )}
 
       {!session && (
-        <div>
-          <div className="flex w-full flex-col items-center justify-center gap-4">
-            <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-3xl">
-              Welcome to{" "}
-              <span className="bg-gradient-to-r from-slate-500 via-zinc-600 to-slate-500 bg-clip-text text-transparent">
-                Zen
-              </span>{" "}
-              - Project Manager
-            </h1>
-            <p className="text-md text-zinc-500 antialiased">
-              Sign in to create a project
-            </p>
-          </div>
-        </div>
+        <section>
+          <Cta />
+          <HowItWorks />
+          <Stats />
+          <Footer />
+        </section>
       )}
     </>
   );
