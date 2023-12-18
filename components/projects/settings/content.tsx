@@ -2,6 +2,7 @@ import { Field, Form, Formik } from "formik";
 import { toast } from "sonner";
 import useSWR, { mutate } from "swr";
 
+import { Switch } from "@/components/ui/switch";
 import SubmitButton from "@/components/shared/submitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,13 +10,6 @@ import fetcher from "@/lib/fetcher";
 import { Project, ProjectStatus } from "types/project";
 import { LoadingSpinner } from "@/components/shared/icons";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import DeleteConfirmationDialog from "./confirm";
 
 const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
@@ -36,11 +30,11 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
       ) : (
         <div>
           <RenameProjectForm id={projectId} name={project?.name} />
-          <ProjectStatusForm id={projectId} status={project?.status} />
           <ProjectDescriptionForm
             id={projectId}
             description={project?.description}
           />
+          <ProjectStatusForm id={projectId} status={project?.status} />
           <ProjectDeleteForm id={projectId} />
         </div>
       )}
@@ -167,7 +161,7 @@ const ProjectStatusForm = ({
   id: string;
   status: ProjectStatus | undefined;
 }) => {
-  const onSubmit = async (values: { status: ProjectStatus }) => {
+  const onChange = async (status: ProjectStatus) => {
     try {
       toast.loading("Updating project status...");
 
@@ -176,7 +170,7 @@ const ProjectStatusForm = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ status }),
       });
 
       if (res) {
@@ -188,50 +182,33 @@ const ProjectStatusForm = ({
     }
   };
 
-  // TODO: Change Select to Radio
+  if (!status) return null;
+
   return (
-    <div>
-      <Formik
-        initialValues={{ status: status || ProjectStatus.ACTIVE }}
-        onSubmit={onSubmit}
-      >
-        {({ isSubmitting, setFieldValue, submitForm }) => (
-          <Form>
-            <div className="grid grid-cols-3 items-end gap-4 py-6">
-              <div className="col-span-2 flex flex-col justify-center space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Field
-                  as={Select}
-                  name="status"
-                  id="status"
-                  defaultValue={status}
-                  onValueChange={(value: ProjectStatus) =>
-                    setFieldValue("status", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={ProjectStatus.ACTIVE}>Active</SelectItem>
-                    <SelectItem value={ProjectStatus.INACTIVE}>
-                      Inactive
-                    </SelectItem>
-                  </SelectContent>
-                </Field>
-              </div>
-              <div className="col-span-1">
-                <SubmitButton
-                  label="Update"
-                  isSubmitting={isSubmitting}
-                  submitForm={submitForm}
-                  showShortcutIcons={false}
-                />
-              </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
+    <div className="bg-white shadow sm:rounded-lg">
+      <div className="px-4 py-5 sm:p-6">
+        <h3 className="text-base font-semibold leading-6 text-gray-900">
+          Project Status
+        </h3>
+        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
+          <div className="max-w-xl text-sm text-gray-500">
+            <p>
+              Status of the project. If the project is inactive, it will not be
+              visible to other users. You can activate it again later.
+            </p>
+          </div>
+          <div className="mt-5 sm:ml-6 sm:mt-0 sm:flex sm:flex-shrink-0 sm:items-center">
+            <Switch
+              checked={status === "active"}
+              onCheckedChange={(checked) =>
+                onChange(
+                  checked ? ProjectStatus.ACTIVE : ProjectStatus.INACTIVE,
+                )
+              }
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
