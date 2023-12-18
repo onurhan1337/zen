@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useSession } from "next-auth/react";
 
 import ProjectCreateContent from "@/components/home/projects/create";
@@ -8,6 +9,13 @@ export default function ProjectsIndex() {
 
   return (
     <>
+      <Head>
+        <title>Projects | Zen</title>
+        <meta
+          name="description"
+          content="Zen is a project management tool for software developers. It allows you to organize your work, manage tasks and projects."
+        />
+      </Head>
       {session && (
         <div className="flex w-full justify-center">
           <div className="flex w-full max-w-screen-xl items-center justify-between">
