@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import getUser from "@/lib/utils/getUser";
 import createTask from "@/lib/services/task/createTask";
+import { fetchAllTasksOfUser } from "@/lib/services/task/fetchTask";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,6 +16,8 @@ export default async function handler(
   }
 
   switch (req.method) {
+    case "GET":
+      return fetchAllTasksOfUser(req, res);
     case "POST":
       return createTask(req, res);
     default:

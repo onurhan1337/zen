@@ -14,6 +14,7 @@ interface MenuProps {
 const MENU: MenuProps = {
   "/": "home",
   "/projects": "projects",
+  "/tasks": "tasks",
 };
 
 export default function NavBar() {

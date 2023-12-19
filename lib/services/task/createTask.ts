@@ -57,6 +57,11 @@ export default async function createTask(
         status,
         priority,
         description,
+        owner: {
+          connect: {
+            id: user.id!,
+          },
+        },
         project: {
           connect: {
             id: project.id!,
