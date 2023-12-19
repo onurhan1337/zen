@@ -25,7 +25,7 @@ const ProjectCard = ({ project }: Props) => {
           {status === ProjectStatus.ACTIVE ? (
             <Badge type="active" />
           ) : (
-            <Badge type="inactive" />
+            <Badge type="archived" />
           )}
         </div>
         <DeleteConfirmationDialog id={id} hasLabel={false} />

@@ -26,6 +26,7 @@ export default function ProjectsIndex() {
                 </h1>
                 <ProjectCreateContent />
               </div>
+              {/* TODO: Add here if user not logged in and try to look this page give an information state. */}
               <ProjectsCardList />
             </div>
           </div>

@@ -14,7 +14,7 @@ export interface Project {
 
 export enum ProjectStatus {
   ACTIVE = "active",
-  INACTIVE = "inactive",
+  ARCHIVED = "archived",
 }
 
 export type ProjectStatusType =

@@ -1,5 +1,5 @@
 interface BadgeProps {
-  type: "active" | "inactive";
+  type: "active" | "archived";
 }
 
 const Badge = ({ type = "active" }: BadgeProps) => {
@@ -25,7 +25,7 @@ const Badge = ({ type = "active" }: BadgeProps) => {
           >
             <circle cx="3" cy="3" r="3" />
           </svg>
-          INACTIVE
+          ARCHIVED
         </span>
       )}
     </>

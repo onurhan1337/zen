@@ -193,7 +193,7 @@ const ProjectStatusForm = ({
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>
-              Status of the project. If the project is inactive, it will not be
+              Status of the project. If the project is archived, it will not be
               visible to other users. You can activate it again later.
             </p>
           </div>
@@ -202,7 +202,7 @@ const ProjectStatusForm = ({
               checked={status === "active"}
               onCheckedChange={(checked) =>
                 onChange(
-                  checked ? ProjectStatus.ACTIVE : ProjectStatus.INACTIVE,
+                  checked ? ProjectStatus.ACTIVE : ProjectStatus.ARCHIVED,
                 )
               }
             />

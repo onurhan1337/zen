@@ -81,7 +81,7 @@ model Project {
 
 enum ProjectStatus {
   active
-  inactive
+  archived
 }
 
 //  ______   ______     ______     __  __    
