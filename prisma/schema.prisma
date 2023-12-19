@@ -51,6 +51,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   projects      Project[]
+  ownedTasks Task[] @relation("TaskOwner")
+  memberTasks Task[] @relation("TaskMembers")
 }
 
 model VerificationToken {
@@ -98,15 +100,18 @@ model Task {
   startDate   DateTime? @default(now())
   endDate     DateTime? 
   priority    Priority @default(low)
+  ownerId     String    @default("validUserId") // Set a valid user ID as the default
   projectId   String
   
-  // Define a relationship with the Project model
+  // Define a relationship with the User and Project models
+  owner       User     @relation("TaskOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     User[]   @relation("TaskMembers")
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   // Use a unique constraint for task names
   @@unique([id, name])
-  @@index([projectId])
-}                                                          
+  @@index([projectId, ownerId])
+}
 
 enum TaskStatus {
   backlog

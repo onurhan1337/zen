@@ -22,6 +22,8 @@ export type Task = {
   status: TaskStatusType;
   endDate: string;
   priority: Priority;
+  ownerId: string;
+  memberId: string[];
   description: string;
 };
 
