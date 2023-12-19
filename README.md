@@ -27,9 +27,7 @@ Zen is a robust project management tool designed to streamline the process of ma
 
 ## Demo
 
-```bash
-https://zen-orcin.vercel.app/
-```
+[https://zen-orcin.vercel.app/](https://zen-orcin.vercel.app/)
 
 ## Running Locally
 
