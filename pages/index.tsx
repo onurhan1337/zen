@@ -1,8 +1,6 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 
-import ProjectCreateContent from "@/components/home/projects/create";
-import ProjectsCardList from "@/components/home/projects/list";
 import HowItWorks from "@/components/layout/how-it-works";
 import Cta from "@/components/layout/cta";
 import Stats from "@/components/layout/stats";
