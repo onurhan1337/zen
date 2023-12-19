@@ -15,14 +15,22 @@ export default async function createTask(
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { name, status, startDate, endDate, description, projectId } =
-      req.body;
+    const {
+      name,
+      status,
+      startDate,
+      endDate,
+      priority,
+      description,
+      projectId,
+    } = req.body;
 
     const schema = Yup.object().shape({
       name: Yup.string().required("Name is required"),
       status: Yup.string().required("Status is required"),
       startDate: Yup.string().required("Start date is required"),
       endDate: Yup.string().required("End date is required"),
+      priority: Yup.string().required("Priority is required"),
       description: Yup.string().required("Description is required"),
       projectId: Yup.string().required("Project ID is required"),
     });
@@ -47,6 +55,7 @@ export default async function createTask(
         startDate,
         endDate,
         status,
+        priority,
         description,
         project: {
           connect: {

@@ -7,6 +7,12 @@ export enum TaskStatus {
   DONE = "done",
 }
 
+export enum Priority {
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
+}
+
 export type TaskStatusType = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 export type Task = {
@@ -15,6 +21,7 @@ export type Task = {
   startDate: string;
   status: TaskStatusType;
   endDate: string;
+  priority: Priority;
   description: string;
 };
 

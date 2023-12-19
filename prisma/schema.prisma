@@ -97,6 +97,7 @@ model Task {
   status      TaskStatus @default(backlog)
   startDate   DateTime? @default(now())
   endDate     DateTime? 
+  priority    Priority @default(low)
   projectId   String
   
   // Define a relationship with the Project model
@@ -112,4 +113,10 @@ enum TaskStatus {
   todo
   inProgress
   done
+}
+
+enum Priority {
+  low
+  medium
+  high
 }

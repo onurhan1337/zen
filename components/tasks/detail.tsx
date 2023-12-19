@@ -11,7 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { User, FileText, CalendarClock, CalendarCheck2 } from "lucide-react";
+import {
+  User,
+  FileText,
+  CalendarClock,
+  CalendarCheck2,
+  FastForward,
+} from "lucide-react";
 import { LoadingSpinner } from "../shared/icons";
 import StatusBadge from "./statusBadge";
 import { Textarea } from "../ui/textarea";
@@ -134,6 +140,20 @@ const TaskDetailContent = ({ taskId }: { taskId: string }) => {
                 </p>{" "}
               </div>
             )}
+
+            <div className=" flex w-full items-start justify-between">
+              <h4
+                className="
+                text-md flex items-center
+                space-x-2 text-zinc-600"
+              >
+                <FastForward className="text-zinc-500" size={12} />
+                <span>Priority</span>
+              </h4>
+              <p className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium uppercase tracking-tight text-gray-400">
+                {task?.priority.toUpperCase()}
+              </p>
+            </div>
 
             <div className=" flex w-full flex-col items-start justify-between space-y-2">
               <h4

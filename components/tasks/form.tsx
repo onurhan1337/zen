@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import { format } from "date-fns";
 
 import { capitalize, cn } from "@/lib/utils";
-import { Task, TaskStatus } from "types/task";
+import { Priority, Task, TaskStatus } from "types/task";
 import { LoadingDots } from "@/components/shared/icons";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "../ui/textarea";
@@ -46,6 +46,7 @@ const TaskCreateForm = () => {
     startDate: new Date(),
     endDate: new Date(),
     status: TaskStatus.BACKLOG,
+    priority: Priority.LOW,
     description: "",
   };
 
@@ -62,6 +63,7 @@ const TaskCreateForm = () => {
     status: TaskStatus;
     startDate: Date;
     endDate: Date;
+    priority: Priority;
     description: string;
   }
 
@@ -79,6 +81,7 @@ const TaskCreateForm = () => {
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
         status: values.status,
+        priority: values.priority,
         description: values.description,
         projectId: projectId,
       }),
@@ -180,7 +183,7 @@ const TaskCreateForm = () => {
                 <SelectContent>
                   {Object.entries(TaskStatus).map(([key, value]) => (
                     <SelectItem key={value} value={value}>
-                      {capitalize(key)}
+                      {capitalize(value)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -218,6 +221,36 @@ const TaskCreateForm = () => {
               />
               <ErrorMessage
                 name="endDate"
+                className="py-1 text-xs italic text-red-500"
+                component="div"
+              />
+            </div>
+
+            <div className="relative col-span-2 mt-4">
+              <Label htmlFor="priority">Priority</Label>
+              <Field
+                as={Select}
+                name="priority"
+                id="priority"
+                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                value={values.priority}
+                onValueChange={(value: string) =>
+                  setFieldValue("priority", value)
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select task priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(Priority).map(([key, value]) => (
+                    <SelectItem key={value} value={value}>
+                      {capitalize(value)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Field>
+              <ErrorMessage
+                name="priority"
                 className="py-1 text-xs italic text-red-500"
                 component="div"
               />
