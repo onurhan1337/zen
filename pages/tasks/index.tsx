@@ -5,14 +5,14 @@ import useSWR from "swr";
 import { DataTable } from "@/components/tasks/data-table";
 import { columns } from "@/components/tasks/components/columns";
 import { Task } from "types/task";
+import TasksPageSkeletonLoading from "@/components/tasks/SkeletonLoading";
 
 export default function TasksIndex() {
   const { data: session } = useSession();
   const { data: tasks, error } = useSWR<Task[]>("/api/task", fetcher);
 
   if (error) return <div>failed to load</div>;
-  // TODO: Add skeleton loader
-  if (!tasks) return <div>loading...</div>;
+  if (!tasks) return <TasksPageSkeletonLoading />;
 
   return (
     <>
