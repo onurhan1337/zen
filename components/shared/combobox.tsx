@@ -34,7 +34,7 @@ export const Combobox: React.FC<ComboboxProps> = ({ onChange, options }) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? options.find((option) => option.value === value)?.label
@@ -49,8 +49,8 @@ export const Combobox: React.FC<ComboboxProps> = ({ onChange, options }) => {
           <CommandGroup>
             {options.map((option) => (
               <CommandItem
-                key={option.value}
-                value={option.label}
+                key={option.label}
+                value={option.value}
                 onSelect={(value) => {
                   onChange(value);
                   setValue(value);
