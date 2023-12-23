@@ -1,15 +1,23 @@
+import { Task } from "./task";
+
+interface User {
+  id: string;
+  name: string;
+  image: string;
+  email: string;
+}
+
 export interface Project {
   id: string;
   name: string;
-  status: ProjectStatusType;
-  startDate: string;
-  endDate: string;
   description: string;
-  user?: {
-    id?: string;
-    name?: string;
-    email?: string;
-  };
+  startDate: Date | null;
+  endDate: Date | null;
+  status: ProjectStatus;
+  userId: string;
+  owner: User;
+  members: User[];
+  tasks: Task[]; // You need to define the Task interface
 }
 
 export enum ProjectStatus {

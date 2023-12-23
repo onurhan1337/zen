@@ -11,8 +11,11 @@ import { Project, ProjectStatus } from "types/project";
 import { LoadingSpinner } from "@/components/shared/icons";
 import { Textarea } from "@/components/ui/textarea";
 import DeleteConfirmationDialog from "./confirm";
+import { MembersDialog } from "./members";
+import { useSession } from "next-auth/react";
 
 const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
+  const { data: session } = useSession();
   const { data: project, isValidating } = useSWR<Project>(
     `/api/project/${projectId}`,
     fetcher,
@@ -21,24 +24,31 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
     },
   );
 
+  const isOwner = project?.owner.id === session?.user?.id;
+
+  if (isValidating || !project) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {isValidating ? (
-        <div className="flex h-full w-full items-center justify-center">
-          <LoadingSpinner />
-        </div>
-      ) : (
+    <>
+      {isOwner && (
         <div>
           <RenameProjectForm id={projectId} name={project?.name} />
           <ProjectDescriptionForm
             id={projectId}
             description={project?.description}
           />
+          <MembersDialog projectId={projectId} />
           <ProjectStatusForm id={projectId} status={project?.status} />
           <ProjectDeleteForm id={projectId} />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

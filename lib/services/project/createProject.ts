@@ -45,9 +45,14 @@ export default async function createProject(
         startDate,
         endDate,
         description,
-        user: {
+        owner: {
           connect: {
-            email: user.email!,
+            id: user.id,
+          },
+        },
+        members: {
+          connect: {
+            id: user.id,
           },
         },
       },

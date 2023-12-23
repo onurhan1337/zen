@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useFormikContext } from "formik";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
@@ -10,11 +11,12 @@ import {
   CommandItem,
 } from "../ui/command";
 import { cn } from "@/lib/utils";
-import { useFormikContext } from "formik";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface Option {
   value: string;
   label: string;
+  image: string;
 }
 
 interface ComboboxProps {
@@ -26,6 +28,8 @@ export const Combobox: React.FC<ComboboxProps> = ({ onChange, options }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState<string | null>(null);
   const { setFieldValue } = useFormikContext();
+
+  console.log("options", options);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -56,7 +60,16 @@ export const Combobox: React.FC<ComboboxProps> = ({ onChange, options }) => {
                   setValue(value);
                   setFieldValue("userId", value);
                 }}
+                className="cursor-pointer"
               >
+                <Avatar className="mr-2 h-6 w-6">
+                  <AvatarImage
+                    className="h-6 w-6"
+                    src={option.image}
+                    alt={option.value}
+                  />
+                  <AvatarFallback>{option.value}</AvatarFallback>
+                </Avatar>
                 {option.label}
                 <CheckIcon
                   className={cn(

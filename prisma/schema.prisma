@@ -50,9 +50,10 @@ model User {
   // Define relationships for User's accounts, sessions, and projects
   accounts      Account[]
   sessions      Session[]
-  projects      Project[]
-  ownedTasks Task[] @relation("TaskOwner")
-  memberTasks Task[] @relation("TaskMembers")
+  ownedProjects Project[] @relation("projectOwner")
+  memberProjects Project[] @relation("projectMembers")
+  ownedTasks    Task[]    @relation("TaskOwner")
+  memberTasks   Task[]    @relation("TaskMembers")
 }
 
 model VerificationToken {
@@ -62,7 +63,7 @@ model VerificationToken {
 
   // Use unique constraints for verification tokens
   @@unique([identifier, token])
-}                                                                                                             
+}
 
 model Project {
   id          String    @id @default(cuid()) @unique
@@ -71,12 +72,11 @@ model Project {
   startDate   DateTime? @default(now())
   endDate     DateTime? 
   status      ProjectStatus @default(active)
-  userId      String
-  // Define a relationship with the User model
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks      Task[]
+  userId     String
+  owner       User     @relation("projectOwner", fields: [userId], references: [id], onDelete: Cascade)
+  members     User[]   @relation("projectMembers")
+  tasks       Task[]
 
-  // Use a unique constraint for project names
   @@unique([id, name])
   @@index([userId])
 }
@@ -100,7 +100,7 @@ model Task {
   startDate   DateTime? @default(now())
   endDate     DateTime? 
   priority    Priority @default(low)
-  ownerId     String    @default("validUserId") // Set a valid user ID as the default
+  ownerId     String
   projectId   String
   
   // Define a relationship with the User and Project models

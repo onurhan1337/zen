@@ -32,6 +32,8 @@ export async function fetchProject(req: NextApiRequest, res: NextApiResponse) {
     },
     include: {
       tasks: true,
+      owner: true,
+      members: true,
     },
   });
 
