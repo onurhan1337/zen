@@ -41,6 +41,8 @@ export default function ProjectDetailIndex() {
     return tasks;
   }, [tasks]);
 
+  const isOwner = project?.owner.id === session?.user?.id;
+
   return (
     <>
       <Head>
@@ -54,32 +56,46 @@ export default function ProjectDetailIndex() {
           <section className="flex w-full flex-col items-center">
             <ProjectDetailContent project={project} />
             <div className="w-full max-w-screen-xl py-4">
-              <Tabs defaultValue="tasks">
-                <div className="flex w-full flex-col items-center justify-center">
-                  <TabsList className="flex w-full max-w-screen-sm items-center justify-center">
-                    <TabsTrigger className="w-full" value="tasks">
-                      Tasks
-                    </TabsTrigger>
-                    <TabsTrigger className="w-full" value="settings">
-                      Settings
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-                {tasks && (
-                  <TabsContent value="tasks">
-                    {memoizedTasks && memoizedTasks.length > 0 ? (
-                      <BoardSectionList INITIAL_TASKS={memoizedTasks} />
-                    ) : (
-                      <TasksEmptyCard />
-                    )}
+              {isOwner ? (
+                <Tabs defaultValue="tasks">
+                  <div className="flex w-full flex-col items-center justify-center">
+                    <TabsList className="flex w-full max-w-screen-sm items-center justify-center">
+                      <TabsTrigger className="w-full" value="tasks">
+                        Tasks
+                      </TabsTrigger>
+                      <TabsTrigger className="w-full" value="settings">
+                        Settings
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  {tasks && (
+                    <TabsContent value="tasks">
+                      {memoizedTasks && memoizedTasks.length > 0 ? (
+                        <BoardSectionList INITIAL_TASKS={memoizedTasks} />
+                      ) : (
+                        <TasksEmptyCard />
+                      )}
+                    </TabsContent>
+                  )}
+                  <TabsContent value="settings">
+                    <Container>
+                      <ProjectSettingsContent projectId={project.id} />
+                    </Container>
                   </TabsContent>
-                )}
-                <TabsContent value="settings">
-                  <Container>
-                    <ProjectSettingsContent projectId={project.id} />
-                  </Container>
-                </TabsContent>
-              </Tabs>
+                </Tabs>
+              ) : (
+                <>
+                  {tasks && (
+                    <div>
+                      {memoizedTasks && memoizedTasks.length > 0 ? (
+                        <BoardSectionList INITIAL_TASKS={memoizedTasks} />
+                      ) : (
+                        <TasksEmptyCard />
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </section>
         ) : (

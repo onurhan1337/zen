@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { fetchMembers } from "@/lib/services/project/fetchMember";
-import createMember from "@/lib/services/project/createMember";
 import getUser from "@/lib/utils/getUser";
+import { fetchMembers } from "@/lib/services/member/fetchMember";
+import createMember from "@/lib/services/member/createMember";
+import deleteMember from "@/lib/services/member/deleteMember";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,6 +21,8 @@ export default async function handler(
       return await fetchMembers(req, res);
     case "POST":
       return await createMember(req, res);
+    case "DELETE":
+      return await deleteMember(req, res);
     default:
       res.status(405).json({ error: "Method not allowed" });
       break;

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Project } from "@prisma/client";
+import { Project } from "types/project";
 
 import { truncate } from "@/lib/utils";
 import Badge from "@/components/shared/badge";
@@ -14,9 +15,12 @@ type Props = {
 };
 
 const ProjectCard = ({ project }: Props) => {
+  const { data: session } = useSession();
   const [clicked, setClicked] = useState<boolean>(false);
-  const { id, name, status, description } = project;
+  const { id, name, status, description, owner } = project;
   const router = useRouter();
+
+  const isOwner = owner.id === session?.user?.id;
 
   return (
     <div className="flex flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4">
@@ -28,7 +32,18 @@ const ProjectCard = ({ project }: Props) => {
             <Badge type="archived" />
           )}
         </div>
-        <DeleteConfirmationDialog id={id} hasLabel={false} />
+        {isOwner ? (
+          <DeleteConfirmationDialog id={id} hasLabel={false} />
+        ) : (
+          <div>
+            <span
+              className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
+              title="Member"
+            >
+              MEMBER
+            </span>
+          </div>
+        )}
       </div>
       <div>
         <h4 className="antialised scroll-m-20 text-lg font-medium tracking-tight md:subpixel-antialiased">

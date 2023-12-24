@@ -29,8 +29,6 @@ export const Combobox: React.FC<ComboboxProps> = ({ onChange, options }) => {
   const [value, setValue] = React.useState<string | null>(null);
   const { setFieldValue } = useFormikContext();
 
-  console.log("options", options);
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -53,7 +51,7 @@ export const Combobox: React.FC<ComboboxProps> = ({ onChange, options }) => {
           <CommandGroup>
             {options.map((option) => (
               <CommandItem
-                key={option.label}
+                key={option.value}
                 value={option.value}
                 onSelect={(value) => {
                   onChange(value);

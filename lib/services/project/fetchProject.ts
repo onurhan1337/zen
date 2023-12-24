@@ -16,7 +16,22 @@ export async function fetchAllProjects(
 
   const projects = await prisma.project.findMany({
     where: {
-      userId: user.id,
+      OR: [
+        {
+          userId: user.id,
+        },
+        {
+          members: {
+            some: {
+              id: user.id,
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      members: true,
+      owner: true,
     },
   });
 

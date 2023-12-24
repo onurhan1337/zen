@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import prisma from "@/lib/prisma";
-import { getSession } from "next-auth/react";
 import getUser from "@/lib/utils/getUser";
 
 export async function fetchAllTasks(req: NextApiRequest, res: NextApiResponse) {
@@ -46,7 +45,10 @@ export async function fetchAllTasksOfUser(
 
   const tasks = await prisma.task.findMany({
     where: {
-      ownerId: user.id as string,
+      OR: [
+        { ownerId: user.id as string },
+        { project: { members: { some: { id: user.id as string } } } },
+      ],
     },
   });
 

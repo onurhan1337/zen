@@ -50,11 +50,6 @@ export default async function createProject(
             id: user.id,
           },
         },
-        members: {
-          connect: {
-            id: user.id,
-          },
-        },
       },
     });
 
