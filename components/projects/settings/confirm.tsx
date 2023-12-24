@@ -51,7 +51,7 @@ const DeleteConfirmationDialog = ({
       setOpen(false);
 
       if (hasLabel && res.ok) {
-        router.push("/");
+        router.push("/projects");
       }
 
       if (!res.ok) {
