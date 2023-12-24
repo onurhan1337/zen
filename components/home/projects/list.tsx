@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import useSWR from "swr";
-import { Project } from "@prisma/client";
+import { Project } from "types/project";
 
 import fetcher from "@/lib/fetcher";
 import {
