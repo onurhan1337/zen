@@ -53,7 +53,7 @@ model User {
   ownedProjects Project[] @relation("projectOwner")
   memberProjects Project[] @relation("projectMembers")
   ownedTasks    Task[]    @relation("TaskOwner")
-  memberTasks   Task[]    @relation("TaskMembers")
+  assignedTasks Task[]    @relation("TaskAssignee")
 }
 
 model VerificationToken {
@@ -101,16 +101,17 @@ model Task {
   endDate     DateTime? 
   priority    Priority @default(low)
   ownerId     String
+  assigneeId  String? // Assignee can be optional
   projectId   String
   
   // Define a relationship with the User and Project models
   owner       User     @relation("TaskOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  members     User[]   @relation("TaskMembers")
+  assignee    User?    @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   // Use a unique constraint for task names
   @@unique([id, name])
-  @@index([projectId, ownerId])
+  @@index([projectId, ownerId, assigneeId])
 }
 
 enum TaskStatus {
