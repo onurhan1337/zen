@@ -1,4 +1,6 @@
-# Zen
+<p align="center">
+<img src="https://github.com/onurhan1337/zen/assets/60575283/b1e47a7c-c374-4b3a-bf9b-777adfdc388b" width='128' height='128' />
+</p>
 
 ### What is Zen?
 

@@ -37,10 +37,10 @@ export default function NavBar() {
           <div className="inline-flex w-full items-center justify-start gap-8">
             <Link href="/" className="font-display flex items-center text-2xl">
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt="Zen logo"
-                width="30"
-                height="30"
+                width={36}
+                height={36}
                 className="mr-2 rounded-sm"
               ></Image>
               <p>Zen</p>
