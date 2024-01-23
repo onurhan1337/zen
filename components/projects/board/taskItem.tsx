@@ -55,9 +55,21 @@ const TaskItem = ({ task }: TaskItemProps) => {
           {truncate(task.description, 30)}
         </p>
 
-        <Badge className="mt-2" size={"1"} color="gray" radius="full">
-          {task.priority.toUpperCase()} {handleIconForPriority(task.priority)}
-        </Badge>
+        <div className="flex flex-row items-center justify-start space-x-3">
+          {task.assignee && (
+            <Badge
+              className="mt-2 border border-zinc-200 bg-blue-50 uppercase text-blue-500"
+              size={"1"}
+              radius="full"
+            >
+              {task.assignee.name}
+            </Badge>
+          )}
+
+          <Badge className="mt-2" size={"1"} color="gray" radius="full">
+            {task.priority.toUpperCase()} {handleIconForPriority(task.priority)}
+          </Badge>
+        </div>
       </div>
 
       <TaskDetailModal taskId={task.id} isOpen={isOpen} setOpen={setOpen} />

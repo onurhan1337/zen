@@ -8,6 +8,9 @@ export async function fetchAllTasks(req: NextApiRequest, res: NextApiResponse) {
     where: {
       projectId: req.query.id as string,
     },
+    include: {
+      assignee: true,
+    },
   });
 
   if (!tasks || tasks.length === 0) {
@@ -21,6 +24,9 @@ export async function fetchTask(req: NextApiRequest, res: NextApiResponse) {
   const task = await prisma.task.findUnique({
     where: {
       id: req.query.id as string,
+    },
+    include: {
+      assignee: true,
     },
   });
 
@@ -49,6 +55,9 @@ export async function fetchAllTasksOfUser(
         { ownerId: user.id as string },
         { project: { members: { some: { id: user.id as string } } } },
       ],
+    },
+    include: {
+      assignee: true,
     },
   });
 

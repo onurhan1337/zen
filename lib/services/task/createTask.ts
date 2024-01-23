@@ -21,6 +21,7 @@ export default async function createTask(
       startDate,
       endDate,
       priority,
+      assignedTo,
       description,
       projectId,
     } = req.body;
@@ -31,6 +32,7 @@ export default async function createTask(
       startDate: Yup.string().required("Start date is required"),
       endDate: Yup.string().required("End date is required"),
       priority: Yup.string().required("Priority is required"),
+      assignedTo: Yup.string().optional().nullable().default(null),
       description: Yup.string().required("Description is required"),
       projectId: Yup.string().required("Project ID is required"),
     });
@@ -49,6 +51,8 @@ export default async function createTask(
       });
     }
 
+    console.log("Assigned to baba: ", assignedTo);
+
     const task = await prisma.task.create({
       data: {
         name,
@@ -56,6 +60,13 @@ export default async function createTask(
         endDate,
         status,
         priority,
+        assignee: assignedTo
+          ? {
+              connect: {
+                id: assignedTo,
+              },
+            }
+          : undefined,
         description,
         owner: {
           connect: {
@@ -69,6 +80,8 @@ export default async function createTask(
         },
       },
     });
+
+    console.log("oluşturuldu:", task);
 
     return res.status(201).json({
       task,

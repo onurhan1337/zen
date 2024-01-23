@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 export type Status = "backlog" | "todo" | "inProgress" | "done";
 
 export enum TaskStatus {
@@ -22,6 +24,7 @@ export type Task = {
   status: TaskStatusType;
   endDate: string;
   priority: Priority;
+  assignee: User | null;
   ownerId: string;
   memberId: string[];
   description: string;

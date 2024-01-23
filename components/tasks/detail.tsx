@@ -155,6 +155,22 @@ const TaskDetailContent = ({ taskId }: { taskId: string }) => {
               </p>
             </div>
 
+            {task?.assignee && (
+              <div className=" flex w-full items-start justify-between">
+                <h4
+                  className="
+                            text-md flex items-center
+                            space-x-2 text-zinc-600"
+                >
+                  <FastForward className="text-zinc-500" size={12} />
+                  <span>Assigned to</span>
+                </h4>
+                <p className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium uppercase tracking-tight text-gray-400">
+                  {task?.assignee.name}
+                </p>
+              </div>
+            )}
+
             <div className=" flex w-full flex-col items-start justify-between space-y-2">
               <h4
                 className="

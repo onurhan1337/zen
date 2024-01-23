@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { toast } from "sonner";
 import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
@@ -28,17 +28,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { taskCreateFormState } from "@/lib/store";
+import { User } from "@prisma/client";
 
-interface FormValues {
-  name: string;
-  status: TaskStatus;
-  startDate: Date;
-  endDate: Date;
-  description: string;
+interface Data {
+  members: User[];
 }
 
 const TaskCreateForm = () => {
   const router = useRouter();
+  const { data } = useSWR<Data>(`/api/project/${router.query.id}`);
   const { setOpen } = taskCreateFormState();
 
   const initialValues: FormValues = {
@@ -47,6 +45,7 @@ const TaskCreateForm = () => {
     endDate: new Date(),
     status: TaskStatus.BACKLOG,
     priority: Priority.LOW,
+    assignedTo: "",
     description: "",
   };
 
@@ -64,6 +63,7 @@ const TaskCreateForm = () => {
     startDate: Date;
     endDate: Date;
     priority: Priority;
+    assignedTo: string;
     description: string;
   }
 
@@ -82,6 +82,7 @@ const TaskCreateForm = () => {
         endDate: values.endDate.toISOString(),
         status: values.status,
         priority: values.priority,
+        assignedTo: values.assignedTo,
         description: values.description,
         projectId: projectId,
       }),
@@ -226,7 +227,7 @@ const TaskCreateForm = () => {
               />
             </div>
 
-            <div className="relative col-span-2 mt-4">
+            <div className="relative col-span-1 mt-4">
               <Label htmlFor="priority">Priority</Label>
               <Field
                 as={Select}
@@ -245,6 +246,37 @@ const TaskCreateForm = () => {
                   {Object.entries(Priority).map(([key, value]) => (
                     <SelectItem key={value} value={value}>
                       {capitalize(value)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Field>
+              <ErrorMessage
+                name="priority"
+                className="py-1 text-xs italic text-red-500"
+                component="div"
+              />
+            </div>
+
+            <div className="relative col-span-1 mt-4">
+              <Label htmlFor="priority">Assigned To</Label>
+              <Field
+                as={Select}
+                name="assignedTo"
+                id="assignedTo"
+                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                value={values.assignedTo}
+                onValueChange={(value: string) =>
+                  setFieldValue("assignedTo", value)
+                }
+                disabled={!data?.members.length}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select member" />
+                </SelectTrigger>
+                <SelectContent>
+                  {data?.members.map((member) => (
+                    <SelectItem key={member.id} value={member.id}>
+                      {member.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
