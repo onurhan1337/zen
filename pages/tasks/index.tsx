@@ -12,7 +12,6 @@ export default function TasksIndex() {
   const { data: tasks, error } = useSWR<Task[]>("/api/task", fetcher);
 
   if (error) return <div>failed to load</div>;
-  if (!tasks) return <TasksPageSkeletonLoading />;
 
   return (
     <>
@@ -30,7 +29,11 @@ export default function TasksIndex() {
               <h1 className="scroll-m-20 text-xl font-bold tracking-tight lg:text-3xl">
                 Tasks
               </h1>
-              <DataTable columns={columns} data={tasks} />
+              {tasks ? (
+                <DataTable columns={columns} data={tasks} />
+              ) : (
+                <TasksPageSkeletonLoading />
+              )}
             </div>
           </div>
         </div>
