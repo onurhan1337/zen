@@ -55,8 +55,11 @@ const HowItWorks = () => {
             {HOW_IT_WORKS.map((h) => (
               <div key={h.name} className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
-                  <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-200">
-                    <span className="text-gray-600">{h.step}</span>
+                  <div
+                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-200  via-orange-300 to-orange-200
+                   shadow-inner"
+                  >
+                    <span className="text-zinc-700">{h.step}</span>
                   </div>
                   {h.name}
                 </dt>
