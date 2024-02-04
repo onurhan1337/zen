@@ -18,6 +18,10 @@ export async function fetchMembers(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ error: "Project not found" });
     }
 
+    if (!project.members) {
+      return res.status(200).json([]);
+    }
+
     res.status(200).json(project.members);
   } catch (error) {
     res
