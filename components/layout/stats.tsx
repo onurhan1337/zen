@@ -24,7 +24,7 @@ export default function Stats() {
   if (!data) {
     return (
       <div className="flex items-center justify-center">
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-zinc-300">Loading...</p>
       </div>
     );
   }
@@ -50,10 +50,10 @@ export default function Stats() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-      <h3 className="text-base font-semibold leading-6 text-gray-900">
+      <h3 className="text-base font-semibold leading-6 text-zinc-300">
         Last 30 days
       </h3>
-      <dl className="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-100 bg-white md:grid-cols-3 md:divide-x md:divide-y-0">
+      <dl className="mt-5 grid grid-cols-1 divide-y divide-zinc-600 overflow-hidden rounded-lg border border-zinc-600 md:grid-cols-3 md:divide-x md:divide-y-0">
         {stats.map((item) => (
           <StatItem
             key={item.name}
@@ -82,20 +82,20 @@ const StatItem = ({
   change: string | undefined;
   changeType: string | undefined;
 }) => (
-  <div className="border-gray-200 px-4 py-5 sm:p-6">
-    <dt className="text-base font-normal text-gray-900">{title}</dt>
+  <div className="border-zinc-200 px-4 py-5 sm:p-6">
+    <dt className="text-base font-normal text-zinc-300">{title}</dt>
     <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
       {title === "users" ? (
         <div className="flex items-baseline">
-          <span className="text-2xl font-semibold text-orange-600">
+          <span className="text-2xl font-semibold text-lime-600">
             {total}
           </span>
-          <span className="ml-2 text-sm font-medium text-gray-500">Total</span>
+          <span className="ml-2 text-sm font-medium text-zinc-400">Total</span>
         </div>
       ) : (
-        <div className="flex items-baseline text-2xl font-semibold text-orange-600">
+        <div className="flex items-baseline text-2xl font-semibold text-lime-600">
           {total}
-          <span className="ml-2 text-sm font-medium text-gray-500">
+          <span className="ml-2 text-sm font-medium text-zinc-400">
             from {recent}
           </span>
         </div>

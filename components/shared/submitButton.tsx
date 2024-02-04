@@ -1,46 +1,52 @@
-import { Button } from "@/components/ui/button";
-import { LoadingDots } from "@/components/shared/icons";
-import { CommandIcon, CornerDownLeftIcon } from "lucide-react";
+import {LoadingDots} from "@/components/shared/icons";
+import {CommandIcon, CornerDownLeftIcon} from "lucide-react";
+import {Button, Dialog} from "@radix-ui/themes";
 
 export default function SubmitButton({
-  label,
-  submitForm,
-  isSubmitting,
-  showShortcutIcons = true,
-}: {
-  label?: string;
-  submitForm: () => Promise<void>;
-  isSubmitting: boolean;
-  showShortcutIcons?: boolean;
+                                         label, submitForm, isSubmitting, showShortcutIcons = true, ...props
+                                     }: {
+    label?: string; submitForm: () => Promise<void>; isSubmitting: boolean; showShortcutIcons?: boolean;
 }) {
-  const handleSubmit = () => {
-    submitForm();
-  };
+    const handleSubmit = () => {
+        submitForm();
+    };
 
-  return (
-    <Button
-      className="flex w-full items-center justify-center space-x-2"
-      type="button"
-      onClick={handleSubmit}
-      disabled={isSubmitting}
-    >
-      {isSubmitting ? (
-        <LoadingDots color="#FFFFFF" />
-      ) : (
-        <>
-          {showShortcutIcons && (
-            <div
-              className="inline-flex items-center justify-center space-x-1
-              rounded-lg border border-zinc-600 px-2 py-1 text-xs
+    return (<Button
+            size={"2"}
+            type="submit"
+            color={"lime"}
+            radius={'full'}
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            {...props}
+        >
+            {isSubmitting ? (<LoadingDots color="#FFFFFF"/>) : (<>
+                    {showShortcutIcons && (<div
+                            className="inline-flex items-center justify-center space-x-1
+              rounded-xl border border-zinc-600 px-2 py-1 text-xs
               "
+                        >
+                            <CommandIcon width="14" height="14"/>
+                            <CornerDownLeftIcon width="14" height="14"/>
+                        </div>)}
+                    <span>{label ? label : "Create"}</span>
+                </>)}
+        </Button>);
+}
+
+export const DialogCloseButton = ({
+                                      label = 'Cancel'
+                                  }: {
+    label?: string;
+}) => {
+    return (<Dialog.Close>
+            <Button
+                color={'gray'}
+                radius={'full'}
+                variant={'outline'}
+                aria-label={label}
             >
-              <CommandIcon width="14" height="14" />
-              <CornerDownLeftIcon width="14" height="14" />
-            </div>
-          )}
-          <span>{label ? label : "Create"}</span>
-        </>
-      )}
-    </Button>
-  );
+                {label}
+            </Button>
+        </Dialog.Close>)
 }

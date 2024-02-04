@@ -1,19 +1,25 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { Resend } from "resend";
 import prisma from "@/lib/prisma";
+import { EmailTemplate } from "@/components/projects/settings/emailTemplate";
+import getUser from "@/lib/utils/getUser";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function createMember(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const sessionUser = await getUser(req, res);
   const { id } = req.query;
-  const { userId } = req.body;
+  const { email } = req.body;
 
   try {
     // Validate input
-    if (!userId || !id) {
+    if (!email || !id) {
       return res
         .status(400)
-        .json({ error: "User ID and Project ID are required" });
+        .json({ error: "User Email and Project ID are required" });
     }
 
     // Check if project exists
@@ -26,30 +32,31 @@ export default async function createMember(
       return res.status(404).json({ error: "Project not found" });
     }
 
-    // Check if user is already a member
-    if (
-      project.members.some((member: { id: string }) => member.id === userId)
-    ) {
-      return res
-        .status(400)
-        .json({ error: "User is already a member of the project" });
-    }
-
     // Check if user exists
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { email: email } });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Add user as a member to the project
-    await prisma.project.update({
-      where: { id: id as string },
-      data: { members: { connect: { id: userId } } },
+    // Check if user is already a member
+    const isMember = project.members.some((member) => member.id === email);
+
+    if (isMember) {
+      return res.status(400).json({ error: "User is already a member" });
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: user.email!,
+      to: email,
+      subject: "Hello world",
+      text: "Hello world",
+      react: EmailTemplate({ firstName: "John" }),
     });
 
-    // Respond with success message
-    res.status(200).json({ message: "Member added to the project" });
+    console.log(data, error);
+
+    res.status(200).json(data);
   } catch (error) {
     // Handle errors
     console.error("Error adding member to the project:", error);

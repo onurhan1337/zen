@@ -57,12 +57,12 @@ export default function ProjectsCardList() {
           .map((_, i) => (
             <div
               key={i}
-              className="flex animate-pulse flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4"
+              className="flex animate-pulse flex-col justify-between space-y-2 rounded-md border border-zinc-700 bg-zinc-800 p-4"
             >
-              <div className="h-4 bg-gray-200"></div>
-              <div className="h-6 bg-gray-200"></div>
-              <div className="h-20 bg-gray-200"></div>
-              <div className="h-10 bg-gray-200"></div>
+              <div className="h-4 bg-zinc-700"></div>
+              <div className="h-6 bg-zinc-700"></div>
+              <div className="h-20 bg-zinc-700"></div>
+              <div className="h-10 bg-zinc-700"></div>
             </div>
           ))}
       </div>
@@ -94,7 +94,7 @@ export default function ProjectsCardList() {
       {filteredProjects && (
         <>
           {filteredProjects.length > 0 && !isValidating ? (
-            <div className="mb-4 grid w-full grid-cols-2 gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 lg:gap-5">
+            <div className="mb-4 grid w-full grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-4 lg:gap-4">
               {filteredProjects.map((project: Project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

@@ -33,7 +33,7 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
   }, []);
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full">
       <div
         className={cn(
           "flex",

@@ -1,389 +1,339 @@
-import { useRouter } from "next/router";
-import useSWR, { mutate } from "swr";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { toast } from "sonner";
-import { CommandIcon, CornerDownLeftIcon, CalendarIcon } from "lucide-react";
-
+import {useRouter} from "next/router";
+import useSWR, {mutate} from "swr";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import {toast} from "sonner";
+import {CalendarIcon } from "lucide-react";
 import * as Yup from "yup";
-import { format } from "date-fns";
+import {format} from "date-fns";
 
-import { capitalize, cn } from "@/lib/utils";
-import { Priority, Task, TaskStatus } from "types/task";
-import { LoadingDots } from "@/components/shared/icons";
-import { Calendar } from "@/components/ui/calendar";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { taskCreateFormState } from "@/lib/store";
-import { User } from "@prisma/client";
+import {capitalize, cn} from "@/lib/utils";
+import {Priority, Task, TaskStatus} from "types/task";
+import {Calendar} from "@/components/ui/calendar";
+import {Textarea} from "../ui/textarea";
+import {Label} from "../ui/label";
+import {Input} from "../ui/input";
+import { Button } from "@/components/ui/button";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover";
+import {taskCreateFormState} from "@/lib/store";
+import {User} from "@prisma/client";
+import SubmitButton, {DialogCloseButton} from "@/components/shared/submitButton";
 
 interface Data {
-  members: User[];
+    members: User[];
 }
 
 const TaskCreateForm = () => {
-  const router = useRouter();
-  const { data } = useSWR<Data>(`/api/project/${router.query.id}`);
-  const { setOpen } = taskCreateFormState();
+    const router = useRouter();
+    const {data} = useSWR<Data>(`/api/project/${router.query.id}`);
+    const {setOpen} = taskCreateFormState();
 
-  const initialValues: FormValues = {
-    name: "",
-    startDate: new Date(),
-    endDate: new Date(),
-    status: TaskStatus.BACKLOG,
-    priority: Priority.LOW,
-    assignedTo: "",
-    description: "",
-  };
+    const initialValues: FormValues = {
+        name: "",
+        startDate: new Date(),
+        endDate: new Date(),
+        status: TaskStatus.BACKLOG,
+        priority: Priority.LOW,
+        assignedTo: "",
+        description: "",
+    };
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Required"),
-    status: Yup.string<TaskStatus>().required("Required"),
-    startDate: Yup.date().required("Required"),
-    endDate: Yup.date().required("Required").min(Yup.ref("startDate")),
-    description: Yup.string().required("Required"),
-  });
-
-  interface FormValues {
-    name: string;
-    status: TaskStatus;
-    startDate: Date;
-    endDate: Date;
-    priority: Priority;
-    assignedTo: string;
-    description: string;
-  }
-
-  async function createTask(
-    values: FormValues,
-    projectId: string | string[] | undefined,
-  ) {
-    const res = await fetch("/api/task", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: values.name,
-        startDate: values.startDate.toISOString(),
-        endDate: values.endDate.toISOString(),
-        status: values.status,
-        priority: values.priority,
-        assignedTo: values.assignedTo,
-        description: values.description,
-        projectId: projectId,
-      }),
+    const validationSchema = Yup.object({
+        name: Yup.string().required("Required"),
+        status: Yup.string<TaskStatus>().required("Required"),
+        startDate: Yup.date().required("Required"),
+        endDate: Yup.date().required("Required").min(Yup.ref("startDate")),
+        description: Yup.string().required("Required"),
     });
 
-    if (!res.ok) {
-      throw new Error(await res.text());
+    interface FormValues {
+        name: string;
+        status: TaskStatus;
+        startDate: Date;
+        endDate: Date;
+        priority: Priority;
+        assignedTo: string;
+        description: string;
     }
 
-    return res.json();
-  }
-
-  const handleSubmit = async (values: FormValues) => {
-    try {
-      toast.loading("Creating task...");
-
-      const newTask = await createTask(values, router.query.id);
-
-      mutate(
-        `/api/project/${router.query.id}/task`,
-        (data: Task[] | undefined) => {
-          if (Array.isArray(data)) {
-            return [...data, newTask];
-          }
-          return data;
-        },
-        true,
-      );
-
-      toast.success("Task created successfully!");
-      setOpen(false);
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  };
-
-  /**
-   * Handles the onKeyDown event on the form.
-   *
-   * @param e - The keyboard event.
-   * @param submitForm - The function to submit the form.
-   */
-  const handleOnKeyDown = (
-    e: React.KeyboardEvent<HTMLFormElement>,
-    submitForm: () => void,
-  ) => {
-    if (
-      (e.ctrlKey || e.metaKey) &&
-      (e.key === "Enter" || e.key === "NumpadEnter")
+    async function createTask(
+        values: FormValues,
+        projectId: string | string[] | undefined,
     ) {
-      e.preventDefault();
-      submitForm();
+        const res = await fetch("/api/task", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: values.name,
+                startDate: values.startDate.toISOString(),
+                endDate: values.endDate.toISOString(),
+                status: values.status,
+                priority: values.priority,
+                assignedTo: values.assignedTo,
+                description: values.description,
+                projectId: projectId,
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+
+        return res.json();
     }
-  };
 
-  return (
-    <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting, submitForm, values, setFieldValue }) => (
-          <Form
-            onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
-            className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
-          >
-            <div className="relative col-span-2 mt-2 md:col-span-1">
-              <Label htmlFor="name">Name</Label>
-              <Field
-                as={Input}
-                type="text"
-                name="name"
-                id="name"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
-              />
-              <ErrorMessage
-                name="name"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
+    const handleSubmit = async (values: FormValues) => {
+        try {
+            toast.loading("Creating task...");
 
-            <div className="relative col-span-2 mt-2 md:col-span-1">
-              <Label htmlFor="status">Status</Label>
-              <Field
-                as={Select}
-                name="status"
-                id="status"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
-                value={values.status}
-                onValueChange={(value: string) =>
-                  setFieldValue("status", value)
-                }
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(TaskStatus).map(([key, value]) => (
-                    <SelectItem key={value} value={value}>
-                      {capitalize(value)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Field>
-              <ErrorMessage
-                name="status"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
+            const newTask = await createTask(values, router.query.id);
 
-            <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
-              <Field
-                as={DatePicker}
-                name="startDate"
-                id="startDate"
-                date={values.startDate}
-                setDate={(date: Date) => setFieldValue("startDate", date)}
-              />
-              <ErrorMessage
-                name="startDate"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
-            <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
-              <Field
-                as={DatePicker}
-                name="endDate"
-                id="endDate"
-                date={values.endDate}
-                setDate={(date: Date) => setFieldValue("endDate", date)}
-              />
-              <ErrorMessage
-                name="endDate"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
+            mutate(
+                `/api/project/${router.query.id}/task`,
+                (data: Task[] | undefined) => {
+                    if (Array.isArray(data)) {
+                        return [...data, newTask];
+                    }
+                    return data;
+                },
+                true,
+            );
 
-            <div className="relative col-span-1 mt-4">
-              <Label htmlFor="priority">Priority</Label>
-              <Field
-                as={Select}
-                name="priority"
-                id="priority"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
-                value={values.priority}
-                onValueChange={(value: string) =>
-                  setFieldValue("priority", value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select task priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(Priority).map(([key, value]) => (
-                    <SelectItem key={value} value={value}>
-                      {capitalize(value)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Field>
-              <ErrorMessage
-                name="priority"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
+            toast.success("Task created successfully!");
+            setOpen(false);
+        } catch (error: any) {
+            toast.error(error.message);
+        }
+    };
 
-            <div className="relative col-span-1 mt-4">
-              <Label htmlFor="priority">Assigned To</Label>
-              <Field
-                as={Select}
-                name="assignedTo"
-                id="assignedTo"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
-                value={values.assignedTo}
-                onValueChange={(value: string) =>
-                  setFieldValue("assignedTo", value)
-                }
-                disabled={!data?.members.length}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select member" />
-                </SelectTrigger>
-                <SelectContent>
-                  {data?.members.map((member) => (
-                    <SelectItem key={member.id} value={member.id}>
-                      {member.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Field>
-              <ErrorMessage
-                name="priority"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
+    /**
+     * Handles the onKeyDown event on the form.
+     *
+     * @param e - The keyboard event.
+     * @param submitForm - The function to submit the form.
+     */
+    const handleOnKeyDown = (
+        e: React.KeyboardEvent<HTMLFormElement>,
+        submitForm: () => void,
+    ) => {
+        if (
+            (e.ctrlKey || e.metaKey) &&
+            (e.key === "Enter" || e.key === "NumpadEnter")
+        ) {
+            e.preventDefault();
+            submitForm();
+        }
+    };
 
-            <div className="relative col-span-2 mt-4">
-              <Label htmlFor="description">Description</Label>
-              <Field
-                as={Textarea}
-                name="description"
-                id="description"
-                className="block w-full resize-none rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
-                rows={5}
-              />
-              <ErrorMessage
-                name="description"
-                className="py-1 text-xs italic text-red-500"
-                component="div"
-              />
-            </div>
-            <div className="col-span-2">
-              <SubmitButton
-                isSubmitting={isSubmitting}
-                submitForm={submitForm}
-              />
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
+    return (
+        <div>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({isSubmitting, submitForm, values, setFieldValue}) => (
+                    <Form
+                        onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
+                        className="mb-4 grid grid-cols-1 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
+                    >
+                        <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
+                            <Label htmlFor="name">Name</Label>
+                            <Field
+                                as={Input}
+                                type="text"
+                                name="name"
+                                id="name"
+                            />
+                            <ErrorMessage
+                                name="name"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+
+                        <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
+                            <Label htmlFor="status">Status</Label>
+                            <Field
+                                as={Select}
+                                name="status"
+                                id="status"
+                                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                                value={values.status}
+                                onValueChange={(value: string) =>
+                                    setFieldValue("status", value)
+                                }
+                            >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Status"/>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.entries(TaskStatus).map(([key, value]) => (
+                                        <SelectItem key={value} value={value}>
+                                            {capitalize(value)}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Field>
+                            <ErrorMessage
+                                name="status"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+
+                        <div className="relative col-span-1 mt-4 flex flex-col space-y-1">
+                            <Label htmlFor="startDate">Start Date</Label>
+                            <Field
+                                as={DatePicker}
+                                name="startDate"
+                                id="startDate"
+                                date={values.startDate}
+                                setDate={(date: Date) => setFieldValue("startDate", date)}
+                            />
+                            <ErrorMessage
+                                name="startDate"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+                        <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
+                            <Label htmlFor="endDate">End Date</Label>
+                            <Field
+                                as={DatePicker}
+                                name="endDate"
+                                id="endDate"
+                                date={values.endDate}
+                                setDate={(date: Date) => setFieldValue("endDate", date)}
+                            />
+                            <ErrorMessage
+                                name="endDate"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+
+                        <div className="relative col-span-1 mt-4 space-y-1">
+                            <Label htmlFor="priority">Priority</Label>
+                            <Field
+                                as={Select}
+                                name="priority"
+                                id="priority"
+                                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                                value={values.priority}
+                                onValueChange={(value: string) =>
+                                    setFieldValue("priority", value)
+                                }
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select task priority"/>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.entries(Priority).map(([key, value]) => (
+                                        <SelectItem key={value} value={value}>
+                                            {capitalize(value)}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Field>
+                            <ErrorMessage
+                                name="priority"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+
+                        <div className="relative col-span-1 mt-4 space-y-1">
+                            <Label htmlFor="priority">Assigned To</Label>
+                            <Field
+                                as={Select}
+                                name="assignedTo"
+                                id="assignedTo"
+                                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
+                                value={values.assignedTo}
+                                onValueChange={(value: string) =>
+                                    setFieldValue("assignedTo", value)
+                                }
+                                disabled={!data?.members.length}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select member"/>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {data?.members.map((member) => (
+                                        <SelectItem key={member.id} value={member.id}>
+                                            {member.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Field>
+                            <ErrorMessage
+                                name="priority"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+
+                        <div className="relative col-span-2 mt-4 space-y-1">
+                            <Label htmlFor="description">Description</Label>
+                            <Field
+                                as={Textarea}
+                                name="description"
+                                id="description"
+                                rows={5}
+                            />
+                            <ErrorMessage
+                                name="description"
+                                className="py-1 text-xs italic text-red-500"
+                                component="div"
+                            />
+                        </div>
+                        <div className="flex items-center justify-end gap-2 col-span-2">
+                            <DialogCloseButton />
+                            <SubmitButton
+                                isSubmitting={isSubmitting}
+                                submitForm={submitForm}
+                            />
+                        </div>
+                    </Form>
+                )}
+            </Formik>
+        </div>
+    );
 };
 
 export default TaskCreateForm;
-
-function SubmitButton({
-  submitForm,
-  isSubmitting,
-}: {
-  submitForm: () => Promise<void>;
-  isSubmitting: boolean;
-}) {
-  const handleSubmit = () => {
-    submitForm();
-  };
-
-  return (
-    <Button
-      className="flex w-full items-center justify-center space-x-2"
-      type="button"
-      onClick={handleSubmit}
-      disabled={isSubmitting}
-    >
-      {isSubmitting ? (
-        <LoadingDots color="#FFFFFF" />
-      ) : (
-        <>
-          <div
-            className="inline-flex items-center justify-center space-x-1
-            rounded-lg border border-zinc-600 px-2 py-1 text-xs
-          "
-          >
-            <CommandIcon width="14" height="14" />
-            <CornerDownLeftIcon width="14" height="14" />
-          </div>
-          <span>Create</span>
-        </>
-      )}
-    </Button>
-  );
-}
-
 function DatePicker({
-  date,
-  setDate,
-}: {
-  date: Date | undefined;
-  setDate: (date: Date) => void;
+                        date,
+                        setDate,
+                    }: {
+    date: Date | undefined;
+    setDate: (date: Date) => void;
 }) {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-auto justify-start text-left font-normal",
-            !date && "text-muted-foreground",
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onDayClick={setDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  );
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn(
+                        "w-auto justify-start text-left font-normal",
+                        !date && "text-muted-foreground",
+                    )}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4"/>
+                    {date ? format(date, "PP") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar
+                    mode="single"
+                    selected={date}
+                    onDayClick={setDate}
+                    initialFocus
+                />
+            </PopoverContent>
+        </Popover>
+    );
 }

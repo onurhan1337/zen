@@ -29,7 +29,7 @@ export default function NavBar() {
       <div
         className={`fixed top-0 flex w-full justify-center ${
           scrolled
-            ? "border-b border-gray-200 bg-white/50 backdrop-blur-xl"
+            ? "border-b border-zinc-600 bg-transparent/10 backdrop-blur-xl"
             : "bg-white/0"
         } z-30 transition-all`}
       >
@@ -42,7 +42,7 @@ export default function NavBar() {
                 width={36}
                 height={36}
                 className="mr-2 rounded-sm"
-              ></Image>
+              />
               <p>Zen</p>
             </Link>
             {session && (

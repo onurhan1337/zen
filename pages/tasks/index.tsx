@@ -10,9 +10,6 @@ import TasksPageSkeletonLoading from "@/components/tasks/SkeletonLoading";
 export default function TasksIndex() {
   const { data: session } = useSession();
   const { data: tasks, error } = useSWR<Task[]>("/api/task", fetcher);
-
-  if (error) return <div>failed to load</div>;
-
   return (
     <>
       <Head>

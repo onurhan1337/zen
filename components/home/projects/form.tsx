@@ -27,7 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { projectCreateFormState } from "@/lib/store";
-import SubmitButton from "@/components/shared/submitButton";
+import SubmitButton, {DialogCloseButton} from "@/components/shared/submitButton";
 
 interface FormValues {
   name: string;
@@ -145,14 +145,13 @@ const ProjectCreateForm = () => {
             onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
             className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
           >
-            <div className="relative col-span-2 mt-2 md:col-span-1">
+            <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
               <Label htmlFor="name">Name</Label>
               <Field
                 as={Input}
                 type="text"
                 name="name"
                 id="name"
-                className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
               />
               <ErrorMessage
                 name="name"
@@ -161,7 +160,7 @@ const ProjectCreateForm = () => {
               />
             </div>
 
-            <div className="relative col-span-2 mt-2 md:col-span-1">
+            <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
               <Label htmlFor="status">Status</Label>
               <Field
                 as={Select}
@@ -173,7 +172,7 @@ const ProjectCreateForm = () => {
                   setFieldValue("status", value)
                 }
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -191,7 +190,7 @@ const ProjectCreateForm = () => {
               />
             </div>
 
-            <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
+            <div className="relative col-span-1 mt-4 flex flex-col space-y-1">
               <Label htmlFor="startDate">Start Date</Label>
               <Field
                 as={DatePicker}
@@ -206,7 +205,7 @@ const ProjectCreateForm = () => {
                 component="div"
               />
             </div>
-            <div className="relative col-span-1 mt-4 flex flex-col space-y-2">
+            <div className="relative col-span-1 mt-4 flex flex-col space-y-1">
               <Label htmlFor="endDate">End Date</Label>
               <Field
                 as={DatePicker}
@@ -222,13 +221,12 @@ const ProjectCreateForm = () => {
               />
             </div>
 
-            <div className="relative col-span-2 mt-4">
+            <div className="relative col-span-2 mt-4 space-y-1">
               <Label htmlFor="description">Description</Label>
               <Field
                 as={Textarea}
                 name="description"
                 id="description"
-                className="block w-full resize-none rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-600 sm:text-sm sm:leading-6"
                 rows={5}
               />
               <ErrorMessage
@@ -237,7 +235,8 @@ const ProjectCreateForm = () => {
                 component="div"
               />
             </div>
-            <div className="col-span-2">
+            <div className="flex items-center justify-end gap-2 col-span-2">
+              <DialogCloseButton />
               <SubmitButton
                 isSubmitting={isSubmitting}
                 submitForm={submitForm}

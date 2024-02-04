@@ -67,11 +67,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full space-y-4">
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className="rounded-md border border-zinc-700">
         <Table>
-          <TableHeader>
+          <TableHeader
+          >
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow className={'border-zinc-700'} key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} colSpan={header.colSpan}>
@@ -87,10 +88,13 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody
+
+          >
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                    className={'border-zinc-700'}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
@@ -105,7 +109,9 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow
+                  className={'border border-zinc-700'}
+              >
                 <TableCell
                   colSpan={columns.length}
                   className="h-24 text-center"

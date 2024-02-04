@@ -1,75 +1,78 @@
-import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { Project } from "types/project";
+import {useState} from "react";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/router";
+import {Box, Button, Card, Flex} from "@radix-ui/themes";
+import {Project, ProjectStatus} from "types/project";
 
-import { truncate } from "@/lib/utils";
+import {truncate} from "@/lib/utils";
 import Badge from "@/components/shared/badge";
-import { LoadingDots } from "@/components/shared/icons";
-import { Button } from "@/components/ui/button";
+import {LoadingDots} from "@/components/shared/icons";
 import DeleteConfirmationDialog from "@/components/projects/settings/confirm";
-import { ProjectStatus } from "types/project";
 
 type Props = {
-  project: Project;
+    project: Project;
 };
 
-const ProjectCard = ({ project }: Props) => {
-  const { data: session } = useSession();
-  const [clicked, setClicked] = useState<boolean>(false);
-  const { id, name, status, description, owner } = project;
-  const router = useRouter();
+const ProjectCard = ({project}: Props) => {
+    const {data: session} = useSession();
+    const [clicked, setClicked] = useState<boolean>(false);
+    const {id, name, status, description, owner} = project;
+    const router = useRouter();
 
-  const isOwner = owner.id === session?.user?.id;
+    const isOwner = owner.id === session?.user?.id;
 
-  return (
-    <div className="flex flex-col justify-between space-y-2 rounded-md border border-zinc-200 bg-white p-4">
-      <div className="flex items-center justify-between gap-2">
-        <div>
-          {status === ProjectStatus.ACTIVE ? (
-            <Badge type="active" />
-          ) : (
-            <Badge type="archived" />
-          )}
-        </div>
-        {isOwner ? (
-          <DeleteConfirmationDialog id={id} hasLabel={false} />
-        ) : (
-          <div>
+    return (<Card>
+            <Flex
+                align={'center'}
+                justify={'between'}
+                width={'100%'}
+            >
+                {// TODO: Active/Archived badge and Member badge are not same size and not aligned. Fix it.
+                }
+                <Flex
+                    align={'center'}
+                    justify={'between'}
+                    width={'100%'}
+                    pb={'2'}
+                >
+                    {status === ProjectStatus.ACTIVE ? (<Badge type="active"/>) : (<Badge type="archived"/>)}
+                    {isOwner ? (<DeleteConfirmationDialog id={id} hasLabel={false}/>) : (<Box>
             <span
-              className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
-              title="Member"
+                className="inline-flex items-center rounded-full bg-green-200 px-2 py-1 text-xs font-medium text-green-800  ring-1 ring-inset ring-green-200"
+                title="Member"
             >
               MEMBER
             </span>
-          </div>
-        )}
-      </div>
-      <div>
-        <h4 className="antialised scroll-m-20 text-lg font-medium tracking-tight md:subpixel-antialiased">
-          {truncate(name, 15)}
-        </h4>
-      </div>
-      <div className="py-2">
-        <p className="antialised text-sm font-normal leading-7  md:subpixel-antialiased [&:not(:first-child)]:mt-6">
-          {truncate(description, 30)}
-        </p>
-      </div>
-      <div className="py-2">
-        <Button
-          onClick={() => {
-            setClicked(true);
-            router.push(`/projects/${id}`);
-          }}
-          disabled={clicked}
-          variant={"outline"}
-          className="w-full bg-gray-100 font-sans hover:bg-gray-200"
-        >
-          {clicked ? <LoadingDots color="#808080" /> : "View Project"}
-        </Button>
-      </div>
-    </div>
-  );
+                        </Box>)}
+                </Flex>
+            </Flex>
+            <Box py={'2'}>
+                <h4 className="antialised scroll-m-20 text-lg font-medium tracking-tight md:subpixel-antialiased">
+                    {truncate(name, 15)}
+                </h4>
+            </Box>
+            <div className="py-2">
+                <p className="antialised text-sm font-normal leading-7  md:subpixel-antialiased [&:not(:first-child)]:mt-6">
+                    {truncate(description, 20)}
+                </p>
+            </div>
+            <Box
+                py={'2'}
+            >
+                <Button
+                    onClick={() => {
+                        setClicked(true);
+                        router.push(`/projects/${id}`);
+                    }}
+                    color={"gray"}
+                    disabled={clicked}
+                    variant={"outline"}
+                    className={'w-full'}
+                >
+                    {clicked ? <LoadingDots color="#808080"/> : "View Project"}
+                </Button>
+            </Box>
+        </Card>);
 };
 
 export default ProjectCard;

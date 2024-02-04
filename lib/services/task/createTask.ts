@@ -51,8 +51,6 @@ export default async function createTask(
       });
     }
 
-    console.log("Assigned to baba: ", assignedTo);
-
     const task = await prisma.task.create({
       data: {
         name,
@@ -80,8 +78,6 @@ export default async function createTask(
         },
       },
     });
-
-    console.log("oluşturuldu:", task);
 
     return res.status(201).json({
       task,

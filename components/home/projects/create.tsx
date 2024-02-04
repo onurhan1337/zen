@@ -1,36 +1,29 @@
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Portal } from "@radix-ui/themes";
+import {Button, Dialog} from "@radix-ui/themes";
 
-import { projectCreateFormState } from "@/lib/store";
+import {projectCreateFormState} from "@/lib/store";
 import ProjectCreateForm from "./form";
 
 const ProjectCreateContent = () => {
-  const { isOpen, setOpen } = projectCreateFormState();
+    const {isOpen, setOpen} = projectCreateFormState();
 
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => setOpen(open)}>
-      <DialogTrigger asChild>
-        <Button variant={"action"}>Create Project</Button>
-      </DialogTrigger>
-      <Portal>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Create Project</DialogTitle>
-            <DialogDescription>Create a new project.</DialogDescription>
-          </DialogHeader>
-          <ProjectCreateForm />
-        </DialogContent>
-      </Portal>
-    </Dialog>
-  );
+    return (
+        <Dialog.Root open={isOpen} onOpenChange={(open: boolean
+        ) => setOpen(open)}>
+            <Dialog.Trigger>
+                <Button
+                    color={'lime'}
+                    size={'2'}
+                >Create Project</Button>
+            </Dialog.Trigger>
+            <Dialog.Content style={{maxWidth: 450}}>
+                <Dialog.Title>Create Project</Dialog.Title>
+                <Dialog.Description size="2" mb="4">
+                    Create a new project.
+                </Dialog.Description>
+                <ProjectCreateForm/>
+            </Dialog.Content>
+        </Dialog.Root>
+    );
 };
 
 export default ProjectCreateContent;

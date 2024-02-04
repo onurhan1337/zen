@@ -103,7 +103,7 @@ export default function ProjectDetailIndex() {
         )
       ) : (
         <div className="flex w-full flex-col items-center justify-center py-12">
-          <h1 className="text-2xl font-bold text-gray-500">
+          <h1 className="text-2xl font-bold text-zinc-500">
             You don&apos;t have access to this project.
           </h1>
         </div>
@@ -135,32 +135,32 @@ const PageLoadingState = () => {
   return (
     <div className="animate-pulse">
       <section className="flex w-full flex-col items-center">
-        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between border-b border-zinc-200 pb-4">
+        <div className="flex w-full max-w-screen-xl flex-row items-center justify-between border-b border-zinc-700 pb-4">
           <div className="flex w-1/2 flex-col items-start justify-center gap-4">
-            <div className="h-8 w-1/2 rounded bg-gray-300"></div>
-            <div className="h-4 w-1/3 rounded bg-gray-300"></div>
+            <div className="h-8 w-1/2 rounded bg-zinc-800"></div>
+            <div className="h-4 w-1/3 rounded bg-zinc-800"></div>
           </div>
 
-          <div className="h-12 w-12 rounded-full bg-gray-300"></div>
+          <div className="h-12 w-12 rounded-full bg-zinc-800"></div>
         </div>
 
         <div className="w-full max-w-screen-xl py-4">
           <Tabs defaultValue="tasks">
             <div className="flex w-full flex-col items-center justify-center">
               <TabsList className="flex w-full max-w-screen-sm items-center justify-center">
-                <div className="h-8 w-full rounded bg-gray-300"></div>
-                <div className="h-8 w-full rounded bg-gray-300"></div>
+                <div className="h-8 w-full rounded bg-zinc-800"></div>
+                <div className="h-8 w-full rounded bg-zinc-800"></div>
               </TabsList>
             </div>
             <TabsContent value="tasks">
               <div className="flex w-full flex-col items-center justify-center py-12">
-                <div className="h-4 w-5/6 rounded bg-gray-300"></div>
-                <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+                <div className="h-4 w-5/6 rounded bg-zinc-800"></div>
+                <div className="h-4 w-5/6 rounded bg-zinc-800"></div>
               </div>
             </TabsContent>
             <TabsContent value="settings">
               <div className="flex w-full flex-col items-center justify-center">
-                <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+                <div className="h-4 w-5/6 rounded bg-zinc-800"></div>
               </div>
             </TabsContent>
           </Tabs>
@@ -175,7 +175,7 @@ const TasksEmptyCard = () => {
     <div className="flex w-full flex-col items-center justify-center py-12">
       <div className="flex w-full flex-col text-center">
         <svg
-          className="mx-auto h-12 w-12 text-gray-400"
+          className="mx-auto h-12 w-12 text-zinc-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -189,8 +189,8 @@ const TasksEmptyCard = () => {
             d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
           />
         </svg>
-        <h3 className="mt-2 text-sm font-semibold text-gray-900">No tasks</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="mt-2 text-sm font-semibold text-zinc-400">No tasks</h3>
+        <p className="mt-1 text-sm text-zinc-500">
           Get started by creating a new task.
         </p>
       </div>

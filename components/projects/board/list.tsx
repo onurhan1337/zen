@@ -165,7 +165,7 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
         onDragEnd={handleDragEnd}
       >
         {Object.keys(boardSections).map((boardSectionKey) => (
-          <div key={boardSectionKey} className=" col-span-1">
+          <div key={boardSectionKey} className="col-span-1">
             <BoardSection
               id={boardSectionKey}
               title={boardSectionKey}
@@ -182,3 +182,4 @@ const BoardSectionList = ({ INITIAL_TASKS }: { INITIAL_TASKS: Task[] }) => {
 };
 
 export default BoardSectionList;
+

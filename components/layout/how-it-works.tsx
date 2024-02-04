@@ -33,19 +33,19 @@ const HOW_IT_WORKS = [
 
 const HowItWorks = () => {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-orange-800">
+          <h2 className="text-base font-semibold leading-7 text-lime-600">
             How to Use
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-2 text-3xl font-bold tracking-tight text-zinc-300 sm:text-4xl">
             Everything you need to use{" "}
-            <span className="inline-block text-clip bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+            <span className="inline-block text-clip bg-gradient-to-tr from-lime-400 to-lime-700 bg-clip-text text-transparent">
               Zen
             </span>
           </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
+          <p className="mt-6 text-lg leading-8 text-zinc-400">
             Zen is a project management tool that helps you organize your
             projects and tasks in a simple way.
           </p>
@@ -54,16 +54,16 @@ const HowItWorks = () => {
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
             {HOW_IT_WORKS.map((h) => (
               <div key={h.name} className="relative pl-16">
-                <dt className="text-base font-semibold leading-7 text-gray-900">
+                <dt className="text-base font-semibold leading-7 text-zinc-300">
                   <div
-                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-200  via-orange-300 to-orange-200
+                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-lime-300  via-lime-500 to-lime-300
                    shadow-inner"
                   >
                     <span className="text-zinc-700">{h.step}</span>
                   </div>
                   {h.name}
                 </dt>
-                <dd className="mt-2 text-base leading-7 text-gray-600">
+                <dd className="mt-2 text-base leading-7 text-zinc-500">
                   {h.description}
                 </dd>
               </div>

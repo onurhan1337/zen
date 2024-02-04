@@ -1,5 +1,5 @@
 .spinner {
-  color: gray;
+  color: rgb(128, 128, 128);
   display: inline-block;
   position: relative;
   width: 80px;
@@ -19,7 +19,7 @@
   width: 6px;
   height: 20px;
   border-radius: 20%;
-  background: black;
+  background: rgb(128, 128, 128);
 }
 .spinner div:nth-child(1) {
   transform: rotate(0deg);

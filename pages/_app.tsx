@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import type { AppProps } from "next/app";
@@ -9,6 +7,11 @@ import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import NavBar from "@/components/layout/navbar";
 import { Toaster } from "sonner";
+import { Inter } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin']
+})
 
 export default function App({
   Component,
@@ -16,14 +19,16 @@ export default function App({
 }: AppProps<{ session: Session }>) {
   return (
     <SessionProvider session={session}>
-      <Theme>
+      <Theme
+        appearance={'dark'}
+      >
         <header>
           <Suspense fallback="...">
             <NavBar />
           </Suspense>
         </header>
         <main
-          className={`${GeistSans.variable} ${GeistMono.variable} import mx-5 py-32 font-sans`}
+          className={`${inter.className} import mx-5 py-32`}
         >
           <Component {...pageProps} />
         </main>
