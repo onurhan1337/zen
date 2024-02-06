@@ -25,14 +25,18 @@ export default function TasksPageSkeletonLoading() {
       <div className="rounded-md border border-zinc-700">
         <Table>
           <thead>
-            <TableRow>
+            <TableRow
+                className={'border-b border-zinc-700'}
+            >
               {columns.map((_column: any, index: any) => (
                 <TableHead key={index}>
                   <div className="h-6 w-full rounded bg-zinc-800"></div>
                 </TableHead>
               ))}
             </TableRow>
-            <TableRow>
+            <TableRow
+                className={'border-b border-zinc-700'}
+            >
               {columns.map((_column: any, index: any) => (
                 <TableHead key={index}>
                   <div className="h-6 w-full rounded bg-zinc-800"></div>
@@ -42,7 +46,10 @@ export default function TasksPageSkeletonLoading() {
           </thead>
           <TableBody>
             {[...Array(5)].map((_, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow
+                  key={rowIndex}
+                  className={'border-b border-zinc-700'}
+              >
                 {columns.map((_column: any, colIndex: any) => (
                   <TableCell key={colIndex}>
                     <div className="h-4 w-full rounded bg-zinc-800"></div>
