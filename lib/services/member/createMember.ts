@@ -47,7 +47,7 @@ export default async function createMember(
     }
 
     const { data, error } = await resend.emails.send({
-      from: user.email!,
+      from: sessionUser?.email || "",
       to: email,
       subject: "Hello world",
       text: "Hello world",

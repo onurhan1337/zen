@@ -54,6 +54,7 @@
     "react-day-picker": "^8.9.1",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
+    "recharts": "^2.11.0",
     "resend": "^3.1.0",
     "sonner": "^1.0.3",
     "swr": "^2.2.4",

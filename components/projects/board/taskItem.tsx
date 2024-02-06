@@ -24,7 +24,7 @@ export const handleIconForPriority = (priority: string) => {
     case "high":
       return <ArrowTopRightIcon className="h-3 w-3 text-zinc-400" />;
     default:
-      <ArrowBottomRightIcon className=" text-zinc-400" />;
+      return <ArrowBottomRightIcon className=" text-zinc-400" />;
       break;
   }
 };

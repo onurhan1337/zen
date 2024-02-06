@@ -67,3 +67,24 @@ export async function fetchAllTasksOfUser(
     res.status(200).json(tasks);
   }
 }
+
+export async function fetchAllTasksOfAssignedMember(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  userId: string,
+) {
+  const tasks = await prisma.task.findMany({
+    where: {
+      assigneeId: userId,
+    },
+    include: {
+      assignee: true,
+    },
+  });
+
+  if (!tasks || tasks.length === 0) {
+    res.status(200).json([]); // Return an empty array in the response object
+  } else {
+    res.status(200).json(tasks);
+  }
+}
