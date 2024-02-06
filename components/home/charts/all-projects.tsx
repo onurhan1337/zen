@@ -3,7 +3,7 @@ import useSWR from "swr";
 import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts"
 import fetcher from "@/lib/fetcher";
 import {Project} from "../../../types/project";
-import {Box, Card, Heading} from "@radix-ui/themes";
+import {Box, Card, Heading, Text} from "@radix-ui/themes";
 
 type Data = {
     projects?: {
@@ -21,8 +21,7 @@ const AllProjectsChart = () => {
     }
 
     if (!projectData) {
-        return (
-            <Card variant={'surface'}>
+        return (<Card variant={'surface'}>
                 <Box
                     style={{
                         padding: 5
@@ -34,11 +33,36 @@ const AllProjectsChart = () => {
                 </Box>
                 <Box
                     style={{
-                        padding: 5,
-                        marginTop: 10
+                        padding: 5, marginTop: 10
                     }}
                 >
-                    <SkeletonBarChart />
+                    <SkeletonBarChart/>
+                </Box>
+            </Card>);
+    }
+
+    if (projectData && projectData.projects?.data.length === 0) {
+        return (
+            <Card variant={'surface'} style={{
+                padding: 5,
+            }}>
+                <Box
+                    style={{
+                        padding: 5
+                    }}
+                >
+                    <Heading>
+                        Projects Overview
+                    </Heading>
+                </Box>
+                <Box style={{
+                    padding: 10,
+                }}>
+                    <Box
+                        className={'border border-zinc-600 rounded-lg p-4'}
+                    >
+                        <Text align="center" as="div">No projects created yet.</Text>
+                    </Box>
                 </Box>
             </Card>
         );
@@ -54,7 +78,12 @@ const AllProjectsChart = () => {
     }));
 
     return (
-        <Card variant={'surface'}>
+        <Card
+            variant={'surface'}
+            style={{
+                padding: 5,
+            }}
+        >
             <Box
                 style={{
                     padding: 5
@@ -66,8 +95,7 @@ const AllProjectsChart = () => {
             </Box>
             <Box
                 style={{
-                    padding: 5,
-                    marginTop: 10
+                    padding: 5, marginTop: 10
 
                 }}
             >
@@ -98,18 +126,16 @@ const AllProjectsChart = () => {
                     </BarChart>
                 </ResponsiveContainer>
             </Box>
-        </Card>
-    );
+        </Card>);
 };
 
 export default React.memo(AllProjectsChart);
 
 const SkeletonBarChart = () => {
     // Create an array of 10 placeholder data
-    const placeholderData = Array.from({ length: 10 }, (_, i) => ({ name: `Placeholder ${i}`, tasks: Math.random() * 30 }));
+    const placeholderData = Array.from({length: 10}, (_, i) => ({name: `Placeholder ${i}`, tasks: Math.random() * 30}));
 
-    return (
-        <ResponsiveContainer width="100%" height={350}>
+    return (<ResponsiveContainer width="100%" height={350}>
             <BarChart data={placeholderData}>
                 <XAxis stroke="#888888"
                        fontSize={12}
@@ -133,6 +159,5 @@ const SkeletonBarChart = () => {
                     radius={[4, 4, 0, 0]}
                 />
             </BarChart>
-        </ResponsiveContainer>
-    );
+        </ResponsiveContainer>);
 };

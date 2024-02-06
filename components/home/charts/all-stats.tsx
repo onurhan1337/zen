@@ -42,6 +42,10 @@ const StatCard = React.memo(({heading, data, icon}: {heading: string, data: { re
     }
 
     function resolveRecent(recent: number, total: number) {
+        if (total === 0) {
+            return 'No data from last month';
+        }
+
         const percentage = Math.floor((recent / total) * 100);
         let symbol = "";
 
