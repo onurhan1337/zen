@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 import {Badge, Box, Card, Flex, Heading, Text} from "@radix-ui/themes";
-import { differenceInDays, parseISO } from 'date-fns';
+import {differenceInDays, isPast, parseISO} from 'date-fns';
 
 import fetcher from "@/lib/fetcher";
 import {Task} from "../../../types/task";
@@ -20,11 +20,28 @@ const TaskChart = () => {
      * Calculates the number of days left from the start date to the end date.
      * @param {string} startDate - The start date in ISO string format.
      * @param {string} endDate - The end date in ISO string format.
-     * @returns {number} The number of days left.
+     * @returns {string | number} The number of days left or a message if the date has expired.
      * @see https://date-fns.org/v2.23.0/docs/differenceInDays
      */
-    const daysLeft = (startDate: string, endDate: string): number => {
+    const daysLeft = (startDate: string, endDate: string): string | number => {
+        if (isPast(parseISO(endDate))) {
+            return 'Date has expired';
+        }
         return differenceInDays(parseISO(startDate), parseISO(endDate));
+    }
+
+    /*
+        * @param {string} startDate - The start date in ISO string format.
+        * @param {string} endDate - The end date in ISO string format.
+        * @returns {string} The number of days left or a message if the date has expired.
+        * @see https://date-fns.org/v2.23.0/docs/isPast
+        * @see https://date-fns.org/v2.23.0/docs/differenceInDays
+     */
+    const resolveDaysLeftText = (startDate: string, endDate: string) => {
+        if (isPast(parseISO(endDate))) {
+            return 'Date has expired';
+        }
+        return `${differenceInDays(parseISO(startDate), parseISO(endDate))} days left`;
     }
 
     React.useEffect(() => {
@@ -86,7 +103,7 @@ const TaskChart = () => {
                             <Badge
                                 color={'crimson'}
                             >
-                                {daysLeft(task.startDate, task.endDate)} days left
+                                {resolveDaysLeftText(task.startDate, task.endDate)}
                             </Badge>
                         </Box>
                     </Flex>
