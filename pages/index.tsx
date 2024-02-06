@@ -19,18 +19,23 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
 
-            {session && (<Flex
+            {session && (
+                <Flex
                     direction={'column'}
+                    className={'mx-auto max-w-7xl'}
                 >
                     <AllStats/>
                     <ChartsSection/>
-                </Flex>)}
+                </Flex>
+            )}
 
-            {!session && (<section>
+            {!session && (
+                <section>
                     <Cta/>
                     <HowItWorks/>
                     <Stats/>
                     <Footer/>
-                </section>)}
+                </section>
+            )}
         </>);
 }

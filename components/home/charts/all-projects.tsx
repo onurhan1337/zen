@@ -105,7 +105,8 @@ const AllProjectsChart = () => {
                                fontSize={12}
                                tickLine={false}
                                axisLine={false}
-                               dataKey="name"/>
+                               dataKey="name"
+                        />
                         <YAxis
                             stroke="#888888"
                             fontSize={12}
@@ -122,18 +123,20 @@ const AllProjectsChart = () => {
                             dataKey="tasks"
                             className={'fill-zinc-300'}
                             radius={[4, 4, 0, 0]}
+                            barSize={30}
                         />
                     </BarChart>
                 </ResponsiveContainer>
             </Box>
-        </Card>);
+        </Card>
+    );
 };
 
 export default React.memo(AllProjectsChart);
 
 const SkeletonBarChart = () => {
     // Create an array of 10 placeholder data
-    const placeholderData = Array.from({length: 10}, (_, i) => ({name: `Placeholder ${i}`, tasks: Math.random() * 30}));
+    const placeholderData = Array.from({length: 7}, (_, i) => ({name: `Project ${i}`, tasks: Math.random() * 30}));
 
     return (<ResponsiveContainer width="100%" height={350}>
             <BarChart data={placeholderData}>
@@ -157,6 +160,7 @@ const SkeletonBarChart = () => {
                     dataKey="tasks"
                     className={'fill-zinc-300'}
                     radius={[4, 4, 0, 0]}
+                    barSize={30}
                 />
             </BarChart>
         </ResponsiveContainer>);

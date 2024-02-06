@@ -84,20 +84,13 @@ const SkeletonStatCard = () => {
     return (
         <Card variant='surface'>
             <Flex align='center' justify='between' className='p-2'>
-                <Heading as="h3" size='3' weight='bold'>
-                    <div style={{ backgroundColor: '#d4d4d8', height: '20px', width: '70%', borderRadius: '5px' }} />
-                </Heading>
-                <div style={{ backgroundColor: '#d4d4d8', height: '20px', width: '20px', borderRadius: '50%' }} />
+                <div style={{ backgroundColor: '#444444', height: '20px', width: '200px', borderRadius: '5px' }} />
+                <div style={{ backgroundColor: '#444444', height: '30px', width: '30px', borderRadius: '50%' }} />
             </Flex>
             <Box className='p-2 space-y-2'>
                 <Box>
-                    <Heading as="h1" size="8" weight="bold">
-                        <div style={{ backgroundColor: '#d4d4d8', height: '40px', width: '50%', borderRadius: '5px' }} />
-                    </Heading>
-                </Box>
-                <Box>
                     <Text size='1'>
-                        <div style={{ backgroundColor: '#d4d4d8', height: '20px', width: '30%', borderRadius: '5px' }} />
+                        <div style={{ backgroundColor: '#444444', height: '20px', width: '30%', borderRadius: '5px' }} />
                     </Text>
                 </Box>
             </Box>

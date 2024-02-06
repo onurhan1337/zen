@@ -185,7 +185,7 @@ const SkeletonLoader = () => {
                     }}
                 >
                     {/* Display 10 skeleton rows while loading */}
-                    {[...Array(10)].map((_, index) => (
+                    {[...Array(5)].map((_, index) => (
                         <SkeletonRow key={index} />
                     ))}
                 </Box>
@@ -205,13 +205,13 @@ const SkeletonRow = () => {
                     justify={'between'}
                     className={'py-2 px-4 my-2 space-y-4 md:space-y-0 border border-zinc-600 rounded-lg'}
                 >
-                    <p style={{ backgroundColor: '#a0a0a0', height: '20px', width: '70%' }}/>
+                    <div style={{ backgroundColor: '#444444', height: '20px', width: '200px' }} />
                     <Box
                         className={'flex space-x-2'}
                     >
-                        <div style={{ backgroundColor: '#a0a0a0', height: '20px', width: '60px' }} />
-                        <div style={{ backgroundColor: '#a0a0a0', height: '20px', width: '60px' }} />
-                        <div style={{ backgroundColor: '#a0a0a0', height: '20px', width: '60px' }} />
+                        <div style={{ backgroundColor: '#444444', height: '20px', width: '60px' }} />
+                        <div style={{ backgroundColor: '#444444', height: '20px', width: '60px' }} />
+                        <div style={{ backgroundColor: '#444444', height: '20px', width: '60px' }} />
                     </Box>
                 </Flex>
             </Flex>
