@@ -9,7 +9,7 @@ const generateInviteCode = (projectId: string): string => {
     const randomIndex = Math.floor(Math.random() * characters.length);
     inviteCode += characters[randomIndex];
   }
-  return "http://localhost:3000/api/invite?code=" + inviteCode;
+  return "https://zen-orcin.xyz/api/invite?code=" + inviteCode;
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
