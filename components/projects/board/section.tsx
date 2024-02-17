@@ -33,7 +33,7 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full rounded-md border-zinc-700 bg-zinc-900 p-4 shadow-sm focus-within:border-zinc-600 hover:shadow-sm focus:border-zinc-700 dark:z-0 dark:border dark:shadow-none dark:focus-within:z-10 dark:hover:z-10 dark:hover:border-zinc-700 sm:p-6">
       <div
         className={cn(
           "flex",
@@ -42,20 +42,16 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
             : "flex-row items-center justify-between",
         )}
       >
-        <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
+        <h4 className="mb-4 scroll-m-20 text-lg font-semibold tracking-tighter">
           {title}
         </h4>
-        <Separator
-          orientation={isMobile ? "horizontal" : "vertical"}
-          size={isMobile ? "4" : "3"}
-        />
       </div>
       <SortableContext
         id={id}
         items={tasks}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={setNodeRef} className="space-y-4 pr-0 sm:pr-4">
+        <div ref={setNodeRef} className="flex flex-col gap-4">
           {tasks.map((task) => (
             <div key={task.id}>
               <SortableTaskItem id={task.id}>
