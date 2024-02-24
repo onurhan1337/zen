@@ -40,7 +40,7 @@ const SignInModal = ({
                         className={`${
                             signInClicked
                                 ? "cursor-not-allowed border-zinc-700 bg-zinc-800"
-                                : "border border-zinc-600 bg-zinc-950/80 text-zinc-300 hover:bg-zinc-900"
+                                : "border border-zinc-600 bg-zinc-950/30 text-zinc-300 hover:bg-zinc-900"
                         } flex h-10 w-full items-center justify-center space-x-3 rounded-md border text-sm shadow-sm transition-all duration-75 focus:outline-none`}
                         onClick={() => {
                             setSignInClicked(true);
@@ -61,7 +61,7 @@ const SignInModal = ({
                         className={`${
                             signInClicked
                                 ? "cursor-not-allowed border-zinc-700 bg-zinc-800"
-                                : "border border-zinc-600 bg-zinc-950/80 text-zinc-300 hover:bg-zinc-900"
+                                : "border border-zinc-600 bg-zinc-950/30 text-zinc-300 hover:bg-zinc-900"
                         } flex h-10 w-full items-center justify-center space-x-3 rounded-md border text-sm shadow-sm transition-all duration-75 focus:outline-none`}
                         onClick={() => {
                             setSignInClicked(true);
