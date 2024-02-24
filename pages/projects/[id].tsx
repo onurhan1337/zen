@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { Task } from "types/task";
-import { Project } from "types/project";
+import {Project, User} from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectSettingsContent from "@/components/projects/settings/content";
 import BoardSectionList from "@/components/projects/board/list";
@@ -13,14 +13,14 @@ import TaskCreateContent from "@/components/tasks/create";
 
 import fetcher from "@/lib/fetcher";
 import Badge from "@/components/shared/badge";
-import { truncate } from "@/lib/utils";
+import {isUserOwner, truncate} from "@/lib/utils";
 import Container from "@/components/ui/container";
 
 export default function ProjectDetailIndex() {
   const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
-  const { data: project } = useSWR<Project>(
+  const { data: project } = useSWR<Project & { owners: User[], members: User[] }>(
     id ? `/api/project/${id}` : null,
     fetcher,
     {
@@ -41,8 +41,7 @@ export default function ProjectDetailIndex() {
     return tasks;
   }, [tasks]);
 
-  const isOwner = project?.owner.id === session?.user?.id;
-
+  const isOwner = project ? isUserOwner(project.owners, session) : false;
   return (
     <>
       <Head>

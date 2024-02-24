@@ -1,11 +1,5 @@
 import { Task } from "./task";
-
-interface User {
-  id: string;
-  name: string;
-  image: string;
-  email: string;
-}
+import {User} from "@prisma/client";
 
 export interface Project {
   id: string;
@@ -15,7 +9,7 @@ export interface Project {
   endDate: Date | null;
   status: ProjectStatus;
   userId: string;
-  owner: User;
+  owners: User[];
   members: User[];
   tasks: Task[]; // You need to define the Task interface
 }

@@ -9,6 +9,7 @@ import DeleteConfirmationDialog from "./confirm";
 import {MembersDialog} from "./members";
 import {useSession} from "next-auth/react";
 import {Button, Flex, Switch, TextArea, TextField} from "@radix-ui/themes";
+import {isUserOwner} from "@/lib/utils";
 
 const ProjectSettingsContent = ({projectId}: { projectId: string }) => {
     const {data: session} = useSession();
@@ -20,7 +21,7 @@ const ProjectSettingsContent = ({projectId}: { projectId: string }) => {
         },
     );
 
-    const isOwner = project?.owner.id === session?.user?.id;
+    const isOwner = project ? isUserOwner(project.owners, session) : false;
 
     if (isValidating || !project) {
         return (

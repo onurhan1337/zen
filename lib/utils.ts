@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import ms from "ms";
+import {User} from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,4 +45,14 @@ export function capitalize(str: string) {
 export const truncate = (str: string, length: number) => {
   if (!str || str.length <= length) return str;
   return `${str.slice(0, length)}...`;
+};
+
+/*
+  @param owners: User[]
+  @param session: any
+  @returns boolean
+  @description: This function checks if the user is the owner of the project
+ */
+export const isUserOwner = (owners: User[], session: any): boolean => {
+  return owners.some((owner) => owner.email === session?.user?.email);
 };

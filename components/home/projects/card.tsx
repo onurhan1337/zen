@@ -4,7 +4,7 @@ import {useRouter} from "next/router";
 import {Box, Button, Card, Flex} from "@radix-ui/themes";
 import {Project, ProjectStatus} from "types/project";
 
-import {truncate} from "@/lib/utils";
+import {isUserOwner, truncate} from "@/lib/utils";
 import Badge from "@/components/shared/badge";
 import {LoadingDots} from "@/components/shared/icons";
 import DeleteConfirmationDialog from "@/components/projects/settings/confirm";
@@ -16,10 +16,10 @@ type Props = {
 const ProjectCard = ({project}: Props) => {
     const {data: session} = useSession();
     const [clicked, setClicked] = useState<boolean>(false);
-    const {id, name, status, description, owner} = project;
+    const {id, name, status, description, owners } = project;
     const router = useRouter();
 
-    const isOwner = owner.id === session?.user?.id;
+    const isOwner =  isUserOwner(owners, session);
 
     return (<Card>
             <Flex

@@ -21,6 +21,11 @@ export async function fetchAllProjects(
           userId: user.id,
         },
         {
+          owners: {
+                some: {
+                id: user.id,
+                },
+            },
           members: {
             some: {
               id: user.id,
@@ -31,7 +36,7 @@ export async function fetchAllProjects(
     },
     include: {
       members: true,
-      owner: true,
+      owners: true,
     },
   });
 
@@ -47,7 +52,7 @@ export async function fetchProject(req: NextApiRequest, res: NextApiResponse) {
     },
     include: {
       tasks: true,
-      owner: true,
+      owners: true,
       members: true,
     },
   });
