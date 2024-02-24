@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") 
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("DIRECT_DATABASE_URL")
 }
 
 model Account {
-  id                String   @id @default(cuid())
+  id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
@@ -23,7 +23,7 @@ model Account {
   session_state     String?
 
   // Define a relationship with the User model
-  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Use unique constraints for account identification
   @@unique([provider, providerAccountId])
@@ -42,18 +42,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid()) @unique
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
+  id             String                 @id @unique @default(cuid())
+  name           String?
+  email          String?                @unique
+  emailVerified  DateTime?
+  image          String?
   // Define relationships for User's accounts, sessions, and projects
-  accounts      Account[]
-  sessions      Session[]
-  ownedProjects Project[] @relation("projectOwner")
-  memberProjects Project[] @relation("projectMembers")
-  ownedTasks    Task[]    @relation("TaskOwner")
-  assignedTasks Task[]    @relation("TaskAssignee")
+  accounts       Account[]
+  sessions       Session[]
+  ownedProjects  Project[]              @relation("projectOwners")
+  memberProjects Project[]              @relation("projectMembers")
+  ownedTasks     Task[]                 @relation("TaskOwner")
+  assignedTasks  Task[]                 @relation("TaskAssignee")
+  inviteAttempts ProjectInviteAttempt[] @relation("ProjectInviteAttempt")
 }
 
 model VerificationToken {
@@ -66,24 +67,43 @@ model VerificationToken {
 }
 
 model Project {
-  id          String    @id @default(cuid()) @unique
-  name        String
-  description String
-  startDate   DateTime? @default(now())
-  endDate     DateTime? 
-  status      ProjectStatus @default(active)
-  userId     String
-  owner       User     @relation("projectOwner", fields: [userId], references: [id], onDelete: Cascade)
-  members     User[]   @relation("projectMembers")
-  tasks       Task[]
+  id             String                 @id @unique @default(cuid())
+  name           String
+  description    String
+  startDate      DateTime?              @default(now())
+  endDate        DateTime?
+  status         ProjectStatus          @default(active)
+  userId         String
+  owners         User[]                 @relation("projectOwners")
+  members        User[]                 @relation("projectMembers")
+  tasks          Task[]
+  inviteCode     String?                @unique @default(uuid())
+  inviteAttempts ProjectInviteAttempt[]
 
   @@unique([id, name])
   @@index([userId])
 }
 
+enum Role {
+  owner
+  member
+}
+
 enum ProjectStatus {
   active
   archived
+}
+
+model ProjectInviteAttempt {
+  id        String    @id @unique @default(cuid())
+  userId    String
+  projectId String
+  expires   DateTime?
+  role      Role      @default(member)
+  user      User      @relation("ProjectInviteAttempt", fields: [userId], references: [id], onDelete: Cascade)
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([userId, projectId])
 }
 
 //  ______   ______     ______     __  __    
@@ -93,21 +113,21 @@ enum ProjectStatus {
 //     \/_/   \/_/\/_/   \/_____/   \/_/\/_/ 
 
 model Task {
-  id          String    @id @default(cuid()) @unique
+  id          String     @id @unique @default(cuid())
   name        String
   description String
   status      TaskStatus @default(backlog)
-  startDate   DateTime? @default(now())
-  endDate     DateTime? 
-  priority    Priority @default(low)
+  startDate   DateTime?  @default(now())
+  endDate     DateTime?
+  priority    Priority   @default(low)
   ownerId     String
   assigneeId  String? // Assignee can be optional
   projectId   String
-  
+
   // Define a relationship with the User and Project models
-  owner       User     @relation("TaskOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  assignee    User?    @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
-  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  owner    User    @relation("TaskOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  assignee User?   @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   // Use a unique constraint for task names
   @@unique([id, name])
