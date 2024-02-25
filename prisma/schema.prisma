@@ -97,6 +97,8 @@ enum ProjectStatus {
 model ProjectInviteAttempt {
   id        String    @id @unique @default(cuid())
   userId    String
+  name      String
+  email     String
   projectId String
   expires   DateTime?
   role      Role      @default(member)

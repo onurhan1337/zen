@@ -1,4 +1,4 @@
-import useSWR, {mutate} from "swr";
+import useSWR from "swr";
 import {Box, Button, Dialog, Portal, Text} from "@radix-ui/themes";
 import {toast} from "sonner";
 import {CopyIcon} from "lucide-react";
@@ -6,10 +6,7 @@ import {CopyIcon} from "lucide-react";
 import fetcher from "@/lib/fetcher";
 import {Project, User} from "@prisma/client";
 import {Input} from "@/components/ui/input";
-import {LoadingSpinner} from "@/components/shared/icons";
-import {isUserOwner} from "@/lib/utils";
 import {Session} from "next-auth";
-import {useSession} from "next-auth/react";
 
 export const MembersDialog = ({user, projectId}: {
     user: Session, projectId: string
@@ -25,8 +22,6 @@ export const MembersDialog = ({user, projectId}: {
     if (isValidating || !project) {
         return null;
     }
-
-    const isOwner = isUserOwner(project.owners, user.user.email)
 
     return (
         <Dialog.Root>
@@ -54,11 +49,10 @@ export const MembersDialog = ({user, projectId}: {
             </Dialog.Trigger>
             <Portal>
                 <Dialog.Content style={{maxWidth: 450}}>
-                    <Dialog.Title>Members List</Dialog.Title>
+                    <Dialog.Title>Add Member</Dialog.Title>
                     <Dialog.Description>
-                        List of members in this project.
+                        Add a member to this project. You can add or remove members from the project at any time.
                     </Dialog.Description>
-                    <MembersList projectId={projectId}/>
                     <InviteMember projectInviteCode={project.inviteCode || ''}/>
                 </Dialog.Content>
             </Portal>
@@ -66,91 +60,10 @@ export const MembersDialog = ({user, projectId}: {
     );
 };
 
-const MembersList = ({projectId}: { projectId: string }) => {
-    const {data: session} = useSession();
-    const {data: project} = useSWR<Project & {
-        owners: User[],
-        members: User[]
-    }>(`/api/project/${projectId}/member`, fetcher, {
-        revalidateOnFocus: true,
-    });
-
-    if (!project) {
-        return (
-            <div className={"flex flex-col items-center gap-2"}>
-                <LoadingSpinner/>
-            </div>
-        );
-    }
-
-    const onRemoveMember = async (userId: string) => {
-        try {
-            const data = await fetcher(`/api/project/${projectId}/member`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId,
-                }),
-            });
-
-            if (data && data.message === "Member deleted successfully") {
-                toast.success("Member removed successfully!");
-
-                mutate(`/api/project/${projectId}`);
-            } else {
-                // If the response is not OK, show an error toast with the message from the server
-                toast.error(data.error || "Something went wrong!");
-            }
-        } catch (error) {
-            // Handle unexpected errors
-            console.error("Error removing member:", error);
-            toast.error("Something went wrong!");
-        }
-    };
-
-    return (
-        <div className="w-full px-4 py-2 sm:p-6">
-            <div className="border-t border-zinc-600"></div>
-
-            <div className="text-sm text-zinc-400">
-                <ul className="h-[200px] w-full list-inside list-disc overflow-y-auto py-4">
-                    {project && ((project.members && project.members.length > 0) || (project.owners && project.owners.length > 0)) ? (
-                        [...(project.members || []), ...(project.owners || [])].map((user) => (
-                            <li
-                                className="flex flex-row items-center justify-between py-3 text-sm text-zinc-500"
-                                key={user.email}
-                            >
-                                <div className="flex flex-col items-start">
-                                    <span className={"text-zinc-400"}>{user.name} {
-                                        session && session.user.email === user.email && '(You)'
-                                    }</span>
-                                    <span className={"text-zinc-500"}>{user.email}</span>
-                                </div>
-                                {session && session.user.email !== user.email && (
-                                    <button onClick={() => onRemoveMember(user.id)}>x</button>
-                                )}
-                            </li>
-                        ))
-                    ) : (
-                        <li
-                            key="no-members-found" // Use a unique key for the case when no members are found
-                            className="text-center text-sm text-zinc-400 "
-                        >
-                            No members found.
-                        </li>
-                    )}
-                </ul>
-            </div>
-        </div>
-    );
-};
-
 const InviteMember = ({projectInviteCode}: { projectInviteCode: string }) => {
 
     return (
-        <Box>
+        <Box mt={'8'}>
             <Box
                 style={{
                     display: "flex",

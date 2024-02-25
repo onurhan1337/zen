@@ -12,48 +12,14 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    if (req.method === "GET") {
-        try {
-            // Extract the invite code from the query parameters
-            const {code} = req.query;
-            if (!code || typeof code !== "string") {
-                return res.status(400).json({error: "Invalid invite code"});
-            }
 
-            // Validate the invite code and extract the project ID
-            const projectId = code.split("_")[0];
+    const user = await getUser(req, res);
 
-            // Find the project associated with the invite code
-            const project = await prisma.project.findUnique({
-                where: {id: projectId},
-            });
-            if (!project) {
-                return res.status(404).json({error: "Project not found"});
-            }
-
-            // Get the user from the request
-            const user = await getUser(req, res);
-
-            if (!user) {
-                return res.status(401).json({error: "Unauthorized"});
-            }
-
-            // Add the user to the project
-            await prisma.project.update({
-                where: {id: projectId},
-                data: {members: {connect: {id: user.id}}},
-            });
-
-            // Redirect to the project page
-            return res.redirect(`/projects/${projectId}`);
-        } catch (error) {
-            console.error("Error adding user to project:", error);
-            return res.status(500).json({error: "Internal server error"});
-        }
+    if (!user || !user.email || !user.name) {
+        return res.status(401).json({error: "Unauthorized"});
     }
 
     if (req.method === "POST") {
-        // data coming like -> `/api/projects/join?code=${values.inviteCode}`
         const {code} = req.body;
 
         if (!code || typeof code !== "string") {
@@ -63,6 +29,10 @@ export default async function handler(
         const project = await prisma.project.findUnique({
             where: {
                 inviteCode: code
+            },
+            include: {
+                members: true,
+                owners: true
             }
         });
 
@@ -70,28 +40,35 @@ export default async function handler(
             return res.status(404).json({error: "Project not found"});
         }
 
-        const user = await getUser(req, res);
+        const isMember = project.members.some(member => member.id === user.id);
+        const isOwner = project.owners.some(owner => owner.id === user.id);
 
-        if (!user) {
-            return res.status(401).json({error: "Unauthorized"});
+        if (isMember || isOwner) {
+            return res.status(400).json({error: "User is already a member of the project"});
         }
 
-        const data = await prisma.project.update({
+        const pendingInvite = await prisma.projectInviteAttempt.findFirst({
             where: {
-                id: project.id
-            },
-            data: {
-                members: {
-                    connect: {
-                        id: user.id
-                    }
-                }
+                projectId: project.id,
+                userId: user.id
             }
         });
 
-        return res.status(200).json(data);
+        if (pendingInvite) {
+            return res.status(400).json({error: "User has already sent a request to join the project"});
+        }
+
+        await prisma.projectInviteAttempt.create({
+            data: {
+                name: user.name,
+                email: user.email,
+                projectId: project.id,
+                userId: user.id
+            }
+        });
+
+        return res.status(200).json({message: "User sent a request to join the project"});
     }
 
-    // If the request method is not GET, return an error
     return res.status(405).json({error: "Method Not Allowed"});
 }

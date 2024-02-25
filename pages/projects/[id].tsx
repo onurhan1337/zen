@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import {useMemo, useState} from "react";
 import useSWR from "swr";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
@@ -15,6 +15,7 @@ import fetcher from "@/lib/fetcher";
 import Badge from "@/components/shared/badge";
 import {isUserOwner, truncate} from "@/lib/utils";
 import Container from "@/components/ui/container";
+import MembersListDialog from "@/components/projects/board/membersList";
 
 export default function ProjectDetailIndex() {
   const { data: session } = useSession();
@@ -53,7 +54,7 @@ export default function ProjectDetailIndex() {
       {session ? (
         project ? (
           <section className="flex w-full flex-col items-center">
-            <ProjectDetailContent project={project} />
+            <ProjectDetailContent project={project} isOwner={isOwner} />
             <div className="w-full max-w-screen-xl py-4">
               {isOwner ? (
                 <Tabs defaultValue="tasks">
@@ -111,7 +112,9 @@ export default function ProjectDetailIndex() {
   );
 }
 
-const ProjectDetailContent = ({ project }: { project: Project }) => {
+const ProjectDetailContent = ({ project, isOwner }: { project: Project, isOwner: boolean }) => {
+  const  [isOpen, setOpen] = useState(false);
+
   return (
     <div className="grid w-full max-w-screen-xl grid-cols-1 items-end justify-between gap-4 border-b border-zinc-200 pb-4 sm:grid-cols-2">
       <div className="w-full grid-cols-2 sm:grid-cols-2">
@@ -124,8 +127,17 @@ const ProjectDetailContent = ({ project }: { project: Project }) => {
       </div>
       <div className="flex w-full grid-cols-2 flex-row items-center justify-between space-x-4 sm:grid-cols-2 sm:justify-end">
         <Badge type={project.status} />
+        {isOwner ? (
+        <div
+            className="flex items-center justify-center space-x-2"
+        >
+        <MembersListDialog projectId={project.id} isOpen={isOpen} setOpen={setOpen} />
         <TaskCreateContent />
       </div>
+        ): (
+            <TaskCreateContent />
+        )}
+        </div>
     </div>
   );
 };
