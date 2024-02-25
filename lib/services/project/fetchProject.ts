@@ -22,10 +22,12 @@ export async function fetchAllProjects(
         },
         {
           owners: {
-                some: {
-                id: user.id,
-                },
+            some: {
+              id: user.id,
             },
+          },
+        },
+        {
           members: {
             some: {
               id: user.id,
