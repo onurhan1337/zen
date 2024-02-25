@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
+import {mutate} from "swr";
 
 export default async function deleteMember(
   req: NextApiRequest,

@@ -13,7 +13,7 @@ import TaskCreateContent from "@/components/tasks/create";
 
 import fetcher from "@/lib/fetcher";
 import Badge from "@/components/shared/badge";
-import {isUserOwner, truncate} from "@/lib/utils";
+import {isUserMember, isUserOwner, truncate} from "@/lib/utils";
 import Container from "@/components/ui/container";
 import MembersListDialog from "@/components/projects/board/membersList";
 
@@ -43,6 +43,12 @@ export default function ProjectDetailIndex() {
   }, [tasks]);
 
   const isOwner = project ? isUserOwner(project.owners, session) : false;
+  const isMember = project ? isUserMember(project.members, session) : false;
+
+  if (!project) {
+    return <PageLoadingState />;
+  }
+
   return (
     <>
       <Head>
@@ -52,7 +58,7 @@ export default function ProjectDetailIndex() {
       </Head>
 
       {session ? (
-        project ? (
+        project && isMember ? (
           <section className="flex w-full flex-col items-center">
             <ProjectDetailContent project={project} isOwner={isOwner} />
             <div className="w-full max-w-screen-xl py-4">
@@ -98,14 +104,18 @@ export default function ProjectDetailIndex() {
               )}
             </div>
           </section>
-        ) : (
-          <PageLoadingState />
+        ): (
+            <div className="flex w-full flex-col items-center justify-center py-12">
+              <h1 className="text-2xl font-bold text-zinc-500">
+                You don&apos;t have access to this project.
+              </h1>
+            </div>
         )
       ) : (
-        <div className="flex w-full flex-col items-center justify-center py-12">
-          <h1 className="text-2xl font-bold text-zinc-500">
-            You don&apos;t have access to this project.
-          </h1>
+          <div className="flex w-full flex-col items-center justify-center py-12">
+            <h1 className="text-2xl font-bold text-zinc-500">
+              You don&apos;t have access to this project.
+            </h1>
         </div>
       )}
     </>

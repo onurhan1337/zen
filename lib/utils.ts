@@ -56,3 +56,14 @@ export const truncate = (str: string, length: number) => {
 export const isUserOwner = (owners: User[], session: any): boolean => {
   return owners.some((owner) => owner.email === session?.user?.email);
 };
+
+/*
+    @param members: User[]
+    @param session: any
+    @returns boolean
+    @description: This function checks if the user is a member of the project
+
+ */
+export const isUserMember = (members: User[], session: any): boolean => {
+  return members.some((member) => member.email === session?.user?.email);
+};
