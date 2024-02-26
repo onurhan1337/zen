@@ -33,7 +33,7 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
   }, []);
 
   return (
-    <div className="w-full rounded-md border-zinc-700 bg-zinc-900 p-4 shadow-sm focus-within:border-zinc-600 hover:shadow-sm focus:border-zinc-700 dark:z-0 dark:border dark:shadow-none dark:focus-within:z-10 dark:hover:z-10 dark:hover:border-zinc-700 sm:p-6">
+    <div className="w-full rounded-md border-zinc-700 bg-zinc-900 p-4 shadow-sm focus-within:border-zinc-600 hover:shadow-sm focus:border-zinc-700 dark:z-0 dark:border dark:shadow-none dark:focus-within:z-10 dark:hover:z-10 dark:hover:border-zinc-700 sm:p-3">
       <div
         className={cn(
           "flex",
