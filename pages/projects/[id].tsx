@@ -1,11 +1,11 @@
-import {useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { Task } from "types/task";
-import {Project, User} from "@prisma/client";
+import { Project, User } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectSettingsContent from "@/components/projects/settings/content";
 import BoardSectionList from "@/components/projects/board/list";
@@ -13,7 +13,7 @@ import TaskCreateContent from "@/components/tasks/create";
 
 import fetcher from "@/lib/fetcher";
 import Badge from "@/components/shared/badge";
-import {isUserMember, isUserOwner, truncate} from "@/lib/utils";
+import { isUserMember, isUserOwner, truncate } from "@/lib/utils";
 import Container from "@/components/ui/container";
 import MembersListDialog from "@/components/projects/board/membersList";
 
@@ -21,13 +21,11 @@ export default function ProjectDetailIndex() {
   const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
-  const { data: project } = useSWR<Project & { owners: User[], members: User[] }>(
-    id ? `/api/project/${id}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    },
-  );
+  const { data: project } = useSWR<
+    Project & { owners: User[]; members: User[] }
+  >(id ? `/api/project/${id}` : null, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const { data: tasks } = useSWR<Task[]>(
     id ? `/api/project/${id}/task` : null,
@@ -58,7 +56,7 @@ export default function ProjectDetailIndex() {
       </Head>
 
       {session ? (
-        project && isMember ? (
+        project && (isMember || isOwner) ? (
           <section className="flex w-full flex-col items-center">
             <ProjectDetailContent project={project} isOwner={isOwner} />
             <div className="w-full max-w-screen-xl py-4">
@@ -104,26 +102,32 @@ export default function ProjectDetailIndex() {
               )}
             </div>
           </section>
-        ): (
-            <div className="flex w-full flex-col items-center justify-center py-12">
-              <h1 className="text-2xl font-bold text-zinc-500">
-                You don&apos;t have access to this project.
-              </h1>
-            </div>
-        )
-      ) : (
+        ) : (
           <div className="flex w-full flex-col items-center justify-center py-12">
             <h1 className="text-2xl font-bold text-zinc-500">
               You don&apos;t have access to this project.
             </h1>
+          </div>
+        )
+      ) : (
+        <div className="flex w-full flex-col items-center justify-center py-12">
+          <h1 className="text-2xl font-bold text-zinc-500">
+            You don&apos;t have access to this project.
+          </h1>
         </div>
       )}
     </>
   );
 }
 
-const ProjectDetailContent = ({ project, isOwner }: { project: Project, isOwner: boolean }) => {
-  const  [isOpen, setOpen] = useState(false);
+const ProjectDetailContent = ({
+  project,
+  isOwner,
+}: {
+  project: Project;
+  isOwner: boolean;
+}) => {
+  const [isOpen, setOpen] = useState(false);
 
   return (
     <div className="grid w-full max-w-screen-xl grid-cols-1 items-end justify-between gap-4 border-b border-zinc-200 pb-4 sm:grid-cols-2">
@@ -138,16 +142,18 @@ const ProjectDetailContent = ({ project, isOwner }: { project: Project, isOwner:
       <div className="flex w-full grid-cols-2 flex-row items-center justify-between space-x-4 sm:grid-cols-2 sm:justify-end">
         <Badge type={project.status} />
         {isOwner ? (
-        <div
-            className="flex items-center justify-center space-x-2"
-        >
-        <MembersListDialog projectId={project.id} isOpen={isOpen} setOpen={setOpen} />
-        <TaskCreateContent />
-      </div>
-        ): (
+          <div className="flex items-center justify-center space-x-2">
+            <MembersListDialog
+              projectId={project.id}
+              isOpen={isOpen}
+              setOpen={setOpen}
+            />
             <TaskCreateContent />
+          </div>
+        ) : (
+          <TaskCreateContent />
         )}
-        </div>
+      </div>
     </div>
   );
 };
