@@ -170,6 +170,7 @@ const PendingInvites = ({code, projectId}: {code: string, projectId: string; }) 
 
             if (res.ok) {
                 toast.success("You have joined the project");
+                mutate(`/api/project/${projectId}/member`);
                 mutate(`/api/project/${projectId}/member/invite`);
             } else {
                 const data = await res.json();
