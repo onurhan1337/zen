@@ -13,7 +13,7 @@ export default function TasksIndex() {
   return (
     <>
       <Head>
-        <title>Projects | Zen</title>
+        <title>Tasks | Zen</title>
         <meta
           name="description"
           content="Zen is a project management tool for software developers. It allows you to organize your work, manage tasks and projects."
