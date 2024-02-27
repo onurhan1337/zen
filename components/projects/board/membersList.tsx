@@ -6,7 +6,7 @@ import fetcher from "@/lib/fetcher";
 import {LoadingSpinner} from "@/components/shared/icons";
 import {toast} from "sonner";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {Check, Inbox, X} from "lucide-react";
+import {Check, Inbox, Users, X} from "lucide-react";
 
 interface MembersListDialogProps {
     projectId: string;
@@ -64,9 +64,9 @@ const MembersListDialog = ({projectId, isOpen, setOpen}: MembersListDialogProps)
             <Dialog.Trigger>
                 <Button
                     color={'gray'}
-                    variant={'outline'}
+                    variant={'soft'}
                     onClick={() => setOpen(true)}>
-                    Members
+                    <Users className="h-4 w-4"/>
                 </Button>
             </Dialog.Trigger>
             <Dialog.Content
