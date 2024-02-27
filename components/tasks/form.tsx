@@ -1,8 +1,9 @@
+import { useState } from "react";
 import {useRouter} from "next/router";
 import useSWR, {mutate} from "swr";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {toast} from "sonner";
-import {CalendarIcon } from "lucide-react";
+import {CalendarIcon} from "lucide-react";
 import * as Yup from "yup";
 import {format} from "date-fns";
 
@@ -12,12 +13,13 @@ import {Calendar} from "@/components/ui/calendar";
 import {Textarea} from "../ui/textarea";
 import {Label} from "../ui/label";
 import {Input} from "../ui/input";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover";
 import {taskCreateFormState} from "@/lib/store";
 import {User} from "@prisma/client";
 import SubmitButton, {DialogCloseButton} from "@/components/shared/submitButton";
+import {Checkbox, Flex, Text} from "@radix-ui/themes";
 
 interface Data {
     members: User[];
@@ -25,6 +27,7 @@ interface Data {
 
 const TaskCreateForm = () => {
     const router = useRouter();
+    const [assignToMe, setAssignToMe] = useState<boolean>(false);
     const {data} = useSWR<Data>(`/api/project/${router.query.id}`);
     const {setOpen} = taskCreateFormState();
 
@@ -74,6 +77,7 @@ const TaskCreateForm = () => {
                 assignedTo: values.assignedTo,
                 description: values.description,
                 projectId: projectId,
+                assignToMe: assignToMe,
             }),
         });
 
@@ -256,7 +260,7 @@ const TaskCreateForm = () => {
                                 onValueChange={(value: string) =>
                                     setFieldValue("assignedTo", value)
                                 }
-                                disabled={!data?.members.length}
+                                disabled={!data?.members.length || assignToMe}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select member"/>
@@ -276,6 +280,20 @@ const TaskCreateForm = () => {
                             />
                         </div>
 
+                        <div className={'relative flex flex-row items-center justify-start mt-4 space-y-1'}>
+                            <Text as={'label'} size={'2'}>
+                                <Flex gap={'2'}>
+                                    <Checkbox
+                                        checked={assignToMe}
+                                        onCheckedChange={(checked: boolean) => {
+                                            setAssignToMe(checked);
+                                        }}
+                                        color={'lime'}
+                                    /> Assign to me
+                                </Flex>
+                            </Text>
+                        </div>
+
                         <div className="relative col-span-2 mt-4 space-y-1">
                             <Label htmlFor="description">Description</Label>
                             <Field
@@ -291,7 +309,7 @@ const TaskCreateForm = () => {
                             />
                         </div>
                         <div className="flex items-center justify-end gap-2 col-span-2">
-                            <DialogCloseButton />
+                            <DialogCloseButton/>
                             <SubmitButton
                                 isSubmitting={isSubmitting}
                                 submitForm={submitForm}
@@ -305,6 +323,7 @@ const TaskCreateForm = () => {
 };
 
 export default TaskCreateForm;
+
 function DatePicker({
                         date,
                         setDate,
