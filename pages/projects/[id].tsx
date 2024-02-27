@@ -140,7 +140,6 @@ const ProjectDetailContent = ({
         </p>
       </div>
       <div className="flex w-full grid-cols-2 flex-row items-center justify-between space-x-4 sm:grid-cols-2 sm:justify-end">
-        <Badge type={project.status} />
         {isOwner ? (
           <div className="flex items-center justify-center space-x-2">
             <MembersListDialog
