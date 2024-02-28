@@ -5,7 +5,7 @@ import {Box, Button, Card, Flex} from "@radix-ui/themes";
 import {Project, ProjectStatus} from "types/project";
 
 import {isUserOwner, truncate} from "@/lib/utils";
-import Badge from "@/components/shared/badge";
+import ProjectStatusBadge from "@/components/home/projects/status-badge";
 import {LoadingDots} from "@/components/shared/icons";
 import DeleteConfirmationDialog from "@/components/projects/settings/confirm";
 
@@ -35,7 +35,7 @@ const ProjectCard = ({project}: Props) => {
                     width={'100%'}
                     pb={'2'}
                 >
-                    {status === ProjectStatus.ACTIVE ? (<Badge type="active"/>) : (<Badge type="archived"/>)}
+                    {status === ProjectStatus.ACTIVE ? (<ProjectStatusBadge type="active"/>) : (<ProjectStatusBadge type="archived"/>)}
                     {isOwner ? (<DeleteConfirmationDialog id={id} hasLabel={false}/>) : (<Box>
             <span
                 className="inline-flex items-center rounded-full bg-green-200 px-2 py-1 text-xs font-medium text-green-800  ring-1 ring-inset ring-green-200"
