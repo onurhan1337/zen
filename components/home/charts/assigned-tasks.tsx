@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { Badge, Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
-import { differenceInDays, isPast, parseISO } from 'date-fns';
+import {differenceInCalendarDays, isPast, parseISO} from 'date-fns';
 
 import fetcher from "@/lib/fetcher";
 import { Task } from "../../../types/task";
@@ -12,7 +12,7 @@ const resolveDaysLeftText = (startDate: string, endDate: string) => {
     if (isPast(parseISO(endDate))) {
         return 'Date has expired';
     }
-    return `${differenceInDays(parseISO(endDate), parseISO(startDate))} days left`;
+    return `${differenceInCalendarDays(parseISO(endDate), parseISO(startDate))} days left`;
 }
 
 const TaskChart = () => {
