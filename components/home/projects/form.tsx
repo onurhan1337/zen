@@ -143,7 +143,7 @@ const ProjectCreateForm = () => {
         {({ isSubmitting, submitForm, values, setFieldValue }) => (
           <Form
             onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
-            className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
+            className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
           >
             <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
               <Label htmlFor="name">Name</Label>

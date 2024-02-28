@@ -47,12 +47,12 @@ export default function DisconnectFromProject({userId, projectId}: { userId: str
 
                 <Flex gap="3" mt="4" justify="end">
                     <AlertDialog.Cancel>
-                        <Button variant="soft" color="gray">
+                        <Button variant="soft" color="gray" radius={'full'}>
                             Cancel
                         </Button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                        <Button onClick={() => onSubmit()} variant="solid" color="red">
+                        <Button onClick={() => onSubmit()} variant="solid" color="red" radius={'full'}>
                             Disconnect
                         </Button>
                     </AlertDialog.Action>

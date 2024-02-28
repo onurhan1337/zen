@@ -141,7 +141,7 @@ const TaskCreateForm = () => {
                 {({isSubmitting, submitForm, values, setFieldValue}) => (
                     <Form
                         onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
-                        className="mb-4 grid grid-cols-1 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
+                        className="grid grid-cols-1 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
                     >
                         <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
                             <Label htmlFor="name">Name</Label>
@@ -170,7 +170,7 @@ const TaskCreateForm = () => {
                                     setFieldValue("status", value)
                                 }
                             >
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger>
                                     <SelectValue placeholder="Status"/>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -280,20 +280,6 @@ const TaskCreateForm = () => {
                             />
                         </div>
 
-                        <div className={'relative flex flex-row items-center justify-start mt-4 space-y-1'}>
-                            <Text as={'label'} size={'2'}>
-                                <Flex gap={'2'}>
-                                    <Checkbox
-                                        checked={assignToMe}
-                                        onCheckedChange={(checked: boolean) => {
-                                            setAssignToMe(checked);
-                                        }}
-                                        color={'lime'}
-                                    /> Assign to me
-                                </Flex>
-                            </Text>
-                        </div>
-
                         <div className="relative col-span-2 mt-4 space-y-1">
                             <Label htmlFor="description">Description</Label>
                             <Field
@@ -308,6 +294,21 @@ const TaskCreateForm = () => {
                                 component="div"
                             />
                         </div>
+
+                        <div className={'relative flex flex-row items-center justify-start mt-4 space-y-1'}>
+                            <Text as={'label'} size={'2'}>
+                                <Flex gap={'2'}>
+                                    <Checkbox
+                                        checked={assignToMe}
+                                        onCheckedChange={(checked: boolean) => {
+                                            setAssignToMe(checked);
+                                        }}
+                                        color={'lime'}
+                                    /> Assign to myself
+                                </Flex>
+                            </Text>
+                        </div>
+
                         <div className="flex items-center justify-end gap-2 col-span-2">
                             <DialogCloseButton/>
                             <SubmitButton
