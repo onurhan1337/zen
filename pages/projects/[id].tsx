@@ -12,7 +12,6 @@ import BoardSectionList from "@/components/projects/board/list";
 import TaskCreateContent from "@/components/tasks/create";
 
 import fetcher from "@/lib/fetcher";
-import Badge from "@/components/shared/badge";
 import { isUserMember, isUserOwner, truncate } from "@/lib/utils";
 import Container from "@/components/ui/container";
 import MembersListDialog from "@/components/projects/board/membersList";
