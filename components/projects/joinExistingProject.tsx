@@ -33,7 +33,7 @@ export default function JoinExistingProject({isOpen, onClose}: JoinExistingProje
 
         if (res.ok) {
             onClose();
-            toast.success("You have joined the project");
+            toast.success("Successfully sent a request to join the project");
             window.location.reload();
         } else {
             const data = await res.json();
