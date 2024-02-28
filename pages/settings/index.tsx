@@ -32,27 +32,33 @@ const SettingsIndex = () => {
             )}
 
             {!session && (
-                <div className="flex w-full max-w-screen-xl items-center justify-between">
-                    <div className="inline-flex w-full flex-col items-start justify-center gap-8">
-                        <h1 className="scroll-m-20 text-xl font-bold tracking-tight lg:text-3xl">
-                            Settings
-                        </h1>
-                        <div className="flex w-full flex-col items-center justify-center gap-4 text-center">
-                            <p className="text-lg font-medium tracking-tight text-gray-600">
-                                You must be{" "}
-                                <span className="underline underline-offset-4">logged in</span> to
-                                see your settings.
-                            </p>
-                            <p className="text-lg font-medium tracking-tight text-gray-600">
-                                If you don&apos;t have an account, you can register by clicking the
-                                button at the top right.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <LoginForSeeSettings/>
             )}
         </>
     );
 };
 
 export default SettingsIndex;
+
+const LoginForSeeSettings = () => {
+    return (
+        <div className="flex w-full max-w-screen-xl items-center justify-between">
+            <div className="inline-flex w-full flex-col items-start justify-center gap-8">
+                <h1 className="scroll-m-20 text-xl font-bold tracking-tight lg:text-3xl">
+                    Settings
+                </h1>
+                <div className="flex w-full flex-col items-center justify-center gap-4 text-center">
+                    <p className="text-lg font-medium tracking-tight text-gray-600">
+                        You must be{" "}
+                        <span className="underline underline-offset-4">logged in</span> to
+                        see your settings.
+                    </p>
+                    <p className="text-lg font-medium tracking-tight text-gray-600">
+                        If you don&apos;t have an account, you can register by clicking the
+                        button at the top right.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
