@@ -8,7 +8,7 @@ import {Session} from "next-auth";
 
 import fetcher from "@/lib/fetcher";
 import Popover from "@/components/shared/popover";
-import JoinExistingProject from "@/components/projects/joinExistingProject";
+import JoinExistingProject from "@/components/projects/join-existing-project";
 
 export default function UserDropdown() {
     const router = useRouter();
