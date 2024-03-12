@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import getUser from "@/lib/utils/getUser";
 import { fetchMembers } from "@/lib/services/member/fetchMember";
-import createMember from "@/lib/services/member/createMember";
 import deleteMember from "@/lib/services/member/deleteMember";
 
 export default async function handler(
@@ -19,8 +18,6 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       return await fetchMembers(req, res);
-    case "POST":
-      return await createMember(req, res);
     case "DELETE":
       return await deleteMember(req, res);
     default:
