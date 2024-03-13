@@ -1,20 +1,29 @@
-import { useRouter } from "next/router";
+import useMediaQuery from "@/lib/hooks/use-media-query";
+import useScroll from "@/lib/hooks/use-scroll";
+import { Button } from "@radix-ui/themes";
+import { FolderArchive, Home } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import useScroll from "@/lib/hooks/use-scroll";
+import { useRouter } from "next/router";
+import FolderCode from "../shared/icons/folder-code";
 import { useSignInModal } from "./sign-in-modal";
 import UserDropdown from "./user-dropdown";
-import { useSession } from "next-auth/react";
-import { Button } from "@radix-ui/themes";
 
-interface MenuProps {
-  [key: string]: string;
+export interface MenuProps {
+  [key: string]: {
+    label: string;
+    icon: JSX.Element;
+  };
 }
 
 const MENU: MenuProps = {
-  "/": "home",
-  "/projects": "projects",
-  "/tasks": "tasks",
+  "/": { label: "Home", icon: <Home className="h-4 w-4" /> },
+  "/projects": {
+    label: "Projects",
+    icon: <FolderCode className="h-4 w-4" />,
+  },
+  "/tasks": { label: "Tasks", icon: <FolderArchive className="h-4 w-4" /> },
 };
 
 export default function NavBar() {
@@ -22,6 +31,7 @@ export default function NavBar() {
   const scrolled = useScroll(50);
   const { pathname } = useRouter();
   const { data: session } = useSession();
+  const { isMobile } = useMediaQuery();
 
   return (
     <>
@@ -45,7 +55,7 @@ export default function NavBar() {
               />
               <p>Zen</p>
             </Link>
-            {session && (
+            {session && !isMobile && (
               <nav className="flex flex-row items-center gap-4">
                 {Object.entries(MENU).map(([key, value]) => {
                   const isActive = key === pathname;
@@ -56,9 +66,9 @@ export default function NavBar() {
                     >
                       <Link href={key}>
                         {isActive ? (
-                          <span className="font-semibold">{value}</span>
+                          <span className="font-semibold">{value.label}</span>
                         ) : (
-                          value
+                          value.label
                         )}
                       </Link>
                     </button>
@@ -68,7 +78,7 @@ export default function NavBar() {
             )}
           </div>
           {session ? (
-            <UserDropdown />
+            <UserDropdown navItems={MENU} />
           ) : (
             <Button
               radius={"full"}

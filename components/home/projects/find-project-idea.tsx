@@ -4,7 +4,6 @@ import {
   Dialog,
   Flex,
   IconButton,
-  Text,
   TextField,
 } from "@radix-ui/themes";
 import { useChat } from "ai/react";

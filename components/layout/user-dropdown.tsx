@@ -1,24 +1,31 @@
+import { LogOut, Plus, Settings } from "lucide-react";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR from "swr";
-import { signOut } from "next-auth/react";
-import { LogOut, Plus, Settings } from "lucide-react";
-import { Session } from "next-auth";
 
-import fetcher from "@/lib/fetcher";
-import Popover from "@/components/shared/popover";
-import Sparkles from "@/components/shared/icons/sparkles";
-import JoinExistingProject from "@/components/projects/join-existing-project";
 import FindProjectIdea from "@/components/home/projects/find-project-idea";
+import JoinExistingProject from "@/components/projects/join-existing-project";
+import Sparkles from "@/components/shared/icons/sparkles";
+import Popover from "@/components/shared/popover";
+import fetcher from "@/lib/fetcher";
+import useMediaQuery from "@/lib/hooks/use-media-query";
+import { MenuProps } from "./navbar";
 
-export default function UserDropdown() {
+interface UserDropdownProps {
+  navItems: MenuProps;
+}
+
+export default function UserDropdown({ navItems }: UserDropdownProps) {
   const router = useRouter();
   const { data: session } = useSWR<Session>("/api/auth/session", fetcher);
   const [openInviteModal, setOpenInviteModal] = useState<boolean>(false);
   const [openAskToAIModal, setOpenAskToAIModal] = useState<boolean>(false);
   const { email, image } = session?.user || {};
   const [openPopover, setOpenPopover] = useState(false);
+  const { isMobile } = useMediaQuery();
 
   if (!email) return null;
 
@@ -59,6 +66,26 @@ export default function UserDropdown() {
               <Plus className="h-4 w-4" />
               <p className="text-sm">Join existing project</p>
             </button>
+            {/* 
+              device is mobile, show the nav items
+            */}
+            {isMobile &&
+              Object.entries(navItems).map(([key, value]) => {
+                return (
+                  <button
+                    key={key}
+                    className={
+                      "relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-zinc-700"
+                    }
+                    onClick={() => {
+                      router.push(key);
+                    }}
+                  >
+                    {value.icon}
+                    <p className="text-sm">{value.label}</p>
+                  </button>
+                );
+              })}
             <button
               className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-zinc-700"
               onClick={() => {
