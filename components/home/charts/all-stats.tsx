@@ -59,7 +59,9 @@ const StatCard = React.memo(({heading, data, icon}: {heading: string, data: { re
     }
 
     return (
-        <Card variant='surface'>
+        <Card variant='surface'
+
+        >
             <Flex align='center' justify='between' className='p-2'>
                 <Heading as="h3" size='3' weight='bold'>{heading}</Heading>
                 {icon}

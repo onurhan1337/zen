@@ -6,8 +6,6 @@ import Cta from "@/components/layout/cta";
 import Stats from "@/components/layout/stats";
 import Footer from "@/components/layout/footer";
 import ChartsSection from "@/components/home/charts";
-import {Flex} from "@radix-ui/themes";
-import AllStats from "@/components/home/charts/all-stats";
 
 export default function Home() {
     const {data: session} = useSession();
@@ -20,13 +18,7 @@ export default function Home() {
             </Head>
 
             {session && (
-                <Flex
-                    direction={'column'}
-                    className={'mx-auto max-w-7xl'}
-                >
-                    <AllStats/>
                     <ChartsSection/>
-                </Flex>
             )}
 
             {!session && (
