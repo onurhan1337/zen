@@ -1,8 +1,8 @@
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import useSWR from "swr";
 
-import { cn } from "@/lib/utils";
 import fetcher from "@/lib/fetcher";
+import { cn } from "@/lib/utils";
 
 interface Data {
   projects: {
@@ -53,7 +53,7 @@ export default function Stats() {
       <h3 className="text-base font-semibold leading-6 text-zinc-300">
         Last 30 days
       </h3>
-      <dl className="mt-5 grid grid-cols-1 divide-y divide-zinc-600 overflow-hidden rounded-lg border border-zinc-600 md:grid-cols-3 md:divide-x md:divide-y-0">
+      <dl className="mt-5 grid grid-cols-1 divide-y divide-zinc-800 overflow-hidden rounded-lg border border-zinc-800 md:grid-cols-3 md:divide-x md:divide-y-0">
         {stats.map((item) => (
           <StatItem
             key={item.name}
@@ -83,17 +83,15 @@ const StatItem = ({
   changeType: string | undefined;
 }) => (
   <div className="border-zinc-200 px-4 py-5 sm:p-6">
-    <dt className="text-base font-normal text-zinc-300">{title}</dt>
+    <dt className="text-lg font-normal text-zinc-300">{title}</dt>
     <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
       {title === "users" ? (
         <div className="flex items-baseline">
-          <span className="text-2xl font-semibold text-lime-600">
-            {total}
-          </span>
+          <span className="text-2xl font-semibold text-green-600">{total}</span>
           <span className="ml-2 text-sm font-medium text-zinc-400">Total</span>
         </div>
       ) : (
-        <div className="flex items-baseline text-2xl font-semibold text-lime-600">
+        <div className="flex items-baseline text-2xl font-semibold text-green-600">
           {total}
           <span className="ml-2 text-sm font-medium text-zinc-400">
             from {recent}
@@ -118,7 +116,7 @@ const ChangeIndicator = ({
   <div
     className={cn(
       changeType === "increase"
-        ? "bg-green-100 text-green-800"
+        ? "bg-green-950 text-green-300"
         : "bg-red-100 text-red-800",
       "inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0",
     )}
