@@ -1,7 +1,7 @@
-import { useSignInModal } from "./sign-in-modal";
+import { Button } from "@radix-ui/themes";
 import { useRouter } from "next/router";
 import { Github } from "../shared/icons";
-import {Button} from "@radix-ui/themes";
+import { useSignInModal } from "./sign-in-modal";
 
 export default function Cta() {
   const { SignInModal, setShowSignInModal } = useSignInModal();
@@ -22,16 +22,16 @@ export default function Cta() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button
                 onClick={() => setShowSignInModal(true)}
-                color={'lime'}
-                size={'3'}
-                variant={'classic'}
+                color={"blue"}
+                size={"3"}
+                variant={"classic"}
               >
                 Get started
               </Button>
               <Button
-                variant={'outline'}
-                size={'3'}
-                color={'gray'}
+                variant={"outline"}
+                size={"3"}
+                color={"gray"}
                 onClick={() =>
                   router.push("https://github.com/onurhan1337/zen")
                 }

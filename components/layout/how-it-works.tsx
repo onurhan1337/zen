@@ -36,12 +36,12 @@ const HowItWorks = () => {
     <div className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-lime-600">
+          <h2 className="text-base font-semibold leading-7 text-blue-600">
             How to Use
           </h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-zinc-300 sm:text-4xl">
             Everything you need to use{" "}
-            <span className="inline-block text-clip bg-gradient-to-tr from-lime-400 to-lime-700 bg-clip-text text-transparent">
+            <span className="inline-block text-clip bg-gradient-to-tr from-blue-400 via-blue-600 to-blue-800 bg-clip-text text-transparent">
               Zen
             </span>
           </p>
@@ -56,7 +56,7 @@ const HowItWorks = () => {
               <div key={h.name} className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-zinc-300">
                   <div
-                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-lime-300  via-lime-500 to-lime-300
+                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600  via-blue-400 to-blue-600
                    shadow-inner"
                   >
                     <span className="text-zinc-700">{h.step}</span>
