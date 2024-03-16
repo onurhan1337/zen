@@ -40,7 +40,7 @@ export default function NavBar() {
         className={`fixed top-0 flex w-full justify-center ${
           scrolled
             ? "border-b border-zinc-600 bg-transparent/10 backdrop-blur-xl"
-            : "bg-white/0"
+            : "border-b border-transparent bg-transparent/0 backdrop-blur-0"
         } z-30 transition-all`}
       >
         <div className="mx-5 flex h-16 w-full max-w-screen-xl items-center justify-between">
