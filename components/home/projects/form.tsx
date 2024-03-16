@@ -1,19 +1,24 @@
-import { useRouter } from "next/router";
-import { mutate } from "swr";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { toast } from "sonner";
 import { CalendarIcon } from "lucide-react";
+import { useRouter } from "next/router";
+import { toast } from "sonner";
+import { mutate } from "swr";
 
-import * as Yup from "yup";
 import { format } from "date-fns";
+import * as Yup from "yup";
 
-import { capitalize, cn } from "@/lib/utils";
-import { Project, ProjectStatus, ProjectStatusType } from "types/project";
-import { Calendar } from "@/components/ui/calendar";
-import { Textarea } from "@/components/ui/textarea";
+import SubmitButton, {
+  DialogCloseButton,
+} from "@/components/shared/submitButton";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -21,13 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 import { projectCreateFormState } from "@/lib/store";
-import SubmitButton, {DialogCloseButton} from "@/components/shared/submitButton";
+import { capitalize, cn } from "@/lib/utils";
+import { Project, ProjectStatus, ProjectStatusType } from "types/project";
 
 interface FormValues {
   name: string;
@@ -88,8 +90,6 @@ const ProjectCreateForm = () => {
 
   const handleSubmit = async (values: FormValues) => {
     try {
-      toast.loading("Creating Project...");
-
       const newProject = await createProject(values);
 
       if (newProject) {
@@ -145,14 +145,9 @@ const ProjectCreateForm = () => {
             onKeyDown={(e) => handleOnKeyDown(e, submitForm)}
             className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-5"
           >
-            <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
+            <div className="relative col-span-2 mt-2 space-y-1 md:col-span-1">
               <Label htmlFor="name">Name</Label>
-              <Field
-                as={Input}
-                type="text"
-                name="name"
-                id="name"
-              />
+              <Field as={Input} type="text" name="name" id="name" />
               <ErrorMessage
                 name="name"
                 className="py-1 text-xs italic text-red-500"
@@ -160,7 +155,7 @@ const ProjectCreateForm = () => {
               />
             </div>
 
-            <div className="relative col-span-2 mt-2 md:col-span-1 space-y-1">
+            <div className="relative col-span-2 mt-2 space-y-1 md:col-span-1">
               <Label htmlFor="status">Status</Label>
               <Field
                 as={Select}
@@ -235,7 +230,7 @@ const ProjectCreateForm = () => {
                 component="div"
               />
             </div>
-            <div className="flex items-center justify-end gap-2 col-span-2">
+            <div className="col-span-2 flex items-center justify-end gap-2">
               <DialogCloseButton />
               <SubmitButton
                 isSubmitting={isSubmitting}

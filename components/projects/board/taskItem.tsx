@@ -1,15 +1,15 @@
-import { useState } from "react";
-
 import TaskDetailModal from "@/components/tasks/detail";
 import { truncate } from "@/lib/utils";
-import { GripVertical } from "lucide-react";
-import { Task } from "types/task";
-import { Badge } from "@radix-ui/themes";
 import {
   ArrowBottomRightIcon,
   ArrowRightIcon,
   ArrowTopRightIcon,
 } from "@radix-ui/react-icons";
+import { useState } from "react";
+
+import { Badge } from "@radix-ui/themes";
+import { GripVertical } from "lucide-react";
+import { Task } from "types/task";
 
 type TaskItemProps = {
   task: Task;
@@ -25,7 +25,6 @@ export const handleIconForPriority = (priority: string) => {
       return <ArrowTopRightIcon className="h-3 w-3 text-zinc-400" />;
     default:
       return <ArrowBottomRightIcon className=" text-zinc-400" />;
-      break;
   }
 };
 
@@ -55,21 +54,15 @@ const TaskItem = ({ task }: TaskItemProps) => {
           {truncate(task.description, 30)}
         </p>
 
-        <div className="flex flex-row items-center justify-start space-x-3">
-          {task.assignee && (
-            <Badge
-              className="mt-2 border border-zinc-700 bg-blue-50 uppercase text-blue-500"
-              size={"1"}
-              radius="full"
-            >
-              {task.assignee.name}
-            </Badge>
-          )}
-
-          <Badge className="mt-2" size={"1"} color="gray" radius="full">
-            {task.priority.toUpperCase()} {handleIconForPriority(task.priority)}
+        {task.assignee && (
+          <Badge
+            className="mt-2 border border-blue-900 bg-blue-50 uppercase text-blue-500"
+            size={"1"}
+            radius="full"
+          >
+            {task.assignee.name}
           </Badge>
-        </div>
+        )}
       </div>
 
       <TaskDetailModal taskId={task.id} isOpen={isOpen} setOpen={setOpen} />

@@ -1,8 +1,13 @@
 import { LoadingSpinner } from "@/components/shared/icons";
-import { Label } from "@/components/ui/label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import fetcher from "@/lib/fetcher";
 import { isUserOwner } from "@/lib/utils";
-import { Button, Flex, Switch, TextArea, TextField } from "@radix-ui/themes";
+import { Button, Switch, TextArea, TextField } from "@radix-ui/themes";
 import { Field, Form, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -34,7 +39,7 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
   return (
     <>
       {isOwner && (
-        <div>
+        <div className="space-y-6">
           <RenameProjectForm id={projectId} name={project?.name} />
           <ProjectDescriptionForm
             id={projectId}
@@ -60,8 +65,6 @@ const RenameProjectForm = ({
 }) => {
   const onSubmit = async (values: { name: string }) => {
     try {
-      toast.loading("Renaming project...");
-
       const res = await fetcher(`/api/project/${id}`, {
         method: "PUT",
         headers: {
@@ -80,37 +83,39 @@ const RenameProjectForm = ({
   };
 
   return (
-    <div>
-      <Formik initialValues={{ name: name || "" }} onSubmit={onSubmit}>
-        {({ isSubmitting, submitForm }) => (
-          <Form>
-            <div className="grid grid-cols-3 items-end gap-4 py-6">
-              <div className="col-span-2 flex flex-col justify-end space-y-2">
-                <Label htmlFor="name">Project Name</Label>
-                <Field
-                  as={TextField.Input}
-                  name="name"
-                  type="text"
-                  className="w-full"
-                  color={"blue"}
-                />
-              </div>
-              <div className="col-span-1">
-                <Button
-                  size={"2"}
-                  variant={"outline"}
-                  color={"blue"}
-                  style={{ width: "100%" }}
-                  onClick={() => submitForm()}
-                >
-                  Rename
-                </Button>
-              </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+    <Accordion type="single" collapsible>
+      <AccordionItem value="Rename">
+        <AccordionTrigger>
+          <div>
+            <h3>Rename Project</h3>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <Formik initialValues={{ name: name || "" }} onSubmit={onSubmit}>
+            {({ submitForm }) => (
+              <Form>
+                <div className="flex w-full flex-col justify-center space-y-4">
+                  <Field
+                    as={TextField.Input}
+                    name="name"
+                    type="text"
+                    color={"blue"}
+                  />
+                  <Button
+                    size={"2"}
+                    variant={"outline"}
+                    color={"blue"}
+                    onClick={() => submitForm()}
+                  >
+                    Rename
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </AccordionContent>{" "}
+      </AccordionItem>
+    </Accordion>
   );
 };
 
@@ -124,8 +129,6 @@ const ProjectDescriptionForm = ({
 }) => {
   const onSubmit = async (values: { description: string }) => {
     try {
-      toast.loading("Updating project details...");
-
       const res = await fetcher(`/api/project/${id}`, {
         method: "PUT",
         headers: {
@@ -144,41 +147,41 @@ const ProjectDescriptionForm = ({
   };
 
   return (
-    <div>
-      <Formik
-        initialValues={{ description: description || "" }}
-        onSubmit={onSubmit}
-      >
-        {({ submitForm }) => (
-          <Form>
-            <div className="flex flex-col space-x-4 py-6">
-              <div className="flex flex-col items-start space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Field
-                  as={TextArea}
-                  name="description"
-                  color={"blue"}
-                  size={"3"}
-                  style={{
-                    width: "100%",
-                  }}
-                />
-                <Flex align="center" justify="end" width="100%">
+    <Accordion type="single" collapsible>
+      <AccordionItem value="Description">
+        <AccordionTrigger>
+          <div>
+            <h3>Project Description</h3>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <Formik
+            initialValues={{ description: description || "" }}
+            onSubmit={onSubmit}
+          >
+            {({ submitForm }) => (
+              <Form>
+                <div className="flex flex-col space-y-4">
+                  <Field
+                    as={TextArea}
+                    name="description"
+                    color={"blue"}
+                    size={"3"}
+                  />
                   <Button
                     variant={"outline"}
                     color={"blue"}
-                    style={{ width: "30%" }}
                     onClick={() => submitForm()}
                   >
                     Update
                   </Button>
-                </Flex>
-              </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };
 
@@ -191,8 +194,6 @@ const ProjectStatusForm = ({
 }) => {
   const onChange = async (status: ProjectStatus) => {
     try {
-      toast.loading("Updating project status...");
-
       const res = await fetcher(`/api/project/${id}`, {
         method: "PUT",
         headers: {

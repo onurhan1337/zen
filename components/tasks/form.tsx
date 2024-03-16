@@ -102,8 +102,6 @@ const TaskCreateForm = () => {
 
   const handleSubmit = async (values: FormValues) => {
     try {
-      toast.loading("Creating task...");
-
       const newTask = await createTask(values, router.query.id);
 
       mutate(

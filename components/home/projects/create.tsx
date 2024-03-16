@@ -9,7 +9,7 @@ const ProjectCreateContent = () => {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open: boolean) => setOpen(open)}>
       <Dialog.Trigger>
-        <Button color={"blue"} size={"2"}>
+        <Button color={"blue"} variant={"classic"} size={"2"}>
           Create Project
         </Button>
       </Dialog.Trigger>

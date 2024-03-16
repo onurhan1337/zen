@@ -8,7 +8,11 @@ const TaskCreateContent = () => {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open: boolean) => setOpen(open)}>
       <Dialog.Trigger>
-        <Button color={"blue"} onClick={() => setOpen(true)}>
+        <Button
+          color={"blue"}
+          variant={"classic"}
+          onClick={() => setOpen(true)}
+        >
           Create Task
         </Button>
       </Dialog.Trigger>

@@ -1,15 +1,14 @@
-import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Separator } from "@radix-ui/themes";
+import React from "react";
 
-import { Task } from "types/task";
-import TaskItem from "./taskItem";
-import SortableTaskItem from "./sortableTaskItem";
 import { cn } from "@/lib/utils";
+import { Task } from "types/task";
+import SortableTaskItem from "./sortableTaskItem";
+import TaskItem from "./taskItem";
 
 type BoardSectionProps = {
   id: string;
