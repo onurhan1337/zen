@@ -39,7 +39,7 @@ export default function NavBar() {
       <div
         className={`fixed top-0 flex w-full justify-center ${
           scrolled
-            ? "border-b border-zinc-600 bg-transparent/10 backdrop-blur-xl"
+            ? "border-b border-zinc-800 bg-transparent/10 backdrop-blur-xl"
             : "border-b border-transparent bg-transparent/0 backdrop-blur-0"
         } z-30 transition-all`}
       >
