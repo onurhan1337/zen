@@ -1,191 +1,78 @@
 import fetcher from "@/lib/fetcher";
-import { Box, Card, Heading, Text } from "@radix-ui/themes";
+import { Box, Card, Heading } from "@radix-ui/themes";
 import React from "react";
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { AreaChart } from '@tremor/react'
+import { RiBarChartFill } from '@remixicon/react';
+
 import useSWR from "swr";
-import { Project } from "../../../types/project";
+import ProjectCreateContent from "../projects/create";
 
 type Data = {
-  projects?: {
-    data: Project[];
-  };
-  projectCount: number;
-  taskCount: number;
+  projects: number;
+  tasks: number;
+  members: number;
 };
 
 const AllProjectsChart = () => {
-  const { data: projectData, error } = useSWR<Data>(
-    "/api/project/stats",
-    fetcher,
-  );
+  const { data } = useSWR<Data[]>("/api/stats/projects-overview", fetcher);
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!projectData) {
-    return (
-      <Card
-        variant={"surface"}
-        style={{
-          width: "100%",
-        }}
-      >
-        <Box>
-          <Heading>Projects Overview</Heading>
-        </Box>
-        <Box
-          style={{
-            padding: 5,
-            marginTop: 10,
-          }}
-        >
-          <SkeletonBarChart />
-        </Box>
-      </Card>
-    );
-  }
-
-  if (projectData && projectData.projects?.data.length === 0) {
-    return (
-      <Card
-        variant={"surface"}
-        style={{
-          padding: 5,
-          width: "100%",
-        }}
-      >
-        <Box
-          style={{
-            padding: 5,
-          }}
-        >
-          <Heading>Projects Overview</Heading>
-        </Box>
-        <Box
-          style={{
-            padding: 10,
-          }}
-        >
-          <Box className={"rounded-lg border border-zinc-600 p-4"}>
-            <Text align="center" as="div">
-              No projects created yet.
-            </Text>
-          </Box>
-        </Box>
-      </Card>
-    );
-  }
-
-  /**
-   * @param {Data} projectData
-   * @return {JSX.Element}
-   * @see https://recharts.org/en-US/api/BarChart
-   */
-  const chartData = projectData.projects?.data.map((project) => ({
-    name: project.name,
-    tasks: project.tasks.length,
-  }));
+  if (!data || data.length === 0) return <EmptyCard />;
 
   return (
-    <Card
-      variant={"surface"}
-      style={{
-        padding: 5,
-        width: "100%",
-      }}
-    >
-      <Box
-        style={{
-          padding: 5,
-        }}
-      >
-        <Heading>Projects Overview</Heading>
+    <Card  style={{
+      padding: 5,
+      width: '100%',
+    }
+    }>
+      <Box style={{ padding: 5 }}>
+        <Heading size={'4'}>Projects Overview</Heading>
       </Box>
-      <Box
-        style={{
-          padding: 5,
-          marginTop: 10,
-        }}
-      >
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={chartData}>
-            <XAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              dataKey="name"
-            />
-            <YAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
-            <Tooltip
-              contentStyle={{ color: "#070809" }}
-              itemStyle={{ color: "#8c8c8c" }}
-              cursor={{ fill: "rgba(38,38,38,0.3)" }}
-            />
-            <Bar
-              fill="#d4d4d8"
-              dataKey="tasks"
-              className={"fill-zinc-300"}
-              radius={[4, 4, 0, 0]}
-              barSize={30}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      <Box style={{ padding: 5, marginTop: 10 }}>
+        <AreaChart
+          className="h-80"
+          data={data}
+          index={'name'}
+          categories={["tasks", "members"]}
+          colors={['blue', 'purple']}
+          yAxisWidth={60}
+        />
       </Box>
     </Card>
   );
 };
 
-export default React.memo(AllProjectsChart);
+export default AllProjectsChart;
 
-const SkeletonBarChart = () => {
-  // Create an array of 10 placeholder data
-  const placeholderData = Array.from({ length: 7 }, (_, i) => ({
-    name: `Project ${i}`,
-    tasks: Math.random() * 30,
-  }));
+const EmptyCard = () => (
+  <Card 
+    style={{
+      padding: 5,
+      width: '100%',
+    }}
+  >
+  <Box style={{ padding: 5 }}>
+        <Heading size={'4'}>Projects Overview</Heading>
+  </Box>
+    
+  <Box style={{ padding: 5, marginTop: 10 }}>
 
-  return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={placeholderData}>
-        <XAxis
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          dataKey="name"
+    <div className="mt-4 flex h-44 items-center justify-center rounded-tremor-small border border-dashed p-4 dark:border-dark-tremor-content-subtle">
+      <div className="text-center">
+        <RiBarChartFill
+          className="mx-auto h-7 w-7 text-tremor-content-subtle dark:text-dark-tremor-content-subtle"
+          aria-hidden={true}
         />
-        <YAxis
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <Tooltip
-          contentStyle={{ color: "#070809" }}
-          cursor={{ fill: "rgba(0,0,0,0.3)" }}
-        />
-        <Bar
-          fill="#d4d4d8"
-          dataKey="tasks"
-          className={"fill-zinc-300"}
-          radius={[4, 4, 0, 0]}
-          barSize={30}
-        />
-      </BarChart>
-    </ResponsiveContainer>
-  );
-};
+        <p className="mt-2 text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          No data to show
+        </p>
+        <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
+          Create a project to get started
+        </p>
+        <div className="mt-4">
+        <ProjectCreateContent />
+        </div>
+      </div>
+    </div>
+      </Box>
+</Card>
+);
