@@ -23,13 +23,13 @@ export default function App({
   return (
     <>
       <SessionProvider session={session}>
-        <Theme appearance={"dark"}>
+        <Theme appearance={"dark"} className="antialiased">
           <header>
             <Suspense fallback="...">
               <NavBar />
             </Suspense>
           </header>
-          <main className={`${inter.className} mx-5 py-12 sm:py-32`}>
+          <main className={`${inter.className} mx-5 py-12 sm:py-24`}>
             <Component {...pageProps} />
           </main>
           <Toaster richColors closeButton={true} />
