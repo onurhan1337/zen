@@ -29,7 +29,7 @@ export default function App({
               <NavBar />
             </Suspense>
           </header>
-          <main className={`${inter.className} mx-5 py-12 sm:py-24`}>
+          <main className={`${inter.className} mx-5 py-24`}>
             <Component {...pageProps} />
           </main>
           <Toaster richColors closeButton={true} />

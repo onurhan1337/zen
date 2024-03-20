@@ -50,6 +50,7 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
               }
               onClick={() => {
                 setOpenAskToAIModal(true);
+                setOpenPopover(false);
               }}
             >
               <Sparkles className="h-4 w-4" />
@@ -61,6 +62,7 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
               }
               onClick={() => {
                 setOpenInviteModal(true);
+                setOpenPopover(false);
               }}
             >
               <Plus className="h-4 w-4" />
@@ -79,6 +81,7 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
                     }
                     onClick={() => {
                       router.push(key);
+                      setOpenPopover(false);
                     }}
                   >
                     {value.icon}
@@ -90,6 +93,7 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
               className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-zinc-700"
               onClick={() => {
                 router.push("/settings");
+                setOpenPopover(false);
               }}
             >
               <Settings className="h-4 w-4" />
@@ -102,6 +106,7 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
                   redirect: false,
                 }).then(() => {
                   router.push("/");
+                  setOpenPopover(false);
                 })
               }
             >

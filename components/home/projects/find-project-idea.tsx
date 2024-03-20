@@ -73,7 +73,6 @@ export default function FindProjectIdea({
                 name="prompt"
                 value={input}
                 width={"100%"}
-                color={"purple"}
                 onChange={handleInputChange}
                 placeholder={'e.g. "Machine Learning"'}
               />
@@ -83,7 +82,6 @@ export default function FindProjectIdea({
                   type="submit"
                   radius="full"
                   variant="ghost"
-                  color={"purple"}
                 >
                   <Sparkles className={"h-4 w-4 text-purple-100"} />
                 </IconButton>
