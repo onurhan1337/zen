@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma';
 import getUser from '@/lib/utils/getUser';
+import prisma from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const user = await getUser(req, res);
@@ -13,75 +13,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
   try {
-    const [totalProjects, recentProjects, totalTasks, recentTasks, projects] = await Promise.all([
-      prisma.project.count({
-        where: {
+    const totalProjects = await prisma.project.count({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    const recentProjects = await prisma.project.count({
+      where: {
+        userId: user.id,
+        startDate: {
+          gte: thirtyDaysAgo,
+        },
+      },
+    });
+
+    const totalTasks = await prisma.task.count({
+      where: {
+        project: {
           userId: user.id,
         },
-      }),
-      prisma.project.count({
-        where: {
+      },
+    });
+
+    const recentTasks = await prisma.task.count({
+      where: {
+        project: {
           userId: user.id,
-          startDate: {
-            gte: thirtyDaysAgo,
-          },
         },
-      }),
-      prisma.task.count({
-        where: {
-          project: {
-            userId: user.id,
-          },
+        startDate: {
+          gte: thirtyDaysAgo,
         },
-      }),
-      prisma.task.count({
-        where: {
-          project: {
-            userId: user.id,
-          },
-          startDate: {
-            gte: thirtyDaysAgo,
-          },
-        },
-      }),
-      prisma.project.findMany({
-        where: {
-          OR: [
-            {
-              members: {
-                some: {
-                  id: user.id,
-                },
-              },
-            },
-            {
-              owners: {
-                some: {
-                  id: user.id,
-                },
-              },
-            },
-          ],
-          startDate: {
-            gte: thirtyDaysAgo,
-          },
-        },
-        select: {
-          members: true,
-          owners: true,
-        },
-      }),
-    ]);
-
-    const userIds = projects.flatMap((project) => [
-      ...project.members.map((member) => member.id),
-      ...project.owners.map((owner) => owner.id),
-    ]);
-
-    const uniqueUserIds = new Set(userIds);
-
-    const recentMembersOfProjects = uniqueUserIds.size;
-
+      },
+    });
+    
     const totalMembersOfProjects = await prisma.project.count({
       where: {
         OR: [
@@ -103,6 +68,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
+
+    const projects = await prisma.project.findMany({
+      where: {
+        OR: [
+          {
+            members: {
+              some: {
+                id: user.id,
+              },
+            },
+          },
+          {
+            owners: {
+              some: {
+                id: user.id,
+              },
+            },
+          },
+        ],
+        startDate: {
+          gte: thirtyDaysAgo,
+        },
+      },
+      include: {
+        members: true,
+        owners: true,
+      },
+    });
+
+    const userIds = projects.flatMap((project) => [
+      ...project.members.map((member) => member.id),
+      ...project.owners.map((owner) => owner.id),
+    ]);
+    
+
+    const uniqueUserIds = Array.from(new Set(userIds));
+
+    const recentMembersOfProjects = uniqueUserIds.length;
+
     res.status(200).json({
       projects: {
         total: totalProjects,
@@ -118,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred.' });
   }
 }
