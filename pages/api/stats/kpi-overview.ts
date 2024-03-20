@@ -118,7 +118,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred.' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 }
