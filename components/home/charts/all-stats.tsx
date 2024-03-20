@@ -1,18 +1,22 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 import useSWR from "swr";
-import {Box, Card, Flex, Heading, Text} from '@radix-ui/themes';
-import {FolderCog2, ListChecks, UsersIcon} from 'lucide-react';
+import { Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { FolderCog2, ListChecks, UsersIcon } from 'lucide-react';
 
 import fetcher from "@/lib/fetcher";
+import { cn } from "@/lib/utils";
 
 type Data = {
     projects: { recent: number, total: number };
     tasks: { recent: number, total: number };
-    users: number;
+    members: {
+        recent: number,
+        total: number
+    };
 };
 
 const AllStats = () => {
-    const {data} = useSWR<Data>('/api/project/stats', fetcher);
+    const { data } = useSWR<Data>('/api/stats/kpi-overview', fetcher);
 
     if (!data) {
         return (
@@ -26,57 +30,97 @@ const AllStats = () => {
 
     return (
         <Box className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <StatCard heading='Projects' data={data.projects} icon={<FolderCog2 className="w-4 h-4"/>}/>
-            <StatCard heading='Tasks' data={data.tasks} icon={<ListChecks className="w-4 h-4"/>}/>
-            <StatCard heading='Members' data={data.users} icon={<UsersIcon className="w-4 h-4"/>}/>
+            {data && (
+                <>
+                    <StatCard
+                        heading="Projects"
+                        data={data.projects}
+                        icon={<FolderCog2 size={24} />}
+                    />
+                    <StatCard
+                        heading="Tasks"
+                        data={data.tasks}
+                        icon={<ListChecks size={24} />}
+                    />
+                    <StatCard
+                        heading="Users"
+                        data={data.members}
+                        icon={<UsersIcon size={24} />}
+                    />
+                </>
+            )
+            }
         </Box>
     );
 }
 
-const StatCard = React.memo(({heading, data, icon}: {heading: string, data: { recent: number, total: number } | number, icon: ReactNode}) => {
-    const resolveData = (data: { recent: number, total: number } | number) => {
-        if (typeof data === 'object') {
-            return data.total;
-        }
-        return data;
-    }
+interface StatCardProps {
+    heading: string;
+    data: { recent: number, total: number } | number;
+    icon: ReactNode;
+}
 
-    function resolveRecent(recent: number, total: number) {
+const StatCard = React.memo(({ heading, data, icon }: StatCardProps) => {
+
+    const resolveChangeMessage = (recent: number, total: number) => {
         if (total === 0) {
             return 'No data from last month';
         }
 
-        const percentage = Math.floor((recent / total) * 100);
-        let symbol = "";
-
-        if (recent > total) {
-            symbol = "+";
-        } else if (recent < total) {
-            symbol = "-";
+        if (recent === total) {
+            return 'No change from last month';
         }
 
-        return symbol + `${percentage}% from last month`;
+        const percentage = Math.abs(Math.floor((recent / total - 1) * 100));
+        let symbol = recent > total ? '+' : '-';
+        if (percentage === 0) {
+            return `Less than 1% change from last month`;
+        }
+
+        return `${symbol}${percentage}% from last month`;
+    };
+
+    const changeType = (recent: number, total: number) => {
+        if (recent > total) {
+            return 'positive';
+        } else if (recent < total) {
+            return 'negative';
+        } else {
+            return 'neutral';
+        }
     }
 
     return (
-        <Card variant='surface'
-
-        >
+        <Card variant='surface'>
             <Flex align='center' justify='between' className='p-2'>
                 <Heading as="h3" size='3' weight='bold'>{heading}</Heading>
                 {icon}
             </Flex>
-            <Box className='p-2 space-y-2'>
-                <Box>
-                    <Heading as="h1" size="8" weight="bold">{resolveData(data)}</Heading>
+            {typeof data === 'object' ? (
+                <Box className='p-2 gap-4'>
+                    <Box>
+                        <Heading size={'6'} mb={'4'}>{data.total}</Heading>
+                        <span
+                            className={cn(
+                                changeType(data.recent, data.total) === 'positive' ? 'bg-emerald-100 text-emerald-800 ring-emerald-600/10 dark:bg-emerald-400/10 dark:text-emerald-500 dark:ring-emerald-400/20' : 
+                                changeType(data.recent, data.total) === 'negative' ? 'bg-red-100 text-red-800 ring-red-600/10 dark:bg-red-400/10 dark:text-red-500 dark:ring-red-400/20' :
+                                'bg-neutral-100 text-neutral-800 ring-neutral-600/10 dark:bg-neutral-400/10 dark:text-neutral-500 dark:ring-neutral-400/20',
+                                'inline-flex items-center bg-neutral-500 rounded-tremor-small px-2 py-1 text-tremor-label font-medium ring-1 ring-inset mt'
+                            )}
+                        >
+                            {resolveChangeMessage(data.recent, data.total)}
+                        </span>
+                    </Box>
                 </Box>
-                <Box>
-                    <Text size='1'>{typeof data === 'object' ? resolveRecent(data.recent, data.total) : null}</Text>
+            ) : (
+                <Box className='p-2 space-y-2'>
+                    <Text size='1'>{data}</Text>
                 </Box>
-            </Box>
+            )}
         </Card>
     );
 });
+
 
 StatCard.displayName = 'StatCard';
 
