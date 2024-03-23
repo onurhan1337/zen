@@ -13,6 +13,7 @@ import Popover from "@/components/shared/popover";
 import fetcher from "@/lib/fetcher";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import { MenuProps } from "./navbar";
+import { Avatar } from "@radix-ui/themes";
 
 interface UserDropdownProps {
   navItems: MenuProps;
@@ -27,7 +28,7 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
   const [openPopover, setOpenPopover] = useState(false);
   const { isMobile } = useMediaQuery();
 
-  if (!email) return null;
+  if (!email || !session) return null;
 
   return (
     <div className="relative inline-block text-left">
@@ -121,11 +122,12 @@ export default function UserDropdown({ navItems }: UserDropdownProps) {
       >
         <button
           onClick={() => setOpenPopover(!openPopover)}
-          className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full transition-all duration-75 focus:outline-none active:scale-95 sm:h-9 sm:w-9"
+          className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full transition-all duration-75 hover:active:scale-95 sm:h-9 sm:w-9"
         >
-          <Image
+          <Avatar
             alt={email}
-            src={image || `https://avatars.dicebear.com/api/micah/${email}.svg`}
+            src={image || ""}
+            fallback={session.user.name.slice(0, 2)}
             width={40}
             height={40}
           />
