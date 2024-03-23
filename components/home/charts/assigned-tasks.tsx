@@ -34,26 +34,35 @@ const TaskChart = () => {
 
   if (!taskData) return <SkeletonLoader />;
 
+  const validTasks = taskData.filter(task => !isPast(parseISO(task.endDate)));
+
   return (
     <Suspense fallback={<SkeletonLoader />}>
       <Card variant="surface" style={{ padding: 5 }}>
-        <Box>
-          <Heading>Assigned Tasks</Heading>
-        </Box>
-        <ScrollArea
-          className={"my-4 rounded-lg border border-zinc-700"}
-          style={{ maxHeight: 300 }}
-        >
-          {taskData && taskData.length > 0 ? (
-            taskData.map((task, index) => <TaskRow key={task.id} task={task} />)
+      <Box style={{ padding: 5 }}>
+            <Heading size={'4'}>
+              Assigned Tasks
+            </Heading>
+          </Box>
+        <Flex direction="column" align="center" justify="center" style={{ height: '80%' }}>
+          {validTasks.length > 0 ? (
+            validTasks.map((task, index) => ( 
+              <ScrollArea
+              key={task.id}  
+              className={"my-4 rounded-lg border border-zinc-800 border-dashed"}
+              style={{ maxHeight: 300 }}
+              >
+                <TaskRow task={task} />
+              </ScrollArea>
+            ))
           ) : (
-            <Box className={"rounded-lg border border-zinc-600 p-4"}>
+            <Box className={"rounded-lg border border-zinc-700 border-dashed my-4 p-4 w-max mx-auto"}>
               <Text align="center" as="div">
                 No tasks assigned yet.
               </Text>
             </Box>
           )}
-        </ScrollArea>
+        </Flex>
       </Card>
     </Suspense>
   );
