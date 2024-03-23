@@ -32,8 +32,8 @@ export default function App({
           <main className={`${inter.className} mx-5 py-24`}>
             <Component {...pageProps} />
           </main>
-          <Toaster richColors closeButton={true} />
         </Theme>
+          <Toaster richColors closeButton={true} />
       </SessionProvider>
       <Analytics />
     </>

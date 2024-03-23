@@ -14,7 +14,6 @@ import { toast } from "sonner";
 import useSWR, { mutate } from "swr";
 import { Project, ProjectStatus } from "types/project";
 import DeleteConfirmationDialog from "./confirm";
-import { MembersDialog } from "./members";
 
 const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
   const { data: session } = useSession();
@@ -45,7 +44,6 @@ const ProjectSettingsContent = ({ projectId }: { projectId: string }) => {
             id={projectId}
             description={project?.description}
           />
-          <MembersDialog projectId={projectId} user={session!} />
           <ProjectStatusForm id={projectId} status={project?.status} />
           <ProjectDeleteForm id={projectId} />
         </div>

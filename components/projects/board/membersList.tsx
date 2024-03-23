@@ -1,9 +1,10 @@
 import { LoadingSpinner } from "@/components/shared/icons";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import fetcher from "@/lib/fetcher";
 import { Project, User } from "@prisma/client";
 import { Box, Button, Dialog, ScrollArea, Text } from "@radix-ui/themes";
-import { Check, Inbox, Users, X } from "lucide-react";
+import { Check, CopyIcon, Inbox, Users, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import useSWR, { mutate } from "swr";
@@ -82,6 +83,7 @@ const MembersListDialog = ({
         <Dialog.Description>
           List of members in this project.
         </Dialog.Description>
+        <InviteMember projectInviteCode={project.inviteCode} />
         <Box mt={"4"}>
           <Tabs defaultValue="members">
             <TabsList
@@ -100,8 +102,8 @@ const MembersListDialog = ({
               <ScrollArea
                 type="always"
                 scrollbars="vertical"
-                style={{ height: 180 }}
-              >
+                style={{ height: '100%' }}
+                >
                 <div className="text-sm text-zinc-400">
                   <ul className="h-[200px] w-full list-inside list-disc pr-2">
                     {project &&
@@ -145,7 +147,7 @@ const MembersListDialog = ({
                 </div>
               </ScrollArea>
             </TabsContent>
-            <TabsContent value="pendingInvites">
+            <TabsContent value="pendingInvites" style={{ height: '200px' }}>
               <PendingInvites
                 code={project.inviteCode!}
                 projectId={projectId}
@@ -299,5 +301,42 @@ const PendingInvites = ({
         ))}
       </ul>
     </div>
+  );
+};
+
+const InviteMember = ({ projectInviteCode }: { projectInviteCode: string }) => {
+  return (
+    <Box my={"4"}>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "8px",
+        }}
+        mb={"2"}
+      >
+        <Input style={{ width: "100%" }} value={projectInviteCode} disabled />
+        <Button
+          color={"gray"}
+          radius={"medium"}
+          variant="surface"
+          onClick={() => {
+            navigator.clipboard.writeText(projectInviteCode);
+            toast.success("Invite code copied to clipboard!");
+          }}
+          aria-label="Copy invite code to clipboard"
+        >
+          <CopyIcon size={18} color={"#fff"} />
+        </Button>
+      </Box>
+      <Text
+        as={"span"}
+        style={{ fontSize: "0.8rem", color: "rgba(255, 255, 255, 0.5)" }}
+      >
+        Share this invite code with others to join this project.
+      </Text>
+    </Box>
   );
 };

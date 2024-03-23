@@ -11,7 +11,7 @@ export async function fetchMembers(req: NextApiRequest, res: NextApiResponse) {
   try {
     const project = await prisma.project.findUnique({
       where: { id: id as string },
-      include: { members: true, owners: true },
+      include: { members: true, owners: true, },
     });
 
     if (!project) {
@@ -22,7 +22,7 @@ export async function fetchMembers(req: NextApiRequest, res: NextApiResponse) {
       return res.status(200).json([]);
     }
 
-    res.status(200).json({ members: project.members, owners: project.owners });
+    res.status(200).json({ members: project.members, owners: project.owners, inviteCode: project.inviteCode });
   } catch (error) {
     res
       .status(500)
