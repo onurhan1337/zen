@@ -134,7 +134,7 @@ const ProjectDetailContent = ({
 
     return (
         <div
-            className="grid w-full max-w-screen-xl grid-cols-1 items-end justify-between gap-4 border-b border-zinc-200 pb-4 sm:grid-cols-2">
+            className="grid w-full max-w-screen-xl grid-cols-1 items-end justify-between gap-4 border-b border-zinc-700 pb-4 sm:grid-cols-2">
             <div className="w-full grid-cols-2 sm:grid-cols-2">
                 <h1 className="scroll-m-20 text-4xl font-extrabold italic tracking-tight antialiased lg:text-3xl">
                     {truncate(project.name, 20)}

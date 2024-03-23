@@ -32,7 +32,7 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
   }, []);
 
   return (
-    <div className="w-full rounded-md border-zinc-700 bg-zinc-900 p-4 shadow-sm focus-within:border-zinc-600 hover:shadow-sm focus:border-zinc-700 dark:z-0 dark:border dark:shadow-none dark:focus-within:z-10 dark:hover:z-10 dark:hover:border-zinc-700 sm:p-3">
+    <div className="w-full rounded-md p-4 shadow-sm sm:p-3">
       <div
         className={cn(
           "flex",
@@ -41,7 +41,9 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
             : "flex-row items-center justify-between",
         )}
       >
-        <h4 className="mb-4 scroll-m-20 text-lg font-semibold tracking-tighter">
+        <h4 className="mb-4 scroll-m-20 text-lg font-semibold tracking-tighter
+          bg-zinc-900 border border-zinc-800 w-full rounded-md shadow-sm p-2 text-center
+        ">
           {title}
         </h4>
       </div>

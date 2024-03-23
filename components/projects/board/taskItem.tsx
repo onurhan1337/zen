@@ -37,7 +37,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
     <>
       <div
         onClick={onOpen}
-        className="rounded-md border border-zinc-600 bg-zinc-900 p-4"
+        className="rounded-md border border-zinc-800 p-4"
       >
         <div
           className="flex cursor-move items-center justify-between"
