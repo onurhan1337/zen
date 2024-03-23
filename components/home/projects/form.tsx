@@ -139,6 +139,8 @@ const ProjectCreateForm = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        validateOnBlur={true}
+        validateOnChange={false}
       >
         {({ isSubmitting, submitForm, values, setFieldValue }) => (
           <Form
