@@ -24,10 +24,15 @@ const HOW_IT_WORKS = [
     step: "4",
   },
   {
+    name: "Invite your team",
+    description:
+      "Invite your team members to collaborate on the project with you.",
+  },
+  {
     name: "Start working",
     description:
       "Start working on your project and keep track of your progress.",
-    step: "5",
+    step: "6",
   },
 ];
 
