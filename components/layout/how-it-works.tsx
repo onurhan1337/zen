@@ -27,6 +27,7 @@ const HOW_IT_WORKS = [
     name: "Invite your team",
     description:
       "Invite your team members to collaborate on the project with you.",
+    step: "5",
   },
   {
     name: "Start working",
