@@ -97,6 +97,30 @@ const TaskCreateForm = () => {
       throw new Error(await res.text());
     }
 
+    const sendNotification = async () => {
+      const response = await fetch("/api/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          task: {
+            name: values.name,
+            priority: values.priority,
+            status: values.status,
+            description: values.description,
+            link: `https://zen-orcin.app/projects/${projectId}`
+          }
+        }),
+      });
+    
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+    };
+
+    await sendNotification();
+
     return res.json();
   }
 
