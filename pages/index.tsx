@@ -1,11 +1,12 @@
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import {useSession} from "next-auth/react";
 
-import HowItWorks from "@/components/layout/how-it-works";
-import Cta from "@/components/layout/cta";
-import Stats from "@/components/layout/stats";
-import Footer from "@/components/layout/footer";
 import ChartsSection from "@/components/home/charts";
+import Cta from "@/components/layout/cta";
+import { FeatureList } from "@/components/layout/feature-list";
+import Footer from "@/components/layout/footer";
+import HowItWorks from "@/components/layout/how-it-works";
+import Stats from "@/components/layout/stats";
 
 export default function Home() {
     const {data: session} = useSession();
@@ -24,6 +25,7 @@ export default function Home() {
             {!session && (
                 <section>
                     <Cta/>
+                    <FeatureList/>
                     <HowItWorks/>
                     <Stats/>
                     <Footer/>
