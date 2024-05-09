@@ -3,6 +3,7 @@ import useSWR from "swr";
 
 import fetcher from "@/lib/fetcher";
 import { cn } from "@/lib/utils";
+import NumberTicker from "../shared/number-tricker";
 
 interface Data {
   projects: {
@@ -87,7 +88,9 @@ const StatItem = ({
     <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
       {title === "users" ? (
         <div className="flex items-baseline">
-          <span className="text-2xl font-semibold text-green-600">{total}</span>
+          <span className="text-2xl font-semibold text-green-600">
+            <NumberTicker value={total}/>
+            </span>
           <span className="ml-2 text-sm font-medium text-zinc-400">Total</span>
         </div>
       ) : (
