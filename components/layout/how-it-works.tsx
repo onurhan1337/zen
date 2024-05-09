@@ -62,8 +62,7 @@ const HowItWorks = () => {
               <div key={h.name} className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-zinc-300">
                   <div
-                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600  via-blue-400 to-blue-600
-                   shadow-inner"
+                    className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-b hover:from-zinc-950 hover:via-zinc-950 hover:to-blue-900 bg-transparent border border-zinc-800 cursor-help" 
                   >
                     <span className="text-zinc-700">{h.step}</span>
                   </div>
