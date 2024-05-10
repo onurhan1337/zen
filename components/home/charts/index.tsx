@@ -1,13 +1,12 @@
-import {Container, Flex, Section} from "@radix-ui/themes";
+import { Flex, Section } from "@radix-ui/themes";
 
 import AllProjectsChart from "@/components/home/charts/all-projects";
-import AssignedTasks from "@/components/home/charts/assigned-tasks";
 import AllStats from "./all-stats";
 
 
 const ChartsSection = () => {
     return (<Section
-        className="w-full max-w-7xl mx-auto "
+        className="w-full max-w-7xl mx-auto"
     >
         <Flex   
             direction={'column'}
@@ -20,7 +19,6 @@ const ChartsSection = () => {
                 width={'100%'}
             >
             <AllProjectsChart />
-            <AssignedTasks/>
             </Flex>
         </Flex>
     </Section>
