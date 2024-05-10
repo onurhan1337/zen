@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import { Project } from "types/project";
 
-import fetcher from "@/lib/fetcher";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -10,9 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import fetcher from "@/lib/fetcher";
 import ProjectCard from "./card";
 import ProjectsEmptyCard from "./empty";
-import { Input } from "@/components/ui/input";
 
 type Data = {
   projects: Project[];
@@ -57,12 +57,12 @@ export default function ProjectsCardList() {
           .map((_, i) => (
             <div
               key={i}
-              className="flex animate-pulse flex-col justify-between space-y-2 rounded-md border border-zinc-700 bg-zinc-800 p-4"
+              className="flex animate-pulse flex-col justify-between space-y-2 rounded-md border border-zinc-800 bg-zinc-900 p-4"
             >
-              <div className="h-4 bg-zinc-700"></div>
-              <div className="h-6 bg-zinc-700"></div>
-              <div className="h-20 bg-zinc-700"></div>
-              <div className="h-10 bg-zinc-700"></div>
+              <div className="h-4 bg-zinc-800/[.9]"></div>
+              <div className="h-6 bg-zinc-800/[.9]"></div>
+              <div className="h-20 bg-zinc-800/[.9]"></div>
+              <div className="h-10 bg-zinc-800/[.9]"></div>
             </div>
           ))}
       </div>
