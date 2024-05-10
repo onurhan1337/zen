@@ -1,23 +1,23 @@
-import React, { useState } from "react";
 import {
-  useSensors,
-  useSensor,
-  PointerSensor,
-  KeyboardSensor,
   DndContext,
-  closestCorners,
   DragEndEvent,
-  DragStartEvent,
   DragOverEvent,
   DragOverlay,
+  DragStartEvent,
   DropAnimation,
+  KeyboardSensor,
+  PointerSensor,
+  closestCorners,
   defaultDropAnimation,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
-import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import React, { useState } from "react";
 
-import { BoardSectionsType, Task, TaskStatusType } from "types/task";
-import { getTaskById } from "@/lib/utils/tasks";
 import { findBoardSectionContainer, initializeBoard } from "@/lib/utils/board";
+import { getTaskById } from "@/lib/utils/tasks";
+import { BoardSectionsType, Task, TaskStatusType } from "types/task";
 import BoardSection from "./section";
 import TaskItem from "./taskItem";
 

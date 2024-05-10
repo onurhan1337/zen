@@ -23,13 +23,13 @@ export default function App({
   return (
     <>
       <SessionProvider session={session}>
-        <Theme appearance={"dark"} className="antialiased dark:bg-gradient-to-r from-black via-zinc-950 to-black h-screen">
+        <Theme appearance={"dark"} className="antialiased dark:bg-gradient-to-r from-black via-zinc-950 to-black h-screen overflow-hidden">
           <header>
             <Suspense fallback="...">
               <NavBar />
             </Suspense>
           </header>
-          <main className={`${inter.className} mx-5 py-24`}>
+          <main className={`${inter.className} mx-5 py-24 dark:bg-gradient-to-r from-black via-zinc-950 to-black overflow-y-auto h-full`}>
             <Component {...pageProps} />
           </main>
         </Theme>

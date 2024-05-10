@@ -1,22 +1,22 @@
-import {useMemo, useState} from "react";
-import useSWR from "swr";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import {useSession} from "next-auth/react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import { useMemo, useState } from "react";
+import useSWR from "swr";
 
-import {Task} from "types/task";
-import {Project, User} from "@prisma/client";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import ProjectSettingsContent from "@/components/projects/settings/content";
 import BoardSectionList from "@/components/projects/board/list";
+import ProjectSettingsContent from "@/components/projects/settings/content";
 import TaskCreateContent from "@/components/tasks/create";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Project, User } from "@prisma/client";
+import { Task } from "types/task";
 
-import fetcher from "@/lib/fetcher";
-import {isUserMember, isUserOwner, truncate} from "@/lib/utils";
-import Container from "@/components/ui/container";
 import MembersListDialog from "@/components/projects/board/membersList";
 import DisconnectFromProject from "@/components/projects/disconnect-from-project";
-import {Session} from "next-auth";
+import Container from "@/components/ui/container";
+import fetcher from "@/lib/fetcher";
+import { isUserMember, isUserOwner, truncate } from "@/lib/utils";
+import { Session } from "next-auth";
 
 export default function ProjectDetailIndex() {
     const {data: session} = useSession();
@@ -58,7 +58,7 @@ export default function ProjectDetailIndex() {
 
             {session ? (
                 project && (isMember || isOwner) ? (
-                    <section className="flex w-full flex-col items-center">
+                    <section className="flex w-full flex-col items-center overflow-hidden">
                         <ProjectDetailContent session={session} project={project} isOwner={isOwner}/>
                         <div className="w-full max-w-screen-xl py-4">
                             {isOwner ? (
