@@ -1,8 +1,7 @@
 import fetcher from "@/lib/fetcher";
 import { Box, Card, Heading } from "@radix-ui/themes";
-import React from "react";
-import { AreaChart } from '@tremor/react'
 import { RiBarChartFill } from '@remixicon/react';
+import { AreaChart } from '@tremor/react';
 
 import useSWR from "swr";
 import ProjectCreateContent from "../projects/create";
@@ -14,29 +13,30 @@ type Data = {
 };
 
 const AllProjectsChart = () => {
-  const { data } = useSWR<Data[]>("/api/stats/projects-overview", fetcher);
+  const { data } = useSWR<Data[]>("/api/stats/projects-overview", fetcher, {
+    keepPreviousData: true,
+  });
 
   if (!data || data.length === 0) return <EmptyCard />;
 
   return (
-    <Card  style={{
-      padding: 5,
-      width: '100%',
-    }
-    }>
-      <Box style={{ padding: 5 }}>
+    <Card  
+      style={{
+        padding: 5,
+        width: '100%',
+        }}
+      variant='surface' 
+    >
         <Heading size={'4'}>Projects Overview</Heading>
-      </Box>
-      <Box style={{ padding: 5, marginTop: 10 }}>
         <AreaChart
           className="h-80"
           data={data}
           index={'name'}
           categories={["tasks", "members"]}
-          colors={['blue', 'purple']}
+          colors={['purple', 'lime']}
           yAxisWidth={60}
+          showAnimation={true}
         />
-      </Box>
     </Card>
   );
 };

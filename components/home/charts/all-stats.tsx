@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
-import useSWR from "swr";
 import { Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { FolderCog2, ListChecks, UsersIcon } from 'lucide-react';
+import React, { ReactNode } from "react";
+import useSWR from "swr";
 
 import fetcher from "@/lib/fetcher";
 import { cn } from "@/lib/utils";
@@ -91,7 +91,7 @@ const StatCard = React.memo(({ heading, data, icon }: StatCardProps) => {
     }
 
     return (
-        <Card variant='surface'>
+        <Card variant='surface' className='bg-gradient-to-br from-zinc-900 via-zinc-900/[.9] to-zinc-900/[.8]'>
             <Flex align='center' justify='between' className='p-2'>
                 <Heading as="h3" size='3' weight='bold'>{heading}</Heading>
                 {icon}
