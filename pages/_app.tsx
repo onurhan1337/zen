@@ -23,7 +23,7 @@ export default function App({
   return (
     <>
       <SessionProvider session={session}>
-        <Theme appearance={"dark"} className="antialiased dark:bg-gradient-to-r from-black via-zinc-950 to-black">
+        <Theme appearance={"dark"} className="antialiased dark:bg-gradient-to-r from-black via-zinc-950 to-black h-screen">
           <header>
             <Suspense fallback="...">
               <NavBar />
