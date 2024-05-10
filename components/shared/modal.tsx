@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
-import { cn } from "@/lib/utils";
-import { Drawer } from "vaul";
-import * as Dialog from "@radix-ui/react-dialog";
 import useMediaQuery from "@/lib/hooks/use-media-query";
+import { cn } from "@/lib/utils";
+import * as Dialog from "@radix-ui/react-dialog";
+import { Dispatch, SetStateAction } from "react";
+import { Drawer } from "vaul";
 
 export default function Modal({
   children,
@@ -50,7 +50,7 @@ export default function Modal({
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={cn(
-            "animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-zinc-700 bg-white p-0 shadow-xl md:rounded-2xl",
+            "animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden p-0 shadow-xl md:rounded-2xl",
             className,
           )}
         >
