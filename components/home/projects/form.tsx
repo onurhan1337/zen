@@ -92,6 +92,8 @@ const ProjectCreateForm = () => {
     try {
       const newProject = await createProject(values);
 
+      console.log(newProject)
+
       if (newProject) {
         mutate(
           "/api/project",
@@ -107,6 +109,8 @@ const ProjectCreateForm = () => {
 
       toast.success("Project created successfully!");
       setOpen(false);
+
+      router.push(`/projects/${newProject.project.id}`)
     } catch (error: any) {
       toast.error(error.message);
     } finally {
